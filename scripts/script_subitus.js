@@ -1,39 +1,6 @@
-var actual = window.location.pathname;
-if (!existeAnterior(actual)) {
-    //$("#btnPrev").attr("disabled", true);
-    $("#btnPrev").hide();
-    //console.log("No hay enlace anterior");
-}else{
-    //console.log("Existe enlace anterior");
-    $("#btnPrev").attr("href", dameAnterior(actual));
-    $("#btnPrev").show();
-    //$("#btnPrev").attr("disabled", false);
-}
-$("#btnFin").attr("href", "ver_avance.html");
-$("#btnFin").html("Ver avance");
-
-/**
-* Se crean los botones, en ellos se insertan los enlaces siguiente
-* y anterior en caso de existir; de no existir desaparece el enlace
-* o se muestra la finalización del curso.
-*/
-if (!existeSiguiente(actual)) {
-    $("#btnNext").html("Ver avance");
-    $("#btnNext").attr("href", "avance.html");
-    // $("#btnNext").click(function(){
-    //     $("#btnNext").preventDefault();
-    //     alert("Finalizando curso");
-    // });
-    //alert("Terminar curso");
-}else{
-    $("#btnNext").attr("href", dameSiguiente(actual));
-    $("#btnNext").html("Siguiente");
-}
-
-
-
+darEnlaceABotones();
 if(typeof(Storage)!= "undefined"){
-    sumarIntentos();
+    //sumarIntentos();
 	verificar_info_usuario();
     verificarVariables();
     verificarEstaPagina();
@@ -55,9 +22,8 @@ if(typeof(Storage)!= "undefined"){
         console.log("Direfencia de minutos" + minutos);
 
         if(minutos>2){
-            terminar_intento_por_tiempo();
+            terminar_intento();
             code = "";
-            //sumarIntentos();
             console.log("Se está eliminando el intento actual, e iniciando uno nuevo");
         }else{
             console.log("Se continúa en el intento actual");
@@ -75,6 +41,41 @@ if(typeof(Storage)!= "undefined"){
     }
 }
 
+function darEnlaceABotones(){
+    var actual = window.location.pathname;
+    if (!existeAnterior(actual)) {
+        //$("#btnPrev").attr("disabled", true);
+        $("#btnPrev").hide();
+        //console.log("No hay enlace anterior");
+    }else{
+        //console.log("Existe enlace anterior");
+        $("#btnPrev").attr("href", dameAnterior(actual));
+        $("#btnPrev").show();
+        //$("#btnPrev").attr("disabled", false);
+    }
+    // $("#btnFin").attr("href", "ver_avance.html");
+    // $("#btnFin").html("Finalizar intento");
+    $("#btnFin").click(function(){
+        //$("#btnFin").preventDefault();
+        terminar_intento();
+        //sumarIntentos();
+        alert("Finalizando curso");
+        window.location.href = "ver_avance.html";
+    });
+
+    /**
+    * Se crean los botones, en ellos se insertan los enlaces siguiente
+    * y anterior en caso de existir; de no existir desaparece el enlace
+    * o se muestra la finalización del curso.
+    */
+    if (!existeSiguiente(actual)) {
+        $("#btnNext").html("Ver avance");
+        $("#btnNext").attr("href", "avance.html");
+    }else{
+        $("#btnNext").attr("href", dameSiguiente(actual));
+        $("#btnNext").html("Siguiente");
+    }
+}
 
 function fin_pagina(){
 	guardaTiempo();
@@ -262,7 +263,7 @@ function verificarAvance(){
     
 }
 
-function verificarLessonLocation(){
+function verificarLessonLocation(){ // Crea la variable
 	if(localStorage.getItem("lesson_location") == null){
         var paginas = "";
         for (let i = 0; i < pages.length; i++) {
@@ -367,18 +368,29 @@ function obtener_resolucion(){
     return "00";
 }
 
-function terminar_intento_por_tiempo(nombre_intento){
-    localStorage.setItem(obtener_nombre_nuevo_intento(), localStorage.getItem("intento_actual"));
-    localStorage.removeItem("intento_actual");
+function terminar_intento(nombre_intento){
+    if(localStorage.getItem("intento_actual") != null){
+        let nuevo = obtener_nombre_nuevo_intento();
+        localStorage.setItem(nuevo, localStorage.getItem("intento_actual"));
+        console.log("Nuevo intento registrado " + nuevo);
+        localStorage.removeItem("intento_actual");
+    }
+    sumarIntentos();
 }
 
 function obtener_nombre_nuevo_intento(){
-    var elementosEnLocal = localStorage.length - 5; //Se descarta intento actual, e info_usuario 
-    if(elementosEnLocal>0){
-        return "intento" + elementosEnLocal;
-    }else{
-        return "intento0";
+    // var elementosEnLocal = localStorage.length - 5; //Se descarta intento actual, e info_usuario 
+    // if(elementosEnLocal>0){
+    //     return "intento" + elementosEnLocal;
+    // }else{
+    //     return "intento0";
+    // }
+    var nuevoNombre = "intento1";
+    while(localStorage.getItem(nuevoNombre) != null){
+        console.log(nuevoNombre + " utilizado");
+        nuevoNombre = nuevoNombre.substring(0, 7) + (parseInt( nuevoNombre.substring(7)) + 1);
     }
+    return nuevoNombre;
 }
 
 function obtener_informacion_pagina(){
@@ -420,7 +432,7 @@ function verificarVariables(){
 	if(localStorage.getItem("status") == null){
 		localStorage.setItem("status", "0");
     }
-    verificarLessonLocation();
+    verificarLessonLocation(); // Crea la variable en caso de no existir
 }
 
 function sumaHoras(hora1, hora2){
@@ -430,29 +442,51 @@ function sumaHoras(hora1, hora2){
     return convierteAHoras(hora1 + hora2);
 }
 
-function sumarIntentos(){
-    console.log("Start sumaIntentos()");
-    var elementosEnLocal = localStorage.length - 5 - pages.length;
-    var nom = "";
-    localStorage.setItem("total_time", "0000");
-    for (var i = 0; i < elementosEnLocal; i++) {
-        nom = "intento" + i;
-        if(localStorage.getItem(nom)){
-            console.log("Se está abriendo el elemento " + nom);
+function sumarIntentos(){//Suma el tiempo de todos los intentos, después guarda el resultado en total_time
+    var nombre = "intento1";
+    console.log("Comienza el registro del tiempo total");
+    while(localStorage.getItem(nombre) != null){ // Se recorren todos los intentos: intento1, intento2 ...
+        console.log(nombre + " utilizado");
+        console.log("Se está abriendo el elemento " + nombre);
+        code = localStorage.getItem(nombre);
+        entrada = code.substring(8,12);
+        console.log("La hora de entrada fue: " + entrada);
+        var salida = code.substring(code.length - 4);
+        console.log("La hora de salida fue: " + salida);
+        var resultado = convierteAHoras(calcularDiferencia(entrada, salida));
+        var anterior = localStorage.getItem("total_time");
+        var sumatoria = sumaHoras(anterior, resultado);
+        console.log("Sumatoria: " + sumatoria);
+        localStorage.setItem("total_time", sumatoria);
+        console.log("Total_time = " + resultado);
 
-            code = localStorage.getItem(nom);
-            entrada = code.substring(8,12);
-            console.log("La hora de entrada fue: " + entrada);
-            var salida = code.substring(code.length - 4);
-            console.log("La hora de salida fue: " + salida);
-
-            var resultado = convierteAHoras(calcularDiferencia(entrada, salida));
-            var anterior = localStorage.getItem("total_time");
-            var sumatoria = sumaHoras(anterior, resultado);
-            console.log("Sumatoria: " + sumatoria);
-            localStorage.setItem("total_time", sumatoria);
-            console.log(resultado);
-        }
+        nombre = nombre.substring(0, 7) + (parseInt( nombre.substring(7)) + 1);
     }
-    console.log("Fin sumaIntentos()");
+    console.log("Fin de la suma de intentos");
+
+
+    // console.log("Start sumaIntentos()");
+    // var elementosEnLocal = localStorage.length - 5 - pages.length;
+    // var nom = "";
+    // localStorage.setItem("total_time", "0000");
+    // for (var i = 0; i < elementosEnLocal; i++) {
+    //     nom = "intento" + i;
+    //     if(localStorage.getItem(nom)){
+    //         console.log("Se está abriendo el elemento " + nom);
+
+    //         code = localStorage.getItem(nom);
+    //         entrada = code.substring(8,12);
+    //         console.log("La hora de entrada fue: " + entrada);
+    //         var salida = code.substring(code.length - 4);
+    //         console.log("La hora de salida fue: " + salida);
+
+    //         var resultado = convierteAHoras(calcularDiferencia(entrada, salida));
+    //         var anterior = localStorage.getItem("total_time");
+    //         var sumatoria = sumaHoras(anterior, resultado);
+    //         console.log("Sumatoria: " + sumatoria);
+    //         localStorage.setItem("total_time", sumatoria);
+    //         console.log(resultado);
+    //     }
+    // }
+    // console.log("Fin sumaIntentos()");
 }

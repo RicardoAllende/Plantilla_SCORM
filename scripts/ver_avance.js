@@ -28,21 +28,32 @@ lessons = lessons.lecciones;
 console.log(lessons);
 
 function recorrerResultados(){
-    var status = localStorage.getItem("lesson_location");
-    var completados = 0;
-    var temp;
-    for (var i = 0; i < pages.length; i++) {
-        temp = status.substring(i * 2, (i*2) + 2);
-        temp = parseInt(temp);
-        if(temp>0){
-            completados++;
-            $("#contenido").append("<a class='btn btn-primary' target='blank' href='"+dameURL(pages[i].id)+"'>" + pages[i].url + "</a>" );
-        }else{
-            $("#contenido").append("<a class='btn'  style='background: #AAB7B8;'  target='blank' href='"+dameURL(pages[i].id)+"'>" + pages[i].url + "</a>" );
+    if(localStorage.getItem("lesson_location") != null){
+        var status = localStorage.getItem("lesson_location");
+        var completados = 0;
+        var temp;
+        for (var i = 0; i < pages.length; i++) {
+            temp = status.substring(i * 2, (i*2) + 2);
+            temp = parseInt(temp);
+            if(temp>0){
+                completados++;
+                $("#contenido").append("<a class='btn btn-primary' href='"+dameURL(pages[i].id)+"'>" + pages[i].url + "</a>" );
+            }else{
+                $("#contenido").append("<a class='btn'  style='background: #AAB7B8;' href='"+dameURL(pages[i].id)+"'>" + pages[i].url + "</a>" );
+            }
         }
+        //console.log(completados + " completados, de " + pages.length);
+        return completados;
+    }else{
+        for (var i = 0; i < pages.length; i++) {
+            $("#contenido").append(
+                "<a class='btn'  style='background: #AAB7B8;' href='"+
+                dameURL(pages[i].id)+"'>" + pages[i].url + "</a>"
+            );
+        }
+        return 0;
     }
-    //console.log(completados + " completados, de " + pages.length);
-    return completados;
+    
 }
 
 //$("#contenido").append(localStorage.getItem("info_usuario") + "<br>" );
