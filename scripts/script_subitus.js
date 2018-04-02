@@ -283,7 +283,8 @@ function verificarLessonLocation(){ // Crea la variable
 }
 
 function verificar_info_usuario(){
-    if(localStorage.info_usuario != null){
+    if(localStorage.getItem("info_usuario") == null){ //Se crea info_usuario pues no existe, o está vacío
+        console.log("Creando info_usuario");
         informacion = "";
         var nAgt = navigator.userAgent;
         for (var id in clientStrings) {
@@ -368,8 +369,8 @@ function obtener_resolucion(){
     }
     for (let index = 0; index < resoluciones.length; index++) {
         if(resolucion == resoluciones[index].resolucion){
-            return resoluciones[index].id;
             console.log("Resolución: " + resolucion + " -> " + resoluciones[index].id);
+            return resoluciones[index].id;
         }
     }
     console.log("No hubo match en la resolución: "+ resolucion);
