@@ -1,15 +1,14 @@
 darEnlaceABotones();
 if(typeof(Storage)!= "undefined"){
-    //sumarIntentos();
 	verificar_info_usuario();
     verificarVariables();
     verificarEstaPagina();
     verificarAvance();
 	if(localStorage.getItem("intento_actual")){ //Se verifica si es la primera vez que se accesa al intento
         /**
-        * Se obtiene la última hora del intento, en caso de 
-        * ser mayor a 2 minutos, se da el intento como terminado
-        * y se inicia uno nuevo
+        * Se obtiene la última hora del intento, en caso de ser mayor a 2 minutos,
+        * o que no se estuviera viendo el avance, se da el intento como terminado
+        * y se inicia uno nuevo.
         */
         var code = localStorage.getItem("intento_actual");
         var hora_ultimo_intento = code.substring(code.length - 4);
@@ -19,12 +18,22 @@ if(typeof(Storage)!= "undefined"){
         t2.setHours(hora_ultimo_intento.substring(0,2), hora_ultimo_intento.substring(2, 4), "00");
         t1.setHours(t1.getHours() - t2.getHours(), t1.getMinutes() - t2.getMinutes(), t1.getSeconds() - t2.getSeconds());
         var minutos = (t1.getHours() * 60) + t1.getMinutes();
+        // var entrada = code.substring(8,12);
+        // var salida = code.substring(code.length - 4);
+        // var minutos = calcularDiferencia(entrada, salida);
         console.log("Direfencia de minutos" + minutos);
-
         if(minutos>2){
-            terminar_intento();
-            code = "";
-            console.log("Se está eliminando el intento actual, e iniciando uno nuevo");
+            var paginaAnterior = document.referrer;
+            paginaAnterior = paginaAnterior.substring(paginaAnterior.lastIndexOf('/') + 1);
+            if (paginaAnterior != "ver_avance.html") {
+                console.log("Tardó " + minutos);
+                terminar_intento();
+                code = "";
+                console.log("Se está eliminando el intento actual, e iniciando uno nuevo");
+            }else{
+                console.log("Viene de ver_avance.html, continúa el intento");
+            }
+            
         }else{
             console.log("Se continúa en el intento actual");
         }
@@ -33,7 +42,7 @@ if(typeof(Storage)!= "undefined"){
         localStorage.setItem("intento_actual", code);
         code = "";
     }else{ //En este caso crean las variables de intento_actual
-    	console.log("No hay intento actual");
+    	console.log("No hay intento actual, se crea la variable intento_actual");
         code = "";
         code += obtener_informacion_pagina();
         localStorage.setItem("intento_actual", code);
@@ -46,20 +55,14 @@ function darEnlaceABotones(){
     if (!existeAnterior(actual)) {
         //$("#btnPrev").attr("disabled", true);
         $("#btnPrev").hide();
-        //console.log("No hay enlace anterior");
     }else{
-        //console.log("Existe enlace anterior");
         $("#btnPrev").attr("href", dameAnterior(actual));
         $("#btnPrev").show();
-        //$("#btnPrev").attr("disabled", false);
     }
-    // $("#btnFin").attr("href", "ver_avance.html");
-    // $("#btnFin").html("Finalizar intento");
     $("#btnFin").click(function(){
-        //$("#btnFin").preventDefault();
         terminar_intento();
-        //sumarIntentos();
-        alert("Finalizando curso");
+        alert("Intento finalizado");
+        localStorage.setItem("session_time", "000000");
         window.location.href = "ver_avance.html";
     });
 
@@ -89,6 +92,11 @@ function agregaTiempoSesion(){
     var resultado = convierteAHoras(calcularDiferencia(entrada, salida));
     localStorage.setItem("session_time", resultado);
 }
+
+/**
+ * @param hora1, hora2 con formato: hh:mm
+ * @returns tiempo en minutos
+ */
 
 function calcularDiferencia(hora1, hora2){
     //Se convierten las horas a minutos
@@ -379,12 +387,6 @@ function terminar_intento(nombre_intento){
 }
 
 function obtener_nombre_nuevo_intento(){
-    // var elementosEnLocal = localStorage.length - 5; //Se descarta intento actual, e info_usuario 
-    // if(elementosEnLocal>0){
-    //     return "intento" + elementosEnLocal;
-    // }else{
-    //     return "intento0";
-    // }
     var nuevoNombre = "intento1";
     while(localStorage.getItem(nuevoNombre) != null){
         console.log(nuevoNombre + " utilizado");
@@ -418,8 +420,6 @@ function obtener_informacion_pagina(){
     console.log("Hora: " + hour + ":" + minutes);
     console.log("Fecha: " + dd + "/" + mm + "/" + yyyy );
     return '' + id_pag + dd + '' + mm + '' + yyyy + '' + hour + '' + minutes;
-    //return '' + dd + '' + mm + '' + yyyy + '' + hour + '' + minutes;
-    //return '' + hour + '' + minutes;
 }
 
 function verificarVariables(){
@@ -463,30 +463,4 @@ function sumarIntentos(){//Suma el tiempo de todos los intentos, después guarda
         nombre = nombre.substring(0, 7) + (parseInt( nombre.substring(7)) + 1);
     }
     console.log("Fin de la suma de intentos");
-
-
-    // console.log("Start sumaIntentos()");
-    // var elementosEnLocal = localStorage.length - 5 - pages.length;
-    // var nom = "";
-    // localStorage.setItem("total_time", "0000");
-    // for (var i = 0; i < elementosEnLocal; i++) {
-    //     nom = "intento" + i;
-    //     if(localStorage.getItem(nom)){
-    //         console.log("Se está abriendo el elemento " + nom);
-
-    //         code = localStorage.getItem(nom);
-    //         entrada = code.substring(8,12);
-    //         console.log("La hora de entrada fue: " + entrada);
-    //         var salida = code.substring(code.length - 4);
-    //         console.log("La hora de salida fue: " + salida);
-
-    //         var resultado = convierteAHoras(calcularDiferencia(entrada, salida));
-    //         var anterior = localStorage.getItem("total_time");
-    //         var sumatoria = sumaHoras(anterior, resultado);
-    //         console.log("Sumatoria: " + sumatoria);
-    //         localStorage.setItem("total_time", sumatoria);
-    //         console.log(resultado);
-    //     }
-    // }
-    // console.log("Fin sumaIntentos()");
 }

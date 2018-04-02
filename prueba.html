@@ -12,17 +12,31 @@
 	// var n = localStorage.getItem("cuenta");
 	// var suma = 12 + parseInt(n);
 	// console.log(suma);
-	var total = 15;
-	var nuevoNombre = "intento1";
+	// var total = 15;
+	// var nuevoNombre = "intento1";
 	// document.write(nuevoNombre.substring(0, 7) + "//"); // intento
 	// document.write(nuevoNombre.substring(7)); // 7
 	// Comentario de prueba
-	while(localStorage.getItem(nuevoNombre) != null){
-		nuevoNombre = nuevoNombre.substring(0, 7) + (parseInt( nuevoNombre.substring(7)) + 1);
-		console.log(nuevoNombre);
-	}
-	localStorage.setItem(nuevoNombre, "1");
-	document.write("Se ha creado " + nuevoNombre);
+	// while(localStorage.getItem(nuevoNombre) != null){
+	// 	nuevoNombre = nuevoNombre.substring(0, 7) + (parseInt( nuevoNombre.substring(7)) + 1);
+	// 	console.log(nuevoNombre);
+	// }
+	// localStorage.setItem(nuevoNombre, "1");
+	// document.write("Se ha creado " + nuevoNombre);
+	function localStorageSpace(){
+        var allStrings = '';
+        for(var key in window.localStorage){
+            if(window.localStorage.hasOwnProperty(key)){
+                allStrings += window.localStorage[key];
+            }
+        }
+        return allStrings ? 3 + ((allStrings.length*16)/(8*1024)) + ' KB' : 'Empty (0 KB)';
+    }
+	document.write(localStorageSpace());
+	var paginaAnterior = document.referrer;
+	paginaAnterior = paginaAnterior.substring(paginaAnterior.lastIndexOf('/') + 1);
+	document.write("<br>La página anterior es: " + paginaAnterior);
+	
 	</script>
 </body>
 </html>
