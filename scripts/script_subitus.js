@@ -1,3 +1,7 @@
+var apiHandle = null;
+var _Debug = false;
+var finalizado = false;
+
 darEnlaceABotones();
 if(typeof(Storage)!= "undefined"){
 	verificar_info_usuario();
@@ -10,33 +14,36 @@ if(typeof(Storage)!= "undefined"){
         * o que no se estuviera viendo el avance, se da el intento como terminado
         * y se inicia uno nuevo.
         */
-        var code = localStorage.getItem("intento_actual");
-        var hora_ultimo_intento = code.substring(code.length - 4);
-        var hoy = new Date();
-        var t1 = new Date();//Será la hora actual
-        var t2 = new Date();
-        t2.setHours(hora_ultimo_intento.substring(0,2), hora_ultimo_intento.substring(2, 4), "00");
-        t1.setHours(t1.getHours() - t2.getHours(), t1.getMinutes() - t2.getMinutes(), t1.getSeconds() - t2.getSeconds());
-        var minutos = (t1.getHours() * 60) + t1.getMinutes();
+        // var code = localStorage.getItem("intento_actual");
+        // var hora_ultimo_intento = code.substring(code.length - 4);
+        // var hoy = new Date();
+        // var t1 = new Date();//Será la hora actual
+        // var t2 = new Date();
+        // t2.setHours(hora_ultimo_intento.substring(0,2), hora_ultimo_intento.substring(2, 4), "00");
+        // t1.setHours(t1.getHours() - t2.getHours(), t1.getMinutes() - t2.getMinutes(), t1.getSeconds() - t2.getSeconds());
+        // var minutos = (t1.getHours() * 60) + t1.getMinutes();
         // var entrada = code.substring(8,12);
         // var salida = code.substring(code.length - 4);
         // var minutos = calcularDiferencia(entrada, salida);
-        console.log("Direfencia de minutos" + minutos);
-        if(minutos>2){
-            var paginaAnterior = document.referrer;
-            paginaAnterior = paginaAnterior.substring(paginaAnterior.lastIndexOf('/') + 1);
-            if (paginaAnterior != "ver_avance.html") {
-                console.log("Tardó " + minutos);
-                terminar_intento();
-                code = "";
-                console.log("Se está eliminando el intento actual, e iniciando uno nuevo");
-            }else{
-                console.log("Viene de ver_avance.html, continúa el intento");
-            }
+        // console.log("Direfencia de minutos" + minutos);
+        
+        // PARTE DE LOS INTENTOS, QUITÁNDOLA SÓLO EXISTE INTENTO ACTUAL
+        // if(minutos>2){
+        //     var paginaAnterior = document.referrer;
+        //     paginaAnterior = paginaAnterior.substring(paginaAnterior.lastIndexOf('/') + 1);
+        //     if (paginaAnterior != "ver_avance.html") {
+        //         console.log("Tardó " + minutos);
+        //         terminar_intento();
+        //         code = "";
+        //         console.log("Se está eliminando el intento actual, e iniciando uno nuevo");
+        //     }else{
+        //         console.log("Viene de ver_avance.html, continúa el intento");
+        //     }
             
-        }else{
-            console.log("Se continúa en el intento actual");
-        }
+        // }else{
+        //     console.log("Se continúa en el intento actual");
+        // }
+        // FIN PARTE INTENTOS
         
         code += obtener_informacion_pagina();
         localStorage.setItem("intento_actual", code);
@@ -50,6 +57,12 @@ if(typeof(Storage)!= "undefined"){
     }
 }
 
+function ocultar_botones(){
+    $("#btnPrev").attr("disabled", true);
+    $("#btnNext").attr("disabled", true);
+    $("#btnFin").attr("disabled", true);
+}
+
 function darEnlaceABotones(){
     var actual = window.location.pathname;
     if (!existeAnterior(actual)) {
@@ -59,17 +72,24 @@ function darEnlaceABotones(){
         $("#btnPrev").attr("href", dameAnterior(actual));
         $("#btnPrev").show();
     }
+    $("#btnNext").html("Cerrar");
     $("#btnFin").click(function(){
-        terminar_intento();
-        alert("Intento finalizado");
-        localStorage.setItem("session_time", "000000");
-        window.location.href = "ver_avance.html";
+        finalizar();
+        alert("Finalizando");
+        var api = getAPIHandle();
+        if (api == null){
+            alert("ERROR en función end()");
+            return false;
+        }
+        var endResult = api.LMSFinish("");
+        finalizado = true;
+        //localStorage.setItem("session_time", "000000");
+        //window.location.href = "ver_avance.html";
     });
 
     /**
     * Se crean los botones, en ellos se insertan los enlaces siguiente
-    * y anterior en caso de existir; de no existir desaparece el enlace
-    * o se muestra la finalización del curso.
+    * y anterior en caso de existir; si no existe, desaparece el enlace
     */
     if (!existeSiguiente(actual)) {
         $("#btnNext").html("Ver avance");
@@ -80,17 +100,12 @@ function darEnlaceABotones(){
     }
 }
 
-function fin_pagina(){
-	guardaTiempo();
-	agregaTiempoSesion();
-}
-
 function agregaTiempoSesion(){
     var code = localStorage.getItem("intento_actual");
     var entrada = code.substring(8,12);
 	var salida = code.substring(code.length - 4);
     var resultado = convierteAHoras(calcularDiferencia(entrada, salida));
-    localStorage.setItem("session_time", resultado);
+    localStorage.setItem("session_time", formatearHora(resultado));
 }
 
 /**
@@ -260,13 +275,13 @@ function verificarAvance(){
         }
         console.log(completados + " completados, de " + pages.length);
         if(completados == pages.length){
-            localStorage.setItem("status", "2");
+            localStorage.setItem("status", "passed");
         }else{
-            localStorage.setItem("status", "1");
+            localStorage.setItem("status", "incomplete");
         }
     }else{
         console.log("No existía la variable status");
-        localStorage.setItem("status", "1");
+        localStorage.setItem("status", "incomplete");
     }
     
 }
@@ -362,6 +377,10 @@ function verificar_info_usuario(){
     }
 }
 
+function formatearHora(hora){
+    return hora.substring(0,2) + ":" + hora.substring(2,4) + ":00";
+}
+
 function obtener_resolucion(){
     let resolucion = screen.width + "x" + screen.height;
     if(screen.width < screen.height){
@@ -425,7 +444,7 @@ function obtener_informacion_pagina(){
 
 function verificarVariables(){
 	if(localStorage.getItem("session_time") == null){
-		localStorage.setItem("session_time", "000000");
+		localStorage.setItem("session_time", "00:00:00");
 	}
 	if(localStorage.getItem("total_time") == null){
 		localStorage.setItem("total_time", "000000");
@@ -465,3 +484,158 @@ function sumarIntentos(){//Suma el tiempo de todos los intentos, después guarda
     }
     console.log("Fin de la suma de intentos");
 }
+
+
+
+/******************************************************************************************
+******************************************************************************************/
+function findAPI(win) {
+    if (_Debug){
+       alert("win is: "+win.location.href);
+    }
+ 
+ 
+    if (win.API != null){
+       if (_Debug){
+          alert("found api in this window");
+       }
+       return win.API;
+    }
+ 
+    if (win.length > 0) {
+       if (_Debug){
+          alert("looking for api in windows frames");
+       }
+ 
+       for (var i=0;i<win.length;i++){
+ 
+          if (_Debug){
+             alert("looking for api in frames["+i+"]");
+          }
+          var theAPI = findAPI(win.frames[i]);
+          if (theAPI != null){
+             return theAPI;
+          }
+       }
+    }
+ 
+    if (_Debug){
+       alert("didn't find api in this window (or its children)");
+    }
+    return null;
+ 
+ }
+ 
+ 
+ /******************************************************************************************
+ ******************************************************************************************/
+ 
+ function getAPI(){
+    var theAPI = findAPI(this.top);
+    if (theAPI == null){
+       if (_Debug){
+          alert("checking to see if this window has an opener");
+          alert("window.opener typeof is> "+typeof(window.opener));
+       }
+ 
+       if (typeof(this.opener) != "undefined"){
+          if (_Debug){
+             alert("checking this windows opener");
+          }
+          if (this.opener != null){
+             if (_Debug){
+                alert("this windows opener is NOT null - looking there");
+             }
+             theAPI = findAPI(this.opener.top);
+          }
+          else{
+             if (_Debug){
+                alert("this windows opener is null");
+             }
+          }
+       }
+    }
+ 
+    return theAPI;
+ }
+ 
+ /******************************************************************************************
+ ******************************************************************************************/
+ function getAPIHandle() {
+    if (apiHandle == null){
+       apiHandle = getAPI();
+    }
+ 
+    return apiHandle;
+ }
+ 
+ //////////////////////////////////////////////////////////////////////////
+ //////////////////////////////////////////////////////////////////////////
+ function init(){
+       var api = getAPIHandle();
+        if (api == null){
+            alert("ERROR en init()");
+            return false;
+        }
+        var initResult = api.LMSInitialize("");
+ }
+ 
+ //////////////////////////////////////////////////////////////////////////
+ //////////////////////////////////////////////////////////////////////////
+ function end(){
+    guardaTiempo();
+    agregaTiempoSesion();
+    if(!finalizado){
+        finalizar();
+    }
+    // var endResult = api.LMSFinish("");
+ }
+ 
+function finalizar(){
+	var api = getAPIHandle();
+    if (api == null){
+        alert("ERROR en función end()");
+        return false;
+    }
+    set("cmi.core.lesson_status", localStorage.getItem("status"));
+    set("cmi.suspend_data", Base64.encode(localStorage.getItem("intento_actual")));
+    set("cmi.core.session_time", localStorage.getItem("session_time"));
+    //set("cmi.core.session_time", "02:21:00");
+    set("cmi.core.lesson_location", Base64.encode(localStorage.getItem("lesson_location")));
+    save();
+}
+ //////////////////////////////////////////////////////////////////////////
+ //////////////////////////////////////////////////////////////////////////
+ function save(){ //Crear commit
+       var api = getAPIHandle();
+        if (api == null){
+               alert("ERROR");
+               return false;
+            }
+        var commitResult = api.LMSCommit("");
+ }
+ 
+ 
+ //////////////////////////////////////////////////////////////////////////
+ //////////////////////////////////////////////////////////////////////////
+ function set(data,value){
+       var api = getAPIHandle();
+        if (api == null){
+               alert("ERROR");
+               return false;
+            }
+        var setResult= api.LMSSetValue(data, value);
+      
+ }
+ 
+ //////////////////////////////////////////////////////////////////////////
+ //////////////////////////////////////////////////////////////////////////
+ function get(data){
+       var api = getAPIHandle();
+        if (api == null){
+               alert("ERROR");
+               return false;
+            }
+         var getResult= api.LMSGetValue(data); 
+     return getResult;
+ }

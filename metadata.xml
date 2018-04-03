@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<lom xmlns="http://www.imsglobal.org/xsd/imsmd_rootv1p2p1"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+     xsi:schemaLocation="http://www.imsglobal.org/xsd/imsmd_rootv1p2p1 imsmd_rootv1p2p1.xsd"> 
+
+
+	<general>
+    		<title>
+              		<langstring>Titulo de curso</langstring>
+   		</title>
+   
+   		<description>
+                    	<langstring>Descripcion</langstring>
+   		</description>
+                <catalogentry>
+			<catalog></catalog>
+			<entry>
+				<langstring></langstring>
+			</entry>		
+		</catalogentry>
+		<keyword>
+			<langstring>humantalent, desarrollo de curso</langstring>
+		</keyword>
+	</general>
+
+
+	<lifecycle>
+       		<version>
+              		<langstring>1.0</langstring>
+       		</version>
+       		<status>
+         		<source>
+            			<langstring xml:lang="x-none">LOMv1.0</langstring>
+         		</source>
+         		<value>
+            			<langstring xml:lang="x-none">Final</langstring>      <!-- [Final,Draft,Revised,Unavailable] -->
+         		</value>
+      		</status>
+	</lifecycle>
+
+
+	<metametadata>
+      		<metadatascheme>ADL SCORM 1.2</metadatascheme>
+   	</metametadata>
+
+
+ 	<technical>
+      		<format>flash player</format>
+      		<format>text/html</format>
+      		<location type="TEXT">...Introducir una breve descripción del lugar en donde pueda ser localizado este recurso...</location>
+	</technical>
+
+	<rights>
+		<cost>
+         		<source>
+            			<langstring xml:lang="x-none">LOMv1.0</langstring>
+         		</source>
+         		<value>
+            			<langstring xml:lang="x-none">yes</langstring>
+         		</value>
+      		</cost>
+		<copyrightandotherrestrictions>
+         		<source>
+            			<langstring xml:lang="x-none">LOMv1.0</langstring>
+         		</source>
+         		<value>
+            			<langstring xml:lang="x-none">yes</langstring>
+         		</value>
+      		</copyrightandotherrestrictions>
+	</rights>
+
+
+	<classification>
+       		<purpose>
+         		<source>
+            			<langstring xml:lang="x-none">LOMv1.0</langstring>
+         		</source>
+         		<value>
+            			<langstring xml:lang="x-none">Educational Objective</langstring>    <!-- [Discipline,Idea,Prerequisite,Accesibility Restrictions,Education level,Skill Level,Security Level] -->
+         		</value>
+      		</purpose>
+      		<description>
+         		<langstring>...Descripción textual de la clasificación...</langstring>
+      		</description>
+       		<keyword>
+         		<langstring>...Palabra clave relacionada a la clasificación...</langstring>
+      		</keyword>
+	</classification>
+
+</lom>

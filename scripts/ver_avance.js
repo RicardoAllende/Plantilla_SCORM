@@ -1,3 +1,28 @@
+$("#botonModal").click(function(e){
+    e.preventDefault();
+    if ($("#botonModal").hasClass("oculto")) {
+        $("#contenido").show();
+        $("#botonModal").removeClass("oculto");
+        $("#botonModalMini").removeClass("oculto");
+    }else{
+        $("#botonModalMini").addClass("oculto");
+        $("#botonModal").addClass("oculto");
+        $("#contenido").hide();
+    }
+    
+});
+$("#botonModalMini").click(function(e){
+    e.preventDefault();
+    if ($("#botonModalMini").hasClass("oculto")) {
+        $("#contenido").show();
+        $("#botonModal").removeClass("oculto");
+        $("#botonModalMini").removeClass("oculto");
+    }else{
+        $("#botonModalMini").addClass("oculto");
+        $("#botonModal").addClass("oculto");
+        $("#contenido").hide();
+    }
+});
 function dameURL(id){
     for (var i = 0; i < pages.length; i++) {
         if(pages[i].id == id){
