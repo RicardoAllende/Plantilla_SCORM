@@ -1,32 +1,3 @@
-$("#botonModal").click(function(e){
-    e.preventDefault();
-    if ($("#botonModal").hasClass("oculto")) {
-        $("#contenido").show();
-        $("#contenidoCurso").hide();
-        $("#botonModal").removeClass("oculto");
-        $("#botonModalMini").removeClass("oculto");
-    }else{
-        $("#botonModalMini").addClass("oculto");
-        $("#botonModal").addClass("oculto");
-        $("#contenido").hide();
-        $("#contenidoCurso").show();
-    }
-    
-});
-$("#botonModalMini").click(function(e){
-    e.preventDefault();
-    if ($("#botonModalMini").hasClass("oculto")) {
-        $("#contenido").show();
-        $("#contenidoCurso").hide();
-        $("#botonModal").removeClass("oculto");
-        $("#botonModalMini").removeClass("oculto");
-    }else{
-        $("#botonModalMini").addClass("oculto");
-        $("#botonModal").addClass("oculto");
-        $("#contenido").hide();
-        $("#contenidoCurso").show();
-    }
-});
 function dameURL(id){
     for (var i = 0; i < pages.length; i++) {
         if(pages[i].id == id){
@@ -53,12 +24,85 @@ var lessons ={
     ]
 };
 lessons = lessons.lecciones;
-
 console.log(lessons);
+var status = lzw_decode(localStorage.getItem("lesson_location"));
 
-function recorrerResultados(){
+$("#contenido").append("Tiempo de la sesión " + lzw_decode(localStorage.getItem("session_time")) + " minutos<br>" );
+    $("#contenido").append(`Lecciones: <button data-leccion='0' class='btnCambiarAvance'>1</button>&nbsp;
+    <button data-leccion='1' class='btnCambiarAvance'>2</button>&nbsp;
+    <button data-leccion='2' class='btnCambiarAvance'>3</button>&nbsp;
+    <button data-leccion='-' class='btnCambiarAvance'>Total del curso</button>`);
+mostrarTotalCurso();
+
+
+
+
+$(".btnCambiarAvance").click(function(){
+    alert("Clic en el botón de la clase btnCambiarAvance " + $(this).data("leccion"));
+    $("#avance").html($(this).data("leccion"));
+    if($(this).data("leccion") == "-"){
+        mostrarTotalCurso();
+    }
+});
+
+function porcentajeLecciones(){
+    var resultados = [];
+    var temp, porcentaje;
+    for(var i =0; i<lessons.length; i++){
+        var completados = 0;
+        var leccion = lessons[i];
+        for (var j = 0; j < leccion.length; j++) {
+            var indice = dameIndice(leccion[j]);
+            temp = status.substring(indice * 2, (indice*2) + 2);
+            temp = parseInt(temp);
+            if(temp>0){
+                completados++;
+            }
+        }
+        porcentaje = completados / leccion.length * 100;
+        porcentaje = parseInt(porcentaje);
+        resultados.push(porcentaje);
+    }
+    resultados.push(100);
+    return resultados;
+}
+
+// function porcentajeLeccion(numeroLeccion){
+//     var resultados = [];
+//     var temp, porcentaje;
+//     numeroLeccion = parseInt(numeroLeccion);
+//     var leccion = lessons[numeroLeccion];
+//     var completados=0;
+//     for (var j = 0; j < leccion.length; j++) {
+//         var indice = dameIndice(leccion[j]);
+//         temp = status.substring(indice * 2, (indice*2) + 2);
+//         temp = parseInt(temp);
+//         if(temp>0){
+//             completados++;
+//         }
+//     }
+
+//     for(var i =0; i<lessons.length; i++){
+//         var completados = 0;
+//         var leccion = lessons[i];
+//         for (var j = 0; j < leccion.length; j++) {
+//             var indice = dameIndice(leccion[j]);
+//             temp = status.substring(indice * 2, (indice*2) + 2);
+//             temp = parseInt(temp);
+//             if(temp>0){
+//                 completados++;
+//             }
+//         }
+//         porcentaje = completados / leccion.length * 100;
+//         porcentaje = parseInt(porcentaje);
+//         resultados.push(porcentaje);
+//     }
+//     resultados.push(100);
+//     return resultados;
+// }
+
+function recorrerTodosLosResultados(leccion){
     if(localStorage.getItem("lesson_location") != null){
-        var status = lzw_decode(localStorage.getItem("lesson_location"));
         var completados = 0;
         var temp;
         for (var i = 0; i < pages.length; i++) {
@@ -66,108 +110,117 @@ function recorrerResultados(){
             temp = parseInt(temp);
             if(temp>0){
                 completados++;
-                $("#contenido").append("<a class='btn btn-primary' href='"+dameURL(pages[i].id)+"'>" + pages[i].url + "</a>" );
+                $("#avance").append("<a class='btn btn-primary' href='"+dameURL(pages[i].id)+"'>" + (i + 1) + "</a>" );
             }else{
-                $("#contenido").append("<a class='btn'  style='background: #AAB7B8;' href='"+dameURL(pages[i].id)+"'>" + pages[i].url + "</a>" );
+                $("#avance").append("<a href='"+dameURL(pages[i].id)+"'><button class='btn'>" + (i + 1) + "</button></a>" );
             }
         }
-        //console.log(completados + " completados, de " + pages.length);
         return completados;
     }else{
         for (var i = 0; i < pages.length; i++) {
-            $("#contenido").append(
+            $("#avance").append(
                 "<a class='btn'  style='background: #AAB7B8;' href='"+
                 dameURL(pages[i].id)+"'>" + pages[i].url + "</a>"
             );
         }
         return 0;
     }
-    
 }
 
-//$("#contenido").append(localStorage.getItem("info_usuario") + "<br>" );
-//$("#contenido").append(localStorage.getItem("intento_actual") + "<br>" );
-$("#contenido").append("Tiempo de la sesión " + lzw_decode(localStorage.getItem("session_time")) + " minutos<br>" );
-// if ((localStorage.getItem("status") == null) || (lzw_decode(localStorage.getItem("status")) == "0")   ) {
-//     $("#contenido").append("Curso no iniciado<br>");
-// }
-if (lzw_decode(localStorage.getItem("status")) == "passed") {
-    $("#contenido").append("Curso iniciado<br>");
-}
-if (lzw_decode(localStorage.getItem("status")) == "incomplete") {
-    $("#contenido").append("Curso terminado<br>");
-}
-
-$("#contenido").append("Tiempo total: " + lzw_decode(localStorage.getItem("total_time")) + "<br>" );
-
-$("#contenido").append("Detalle de las lecciones <br>");
-var resultados = [];
-var status = lzw_decode(localStorage.getItem("lesson_location"));
-var temp, porcentaje;
-for(var i =0; i<lessons.length; i++){
-    var completados = 0;
-    var leccion = lessons[i];
-    for (var j = 0; j < leccion.length; j++) {
-        var indice = dameIndice(leccion[j]);
-        temp = status.substring(indice * 2, (indice*2) + 2);
-        console.log("Obteniendo " + temp + " del índice: " + indice);
-        temp = parseInt(temp);
-        if(temp>0){
-            completados++;
+function indiceDe(id){
+    for (let index = 0; index < pages.length; index++) {
+        if(pages[index].id == id){
+            return index;
         }
     }
-    porcentaje = completados / leccion.length * 100;
-    porcentaje = parseInt(porcentaje);
-    resultados.push(porcentaje);
+    return -1;
 }
-resultados.push(100);
-$("#contenido").append('<section style="height: 200px; width: 400px;">'+
-    '<canvas id="myChart" ></canvas>'+
-'</section>');
-$("#contenido").append('<section style="height: 200px; width: 400px;">'+
-    '<canvas id="cursoCompleto" ></canvas>'+
-'</section>');
-//console.log("Ahora van los resultados");
-//console.log(resultados);
-console.log("Los resultados para la gráfica son :" + resultados);
-var ctx = document.getElementById("myChart").getContext('2d');
-var myChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: ["Lección 1", "Lección 2", "Lección 3"],
-        datasets: [{
-            label: 'Progreso del curso (%)',
-            data: resultados,
-            backgroundColor: [
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(54, 162, 235, 0.2)'
-            ],
-            borderColor: [
-                'rgba(54, 162, 235, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(54, 162, 235, 1)'
-            ],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero:true
-                }
+
+function recorrerResultados(numero_leccion){
+    if(localStorage.getItem("lesson_location") != null){
+        var completados = 0;
+        var temp;
+        for (let index = 0; index < lessons.length; index++) {
+            let posicion = indiceDe(lessons[j])
+            temp = status.substring(posicion * 2, (posicion*2) + 2);
+            temp = parseInt(temp);
+            if(temp>0){
+                completados++;
+                $("#avance").append("<a class='btn btn-primary' href='"+dameURL(lessons[j])+"'>" + (index + 1) + "</a>" );
+            }else{
+                $("#avance").append("<a href='"+dameURL(lessons[j])+"'><button class='btn'>" + (index + 1) + "</button></a>" );
+            }
+        }
+        // for (var i = 0; i < pages.length; i++) {
+        //     temp = status.substring(i * 2, (i*2) + 2);
+        //     temp = parseInt(temp);
+        //     if(temp>0){
+        //         completados++;
+        //         $("#avance").append("<a class='btn btn-primary' href='"+dameURL(pages[i].id)+"'>" + (i + 1) + "</a>" );
+        //     }else{
+        //         $("#avance").append("<a href='"+dameURL(pages[i].id)+"'><button class='btn'>" + (i + 1) + "</button></a>" );
+        //     }
+        // }
+        return completados;
+    }else{
+        for (var i = 0; i < pages.length; i++) {
+            $("#avance").append(
+                "<a class='btn'  style='background: #AAB7B8;' href='"+
+                dameURL(pages[i].id)+"'>" + pages[i].url + "</a>"
+            );
+        }
+        return 0;
+    }
+}
+
+function mostrarTotalCurso(){
+    $("#avance").append(`<div class='row' style='padding: 50px; height: 250px;'>
+        <div class='col-md-6'>
+        <canvas id='myChart'></canvas>
+        </div>
+        <div class='col-md-6'>
+        <canvas id='cursoCompleto'></canvas>
+        </div>
+    </div>`);
+
+    resultados = porcentajeLecciones();
+
+    $("#avance").append("Detalle total de las páginas<br><div style='background: #e9e9e9;'");
+    var terminadas = recorrerTodosLosResultados();
+    //$("#avance").append("</div><hr>");
+
+    var ctx = document.getElementById("myChart").getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ["Lección 1", "Lección 2", "Lección 3"],
+            datasets: [{
+                label: 'Progreso del curso (%)',
+                data: resultados,
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(54, 162, 235, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(54, 162, 235, 1)'
+                ],
+                borderWidth: 1
             }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
         }
-    }
-});
-
-//
-$("#contenido").append("Detalle de las páginas<br><div style='background: #e9e9e9;'");
-var terminadas = recorrerResultados();
-$("#contenido").append("</div><hr>");
-
-var ct = document.getElementById("cursoCompleto").getContext('2d');
+    });
+    var ct = document.getElementById("cursoCompleto").getContext('2d');
     var myPieChart = new Chart(ct,{
         type: 'doughnut',
         data: {
@@ -179,14 +232,13 @@ var ct = document.getElementById("cursoCompleto").getContext('2d');
                 backgroundColor: [
                     "rgba(54, 162, 235, 0.2)",
                     "rgba( 247, 131, 106, 0.2)"
-                ],
-                label: 'Avance total'
+                ]
+                
             }],
             labels: [
                 'Completado',
                 'No completado'
-                
             ]
         }
     });
-//alert("Fin del documento");
+}

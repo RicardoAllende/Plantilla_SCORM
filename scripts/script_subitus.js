@@ -63,9 +63,12 @@ function ocultar_botones(){
 }
 
 function darEnlaceABotones(){
+    /**
+    * Se insertan los enlaces siguiente y anterior;
+    * si no existen, desaparece el enlace
+    */
     var actual = window.location.pathname;
     if (!existeAnterior(actual)) {
-        //$("#btnPrev").attr("disabled", true);
         $("#btnPrev").hide();
     }else{
         $("#btnPrev").attr("href", dameAnterior(actual));
@@ -82,14 +85,8 @@ function darEnlaceABotones(){
         }
         var endResult = api.LMSFinish("");
         finalizado = true;
-        //localStorage.setItem("session_time", "000000");
-        //window.location.href = "ver_avance.html";
     });
 
-    /**
-    * Se crean los botones, en ellos se insertan los enlaces siguiente
-    * y anterior en caso de existir; si no existe, desaparece el enlace
-    */
     if (!existeSiguiente(actual)) {
         $("#btnNext").hide();
     }else{

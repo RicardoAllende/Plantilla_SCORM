@@ -223,10 +223,10 @@
 						<a class="navbar-brand" href="index.html"> <img src="assets/images/logo.png" alt="Packet"/> </a>
 						<a class="navbar-brand navbar-brand-collapsed" href="index.html"> <img src="assets/images/logo-collapsed.png" alt="" /> </a>
 
-						<a href="ver_avance.html" id="botonModalMini" class="oculto" style="padding-left:5%;"><button class="btn pull-right menu-toggler visible-xs-block" id="menu-toggler" >
+						<button type="button" data-toggle="modal" class="btn pull-right menu-toggler visible-xs-block" id="menu-toggler"  data-target="#myModal">
 								<i class="fa fa-bell closed-icon"></i><i class="fa fa-folder-open open-icon"></i><small><i class="fa fa-caret-down margin-left-5"></i></small>
 								<!--<i class="fa fa-bell"></i> </a>-->
-						</button></a>
+						</button>
 					</div>
 					<!-- end: NAVBAR HEADER -->
 					<!-- start: NAVBAR COLLAPSE -->
@@ -254,7 +254,7 @@
 							<!-- end: MESSAGES DROPDOWN -->
 							<!-- start: ACTIVITIES DROPDOWN -->
 							<li class="dropdown">
-								<a id="botonModal" class="oculto"> <i class="fa fa-bell"></i> </a>
+								<a><button type="button" data-toggle="modal" data-target="#myModal"><i class="fa fa-bell"></i></button></a>
 								<ul class="dropdown-menu dropdown-light dropdown-messages dropdown-large animated fadeInUpShort">
 									<li>
 										<span class="dropdown-header"> You have new notifications</span>
@@ -299,26 +299,32 @@
 							Salir
 						</button>
 					</div>
-					<div id="contenedor"><div id="contenido"></div></div>
+					
 				</div>
 			</div>
-			
+			<div class="modal fade" id="myModal" role="dialog">
+				<div class="modal-dialog">
+				
+					<!-- Modal content-->
+					<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Avance del curso</h4>
+					</div>
+					<div class="modal-body">
+						<div id="contenedor"><div id="contenido"></div></div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+					</div>
+					
+				</div>
+			</div>
 			
 		</div>
 		
 		<!-- start: MAIN JAVASCRIPTS -->
-		<style>
-			#contenido{
-				padding: 3%;
-				padding-right: 15%;
-				background: #212529;
-				color: white;
-			}
-			#contenedor{
-				padding: 3%;
-				padding-right: 15%;
-			}
-		</style>
 		<script src="bower_components/jquery/dist/jquery.min.js"></script>
 		<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 		<script src="bower_components/components-modernizr/modernizr.js"></script>
