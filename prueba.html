@@ -36,7 +36,7 @@
 	// var paginaAnterior = document.referrer;
 	// paginaAnterior = paginaAnterior.substring(paginaAnterior.lastIndexOf('/') + 1);
 	// document.write("<br>La página anterior es: " + paginaAnterior);
-	var Base64 = {
+	/*var Base64 = {
 
 		// private property
 		_keyStr : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
@@ -171,10 +171,65 @@
 		}
 
 	}
-	var cadena = Base64.encode('w00t');
-	alert(cadena); // dzAwdA==
-	var cadena = Base64.decode('dzAwdA==');
-	alert(cadena); // w00t
+	// var cadena = Base64.encode('w00t');
+	// alert(cadena); // dzAwdA==
+	var cadena = Base64.decode('MDEwMzA0MTgxMzA3MTMwNzAyMDMwNDE4MTMwNzEzMDcwMzAzMDQxODEzMDcxMzA3MDQwMzA0MTgxMzA3MTMwNzA1MDMwNDE4MTMwNzEzMDcwNjAzMDQxODEzMDcxMzA4MDcwMzA0MTgxMzA4MTMwODA4MDMwNDE4MTMwODEzMDgwOTAzMDQxODEzMDgxMzA4');
+	alert(cadena); */
+
+	function lzw_encode(s) {
+		var dict = {};
+		var data = (s + "").split("");
+		var out = [];
+		var currChar;
+		var phrase = data[0];
+		var code = 256;
+		for (var i=1; i<data.length; i++) {
+			currChar=data[i];
+			if (dict[phrase + currChar] != null) {
+				phrase += currChar;
+			}
+			else {
+				out.push(phrase.length > 1 ? dict[phrase] : phrase.charCodeAt(0));
+				dict[phrase + currChar] = code;
+				code++;
+				phrase=currChar;
+			}
+		}
+		out.push(phrase.length > 1 ? dict[phrase] : phrase.charCodeAt(0));
+		for (var i=0; i<out.length; i++) {
+			out[i] = String.fromCharCode(out[i]);
+		}
+		return out.join("");
+	}
+
+	// Decompress an LZW-encoded string
+	function lzw_decode(s) {
+		var dict = {};
+		var data = (s + "").split("");
+		var currChar = data[0];
+		var oldPhrase = currChar;
+		var out = [currChar];
+		var code = 256;
+		var phrase;
+		for (var i=1; i<data.length; i++) {
+			var currCode = data[i].charCodeAt(0);
+			if (currCode < 256) {
+				phrase = data[i];
+			}
+			else {
+			phrase = dict[currCode] ? dict[currCode] : (oldPhrase + currChar);
+			}
+			out.push(phrase);
+			currChar = phrase.charAt(0);
+			dict[code] = oldPhrase + currChar;
+			code++;
+			oldPhrase = phrase;
+		}
+		return out.join("");
+	}
+	//var comprimido = lzw_encode("010304181307130702030418130713070303041813071307040304181307130705030418130713070603041813071308070304181308130808030418130813080903041813081308");
+	//alert(comprimido);
+	alert(lzw_decode("010304181353ĈĊ02ĂĄĆČċĉăāăąćĕēĎĐęēĜăĘĒěĕĀĞĤ55Č509ĨĚĪĬ08İĬĳ7ĶĉīĻ06ĺĲĽĭģıļĪĄŀ5"));
 	
 	</script>
 </body>

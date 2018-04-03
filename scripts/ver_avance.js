@@ -2,12 +2,14 @@ $("#botonModal").click(function(e){
     e.preventDefault();
     if ($("#botonModal").hasClass("oculto")) {
         $("#contenido").show();
+        $("#contenidoCurso").hide();
         $("#botonModal").removeClass("oculto");
         $("#botonModalMini").removeClass("oculto");
     }else{
         $("#botonModalMini").addClass("oculto");
         $("#botonModal").addClass("oculto");
         $("#contenido").hide();
+        $("#contenidoCurso").show();
     }
     
 });
@@ -15,12 +17,14 @@ $("#botonModalMini").click(function(e){
     e.preventDefault();
     if ($("#botonModalMini").hasClass("oculto")) {
         $("#contenido").show();
+        $("#contenidoCurso").hide();
         $("#botonModal").removeClass("oculto");
         $("#botonModalMini").removeClass("oculto");
     }else{
         $("#botonModalMini").addClass("oculto");
         $("#botonModal").addClass("oculto");
         $("#contenido").hide();
+        $("#contenidoCurso").show();
     }
 });
 function dameURL(id){
@@ -54,7 +58,7 @@ console.log(lessons);
 
 function recorrerResultados(){
     if(localStorage.getItem("lesson_location") != null){
-        var status = localStorage.getItem("lesson_location");
+        var status = lzw_decode(localStorage.getItem("lesson_location"));
         var completados = 0;
         var temp;
         for (var i = 0; i < pages.length; i++) {
@@ -83,22 +87,22 @@ function recorrerResultados(){
 
 //$("#contenido").append(localStorage.getItem("info_usuario") + "<br>" );
 //$("#contenido").append(localStorage.getItem("intento_actual") + "<br>" );
-$("#contenido").append("Tiempo de la sesión " + localStorage.getItem("session_time") + " minutos<br>" );
-if ((localStorage.getItem("status") == null) || (localStorage.getItem("status") == "0")   ) {
-    $("#contenido").append("Curso no iniciado<br>");
-}
-if (localStorage.getItem("status") == "1") {
+$("#contenido").append("Tiempo de la sesión " + lzw_decode(localStorage.getItem("session_time")) + " minutos<br>" );
+// if ((localStorage.getItem("status") == null) || (lzw_decode(localStorage.getItem("status")) == "0")   ) {
+//     $("#contenido").append("Curso no iniciado<br>");
+// }
+if (lzw_decode(localStorage.getItem("status")) == "passed") {
     $("#contenido").append("Curso iniciado<br>");
 }
-if (localStorage.getItem("status") == "2") {
+if (lzw_decode(localStorage.getItem("status")) == "incomplete") {
     $("#contenido").append("Curso terminado<br>");
 }
 
-$("#contenido").append("Tiempo total: " + localStorage.getItem("total_time") + "<br>" );
+$("#contenido").append("Tiempo total: " + lzw_decode(localStorage.getItem("total_time")) + "<br>" );
 
 $("#contenido").append("Detalle de las lecciones <br>");
 var resultados = [];
-var status = localStorage.getItem("lesson_location");
+var status = lzw_decode(localStorage.getItem("lesson_location"));
 var temp, porcentaje;
 for(var i =0; i<lessons.length; i++){
     var completados = 0;
