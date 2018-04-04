@@ -86,7 +86,6 @@ function verificarMarcador(){
 function marcarPagina(){
     $(".btnBookmark").addClass("paginaMarcada");
     $(".btnBookmark").html(`<i class="glyphicon glyphicon-check">`);
-    alert("Página guardada en sus marcadores");
     if (localStorage.getItem("lesson_location") != null) {
         
         let ind;
@@ -100,6 +99,7 @@ function marcarPagina(){
                 ind =  i;
             }
         }
+        $('#enlace'+ind).prepend('<i class="glyphicon glyphicon-bookmark"></i>');
         console.log("El índice es " + ind);
         var lesson_location = lzw_decode(localStorage.getItem("lesson_location"));
         var marcadorPagina = lesson_location.substring((ind * 3)+2, (ind*3) + 3);
@@ -116,12 +116,11 @@ function marcarPagina(){
         console.log("Después de guardar el marcador lesson_location = " + lesson_location );
         localStorage.setItem("lesson_location", lzw_encode(lesson_location));
     }
-    
+    alert("Página guardada en sus marcadores");
 }
 function desmarcarPagina(){
     $(".btnBookmark").removeClass("paginaMarcada");
     $(".btnBookmark").html(`<i class="glyphicon glyphicon-bookmark">`);
-    alert("Página desmarcada");
     if (localStorage.getItem("lesson_location") != null) {
         let ind;
         let nombre = window.location.pathname
@@ -134,6 +133,8 @@ function desmarcarPagina(){
                 ind =  i;
             }
         }
+        $('#enlace'+ind).html('<span class="title">' + pages[ind].title + ' </span>');
+        
         console.log("El índice es " + ind);
         var lesson_location = lzw_decode(localStorage.getItem("lesson_location"));
         var marcadorPagina = lesson_location.substring((ind * 3)+2, (ind*3) + 3);
@@ -149,6 +150,7 @@ function desmarcarPagina(){
         console.log("Lesson_location = " + lesson_location );
         localStorage.setItem("lesson_location", lzw_encode(lesson_location));
     }
+    alert("Página desmarcada");
 }
 $(".btnBookmark").click(function(){
     if($(this).hasClass("paginaMarcada")){
@@ -157,12 +159,6 @@ $(".btnBookmark").click(function(){
         marcarPagina();
     }
 });
-
-function ocultar_botones(){
-    $("#btnPrev").attr("disabled", true);
-    $("#btnNext").attr("disabled", true);
-    $("#btnFin").attr("disabled", true);
-}
 
 function darEnlaceABotones(){
     /**
@@ -179,12 +175,14 @@ function darEnlaceABotones(){
 
     $("#btnFin").click(function(){
         finalizar();
+        localStorage.setItem("finalizado", "1");
         alert("Finalizando");
         var api = getAPIHandle();
         if (api == null){
             alert("ERROR en función end()");
             return false;
         }
+        
         var endResult = api.LMSFinish("");
         finalizado = true;
     });
@@ -321,7 +319,7 @@ function verificarEstaPagina(){
         estadoPagina = parseInt(estadoPagina);
         console.log("Esta página ha sido visitada: " + estadoPagina + " veces");
         if(estadoPagina == 0){
-            alert("Página visitada por primera vez");
+            alert("Avance de esta página guardado");
         }
         estadoPagina++;
         if (estadoPagina>99) {
@@ -345,16 +343,19 @@ function verificarAvance(){
         var status = lzw_decode(localStorage.getItem("lesson_location"));
         var completados = 0;
         //console.log(status);
-        var temp;
+        var temp, marcador;
         for (var i = 0; i < pages.length; i++) {
             temp = status.substring(i * 3, (i*3) + 2);
-            //console.log(temp + " mayor que 0");
+            marcador = status.substring((i * 3)+2, (i*3) + 3);
             temp = parseInt(temp);
             if(temp>0){
                completados++;
                //console.log("Lá página en el índice " + i + " fue completada");
             }else{
                 //console.log("Incompleta Lá página en el índice " + i);
+            }
+            if (marcador == "1") {
+                $('#enlace'+i).prepend('<i class="glyphicon glyphicon-bookmark"></i>');
             }
         }
         console.log(completados + " completados, de " + pages.length);
@@ -373,7 +374,6 @@ function verificarAvance(){
         console.log("No existía la variable status");
         localStorage.setItem("status", lzw_encode("incomplete"));
     }
-    
 }
 
 function verificarLessonLocation(){ // Crea la variable
@@ -714,12 +714,14 @@ function findAPI(win) {
  //////////////////////////////////////////////////////////////////////////
  //////////////////////////////////////////////////////////////////////////
  function init(){
-       var api = getAPIHandle();
-        if (api == null){
-            alert("ERROR en init()");
-            return false;
-        }
-        var initResult = api.LMSInitialize("");
+    verificarUltimaPaginaVisitada();
+    //diferencia_lesson_location();   
+    var api = getAPIHandle();
+    if (api == null){
+        alert("ERROR en init()");
+        return false;
+    }
+    var initResult = api.LMSInitialize("");
  }
  
  //////////////////////////////////////////////////////////////////////////
@@ -734,7 +736,8 @@ function findAPI(win) {
  }
  
 function finalizar(){
-	var api = getAPIHandle();
+    guardaUltimaPaginaVisitada();
+    var api = getAPIHandle();
     if (api == null){
         alert("ERROR en función end()");
         return false;
@@ -743,8 +746,9 @@ function finalizar(){
     set("cmi.suspend_data", localStorage.getItem("intento_actual"));
     set("cmi.core.session_time", lzw_decode(localStorage.getItem("session_time")));
     //set("cmi.core.session_time", "02:21:00");
-    set("cmi.core.lesson_location", lzw_decode(localStorage.getItem("lesson_location")));
+    set("cmi.core.lesson_location", localStorage.getItem("lesson_location"));
     save();
+    
 }
  //////////////////////////////////////////////////////////////////////////
  //////////////////////////////////////////////////////////////////////////
@@ -786,27 +790,63 @@ function finalizar(){
      //La diferencia la hará 
  }
 
-//  function diferencia_lesson_location(){
-//     var api = getAPIHandle();
-//     if (api == null){
-//         alert("ERROR");
-//         return false;
-//     }
-//     var lesson_location_scorm = api.LMSGetValue("cmi.core.lesson_location");
-//     var lesson_location_local = lzw_decode(localStorage.getItem("lesson_location"));
-//     var temp, temp2;
-//     for (var i = 0; i < pages.length; i++) {
-//         temp = lesson_location_scorm.substring(i * 3, (i*3) + 2);
-//         temp2 = lesson_location_local.substring(i * 3, (i*3) + 2);
-//         //console.log(temp + " mayor que 0");
-//         temp = parseInt(temp);
-//         temp2 = parseInt(temp2);
-//         if(temp>temp2){
-//            //completados++;
-//            //console.log("Lá página en el índice " + i + " fue completada");
-//         }else{
-//             //console.log("Incompleta Lá página en el índice " + i);
-//         }
-//     }
+function guardaUltimaPaginaVisitada(){
+    let nombre=window.location.pathname;
+    nombre = nombre.substring(nombre.lastIndexOf('/') + 1);
+    if(nombre==""){//Index
+        nombre = "index.html";
+    }
+    localStorage.setItem("ultimaVisitada", nombre);
+}
 
-//  }
+function verificarUltimaPaginaVisitada(){
+    let ultimaVisitada = localStorage.getItem("ultimaVisitada");
+    if(ultimaVisitada != null){
+        if (localStorage.getItem("finalizado") != null) {
+            localStorage.removeItem("finalizado");
+            if(confirm("¿Desea ir a la última página visitada?")){
+                window.location.href = ultimaVisitada;
+            }
+        }
+    }
+}
+
+function diferencia_lesson_location(){ // Comprueba todas las páginas y guarda el número mayor de visitas en cada uno
+    if(localStorage.getItem("status") != null){
+        var status = lzw_decode(localStorage.getItem("lesson_location"));
+        var statusSCO = lzw_decode(get("cmi.core.lesson_location"));
+        var completados = 0;
+        //console.log(status);
+        var temp, tempSCO, mayor, marcador, marcador2, resultado="", cambio=false;
+        for (var i = 0; i < pages.length; i++) {
+            temp = status.substring(i * 3, (i*3) + 2);
+            marcador = status.substring((i * 3)+2, (i*3) + 3);
+            temp = parseInt(temp);
+            
+            tempSCO = statusSCO.substring(i * 3, (i*3) + 2);
+            marcador2 = statusSCO.substring((i * 3) + 2, (i*3) + 3);
+            tempSCO = parseInt(tempSCO);
+            if(temp >= tempSCO){
+                cambio = true;
+                mayor = temp;
+            }else{
+                mayor = tempSCO;
+            }
+            if (mayor>99) {
+                mayor=99;
+                
+            }
+            if (mayor<10) {
+                mayor = "0" + mayor.toString();
+            }
+            mayor = mayor.toString();
+            if((marcador == "1") || (marcador2 == "1") ){
+                marcador = "1";
+            }
+            resultado += (mayor + marcador);
+        }
+        if (cambio) {
+            console.log("Se encontró un mejor avance en lesson_location revisando localStorage y la variable en SCO, resultado= " + resultado);
+        }
+    }
+}

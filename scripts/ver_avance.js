@@ -16,15 +16,6 @@ function dameIndice(id){
     return -1;
 }
 
-var lessons ={
-    lecciones : [
-    ["01", "02", "03"],
-    ["04", "05", "06"],
-    ["07", "08", "09"]
-    ]
-};
-lessons = lessons.lecciones;
-//console.log(lessons);
 var lesson_location = lzw_decode(localStorage.getItem("lesson_location"));
 var lesson_status = lzw_decode( localStorage.getItem("status") );
 var background = [];

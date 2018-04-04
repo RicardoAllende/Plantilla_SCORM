@@ -12,6 +12,15 @@ var pages =JSON.parse('{"pages" : ['+
 
 pages = pages.pages;
 
+var lessons ={
+    lecciones : [
+    ["01", "02", "03"],
+    ["04", "05", "06"],
+    ["07", "08", "09"]
+    ]
+};
+lessons = lessons.lecciones;
+
 var resoluciones = {
 	"resoluciones": [
 		{"id": "01", "resolucion": "320x200"},

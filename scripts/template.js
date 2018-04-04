@@ -1,3 +1,15 @@
+var enlaces = "";
+for(let i =0; i<pages.length; i++){
+    enlaces += `<li>
+                    <a href=" `+ pages[i].url + `">
+                    <div class="item-content">
+                        <div class="item-inner" id="enlace` + i + `">
+                        <span class="title">`+ pages[i].title + `</span>
+                        </div>
+                    </div> </a>
+                </li>`;
+}
+
 document.write(`<div id="app">
     <!-- sidebar -->
     <div class="sidebar app-aside" id="sidebar">
@@ -62,83 +74,9 @@ document.write(`<div id="app">
                     <div class="navbar-title">
                         <span>Navegación dentro del curso</span>
                     </div>
-                    <ul class="main-navigation-menu">
-                        <li>
-                            <a href="index.html">
-                            <div class="item-content">
-                                <div class="item-inner">
-                                    <span class="title"> 01</span>
-                                </div>
-                            </div> </a>
-                        </li>
-                        <li>
-                            <a href="02.html">
-                            <div class="item-content">
-                                <div class="item-inner">
-                                    <span class="title"> 02</span>
-                                </div>
-                            </div> </a>
-                        </li>
-                        <li>
-                            <a href="03.html">
-                            <div class="item-content">
-                                <div class="item-inner">
-                                    <span class="title"> 03</span>
-                                </div>
-                            </div> </a>
-                        </li>
-                        <li>
-                            <a href="04.html">
-                            <div class="item-content">
-                                <div class="item-inner">
-                                    <span class="title"> 04</span>
-                                </div>
-                            </div> </a>
-                        </li>
-                        <li>
-                            <a href="05.html">
-                            <div class="item-content">
-                                <div class="item-inner">
-                                    <span class="title"> 05</span>
-                                </div>
-                            </div> </a>
-                        </li>
-                        <li>
-                            <a href="06.html">
-                            <div class="item-content">
-                                <div class="item-inner">
-                                    <span class="title"> 06</span>
-                                </div>
-                            </div> </a>
-                        </li>
-                        <li>
-                            <a href="07.html">
-                            <div class="item-content">
-                                <div class="item-inner">
-                                    <span class="title"> 07 </span>
-                                </div>
-                            </div> </a>
-                        </li>
-                        <li>
-                            <a href="08.html">
-                            <div class="item-content">
-                                <div class="item-inner">
-                                    <span class="title"> 08 </span>
-                                </div>
-                            </div> </a>
-                        </li>
-                        <li>
-                            <a href="09.html">
-                            <div class="item-content">
-                                <!--<div class="item-media">
-                                    <div class="lettericon" data-text="Layouts" data-size="sm" data-char-count="2"></div>
-                                </div>-->
-                                <div class="item-inner">
-                                    <span class="title"> 09 </span>
-                                </div>
-                            </div> </a>
-                        </li>
-                    </ul>
+                    <ul class="main-navigation-menu">`
+                    + enlaces + 
+                    `</ul>
                     <!-- end: MAIN NAVIGATION MENU -->
                 </nav>
             </div>
@@ -225,7 +163,7 @@ document.write(`<div id="app">
         <!-- end: TOP NAVBAR -->
         <div class="main-content">
             <div id="contenidoCurso">
-                <center><h1>Contenido del curso</h1></center>
+                <center><h1>` + window.location.pathname + `</h1></center>
                 
                 <a href="index.html" id="btnNext" class="btn btn-primary btn-lg" style="display:scroll;position:fixed;bottom:50%;right:0px;">
                 Siguiente
@@ -310,6 +248,5 @@ document.write(`<div id="app">
         Index.init();
     });
     </script>
-    <script src="scripts/config.js"></script>
     <script type="text/javascript" src="scripts/script_subitus.js"></script>
     <script src="scripts/ver_avance.js"></script>`);
