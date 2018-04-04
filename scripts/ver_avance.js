@@ -34,7 +34,7 @@ var etiquetas = [];
 $("#contenido").append("Tiempo de la sesión " + lzw_decode(localStorage.getItem("session_time")) + " minutos<br><br>" );
 $("#contenido").append("Lecciones: ");
 for (let index = 0; index < lessons.length; index++) {
-    $("#contenido").append("<button class='btnCambiarAvance' data-leccion='" + index + "' >" + (index + 1) + "</button>");
+    $("#contenido").append("<button class='btnCambiarAvance' data-leccion='" + index + "' >" + (index + 1) + "</button>&nbsp;");
     background.push('rgba(54, 162, 235, 0.2)');
     borders.push('rgba(54, 162, 235, 1)');
     etiquetas.push("Lección " + (index + 1));
@@ -47,9 +47,7 @@ mostrarTotalCurso();
 
 
 $(".btnCambiarAvance").click(function(){
-    //alert("Clic en el botón de la clase btnCambiarAvance " + $(this).data("leccion"));
     let leccion = $(this).data("leccion");
-    //$("#avance").html($(this).data("leccion"));
     if($(this).data("leccion") == "-"){
         mostrarTotalCurso();
     }else{
@@ -66,7 +64,7 @@ function porcentajeLecciones(){
         var leccion = lessons[i];
         for (var j = 0; j < leccion.length; j++) {
             var indice = dameIndice(leccion[j]);
-            temp = lesson_location.substring(indice * 2, (indice*2) + 2);
+            temp = lesson_location.substring(indice * 3, (indice*3) + 2);
             temp = parseInt(temp);
             if(temp>0){
                 completados++;
@@ -88,7 +86,7 @@ function porcentajeLecciones(){
 //     var completados=0;
 //     for (var j = 0; j < leccion.length; j++) {
 //         var indice = dameIndice(leccion[j]);
-//         temp = lesson_location.substring(indice * 2, (indice*2) + 2);
+//         temp = lesson_location.substring(indice * 3, (indice*3) + 2);
 //         temp = parseInt(temp);
 //         if(temp>0){
 //             completados++;
@@ -100,7 +98,7 @@ function porcentajeLecciones(){
 //         var leccion = lessons[i];
 //         for (var j = 0; j < leccion.length; j++) {
 //             var indice = dameIndice(leccion[j]);
-//             temp = lesson_location.substring(indice * 2, (indice*2) + 2);
+//             temp = lesson_location.substring(indice * 3, (indice*3) + 2);
 //             temp = parseInt(temp);
 //             if(temp>0){
 //                 completados++;
@@ -119,7 +117,7 @@ function recorrerTodosLosResultados(leccion){
         var completados = 0;
         var temp;
         for (var i = 0; i < pages.length; i++) {
-            temp = lesson_location.substring(i * 2, (i*2) + 2);
+            temp = lesson_location.substring(i * 3, (i*3) + 2);
             temp = parseInt(temp);
             if(temp>0){
                 completados++;
@@ -157,7 +155,7 @@ function recorrerResultados(numero_leccion){
         let leccion = lessons[numero_leccion];
         for (let index = 0; index < leccion.length; index++) {
             posicion = indiceDe(leccion[index]);
-            temp = lesson_location.substring(posicion * 2, (posicion*2) + 2);
+            temp = lesson_location.substring(posicion * 3, (posicion*3) + 2);
             temp = parseInt(temp);
             if(temp>0){
                 completados++;
@@ -180,7 +178,7 @@ function mostrarTotalCurso(){
     $("#avance").html("<br>");
     $("#avance").append("Información del curso :<br>");
     $("#avance").append("Estado del curso: " + lesson_status);
-    $("#avance").append(`<div class='row' style='padding: 50px; height: 250px;'>
+    $("#avance").append(`<div class='row' style='padding: 50px;'>
         <div class='col-md-6'>
         <canvas id='myChart'></canvas>
         </div>

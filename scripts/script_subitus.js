@@ -3,6 +3,7 @@ var _Debug = false;
 var finalizado = false;
 
 darEnlaceABotones();
+
 if(typeof(Storage)!= "undefined"){
 	verificar_info_usuario();
     verificarVariables();
@@ -55,6 +56,107 @@ if(typeof(Storage)!= "undefined"){
         code = "";
     }
 }
+verificarMarcador();
+//marcarPagina();
+function dameIndice(nombre){
+    nombre = nombre.substring(nombre.lastIndexOf('/') + 1);
+    if(nombre==""){//Index
+        nombre = "index.html";
+    }
+    for (let i = 0; i < pages.length; i++) {
+        if(pages[i].url == nombre){
+            return i;
+        }
+    }
+    return -1;
+}
+function verificarMarcador(){
+	if (localStorage.getItem("lesson_location") != null) {
+        let indice = dameIndice(window.location.pathname);
+        //console.log("En función verificarmarcador" + dameIndice(window.location.pathname));
+        let lesson_location = lzw_decode(localStorage.getItem("lesson_location"));
+        let marcador = lesson_location.substring((indice * 3)+2, (indice*3) + 3);
+        //alert("El marcador de esta página es: " + marcador + ", lesson_location es: " + lesson_location);
+        if(marcador == "1"){
+            $(".btnBookmark").addClass("paginaMarcada");
+            $(".btnBookmark").html(`<i class="glyphicon glyphicon-check">`);
+        }
+    }
+}
+function marcarPagina(){
+    $(".btnBookmark").addClass("paginaMarcada");
+    $(".btnBookmark").html(`<i class="glyphicon glyphicon-check">`);
+    alert("Página guardada en sus marcadores");
+    if (localStorage.getItem("lesson_location") != null) {
+        
+        let ind;
+        let nombre = window.location.pathname
+        nombre = nombre.substring(nombre.lastIndexOf('/') + 1);
+        if(nombre==""){//Index
+            nombre = "index.html";
+        }
+        for (let i = 0; i < pages.length; i++) {
+            if(pages[i].url == nombre){
+                ind =  i;
+            }
+        }
+        console.log("El índice es " + ind);
+        var lesson_location = lzw_decode(localStorage.getItem("lesson_location"));
+        var marcadorPagina = lesson_location.substring((ind * 3)+2, (ind*3) + 3);
+        console.log("Recuperado de localStorage " + lesson_location);
+        //alert(marcadorPagina);
+        //console.log("El marcador de esta página era: " + marcadorPagina + ", lesson_location es: " + lesson_location);
+        var principio = lesson_location.substring(0, (ind*3) + 2);
+        //console.log("Principio " + principio);
+        var final = lesson_location.substring((ind*3)+3);
+        //console.log("Final " + final);
+        marcadorPagina = "1";
+        //console.log("El marcador de esta página ahora es: " + marcadorPagina);
+        lesson_location = principio + marcadorPagina + final;
+        console.log("Después de guardar el marcador lesson_location = " + lesson_location );
+        localStorage.setItem("lesson_location", lzw_encode(lesson_location));
+    }
+    
+}
+function desmarcarPagina(){
+    $(".btnBookmark").removeClass("paginaMarcada");
+    $(".btnBookmark").html(`<i class="glyphicon glyphicon-bookmark">`);
+    alert("Página desmarcada");
+    if (localStorage.getItem("lesson_location") != null) {
+        let ind;
+        let nombre = window.location.pathname
+        nombre = nombre.substring(nombre.lastIndexOf('/') + 1);
+        if(nombre==""){//Index
+            nombre = "index.html";
+        }
+        for (let i = 0; i < pages.length; i++) {
+            if(pages[i].url == nombre){
+                ind =  i;
+            }
+        }
+        console.log("El índice es " + ind);
+        var lesson_location = lzw_decode(localStorage.getItem("lesson_location"));
+        var marcadorPagina = lesson_location.substring((ind * 3)+2, (ind*3) + 3);
+        console.log("Recuperado de localStorage" + lesson_location);
+        console.log("El marcador de esta página era: " + marcadorPagina + ", lesson_location es: " + lesson_location);
+        var principio = lesson_location.substring(0, (ind*3) + 2);
+        console.log("Principio " + principio);
+        var final = lesson_location.substring((ind*3)+3);
+        console.log("Final " + final);
+        marcadorPagina = "0";
+        console.log("El marcador de esta página ahora es: " + marcadorPagina);
+        lesson_location = principio + marcadorPagina + final;
+        console.log("Lesson_location = " + lesson_location );
+        localStorage.setItem("lesson_location", lzw_encode(lesson_location));
+    }
+}
+$(".btnBookmark").click(function(){
+    if($(this).hasClass("paginaMarcada")){
+        desmarcarPagina();
+    }else{
+        marcarPagina();
+    }
+});
 
 function ocultar_botones(){
     $("#btnPrev").attr("disabled", true);
@@ -183,19 +285,6 @@ function dameSiguiente(nombre){
     }
 }
 
-function dameIndice(nombre){
-    nombre = nombre.substring(nombre.lastIndexOf('/') + 1);
-    if(nombre==""){//Index
-        nombre = "index.html";
-    }
-    for (var i = 0; i < pages.length; i++) {
-        if(pages[i].url == nombre){
-            return i;
-        }
-    }
-    return -1;
-}
-
 function dameNombre(id){
     for (var i = 0; i < pages.length; i++) {
         if(pages[i].url == id){
@@ -226,9 +315,9 @@ function verificarEstaPagina(){
     if (localStorage.getItem("lesson_location") != null) {
         var indice = dameIndice(window.location.pathname);
         var lesson_location = lzw_decode(localStorage.getItem("lesson_location"));
-        var estadoPagina = lesson_location.substring(indice * 2, (indice*2) + 2);
-        var principio = lesson_location.substring(0, (indice*2));
-        var final = lesson_location.substring((indice*2) + 2);
+        var estadoPagina = lesson_location.substring(indice * 3, (indice*3) + 2);
+        var principio = lesson_location.substring(0, (indice*3));
+        var final = lesson_location.substring((indice*3) + 2);
         estadoPagina = parseInt(estadoPagina);
         console.log("Esta página ha sido visitada: " + estadoPagina + " veces");
         if(estadoPagina == 0){
@@ -246,7 +335,7 @@ function verificarEstaPagina(){
         console.log("Ahora el contador de esta página indica " + estadoPagina + " visitas");
         var lesson_location = localStorage.setItem("lesson_location", lzw_encode(principio + estadoPagina + final));
     }else{
-        alert("Aún no se ha creado lesson_location");
+        alert("Hubo un error y aún no se ha creado lesson_location");
     }
     
 }
@@ -258,7 +347,7 @@ function verificarAvance(){
         //console.log(status);
         var temp;
         for (var i = 0; i < pages.length; i++) {
-            temp = status.substring(i * 2, (i*2) + 2);
+            temp = status.substring(i * 3, (i*3) + 2);
             //console.log(temp + " mayor que 0");
             temp = parseInt(temp);
             if(temp>0){
@@ -269,6 +358,12 @@ function verificarAvance(){
             }
         }
         console.log(completados + " completados, de " + pages.length);
+        let nuevo = parseInt(completados / pages.length * 100);
+        console.log("Se está estableciendo el valor de la barra de progreso en: " + nuevo);
+        $('#progress-bar').attr("aria-valuenow",nuevo); 
+        $('#progress-bar').attr("style","width:" + nuevo + "%"); 
+        $('#progress-bar').html("avance: " + nuevo + "%");
+
         if(completados == pages.length){
             localStorage.setItem("status", lzw_encode("passed"));
         }else{
@@ -285,9 +380,9 @@ function verificarLessonLocation(){ // Crea la variable
 	if(localStorage.getItem("lesson_location") == null){
         var paginas = "";
         for (let i = 0; i < pages.length; i++) {
-            paginas += "00";
+            paginas += "000";
         }
-        console.log("Lesson_location creado");
+        console.log("Lesson_location creado "+paginas);
 		localStorage.setItem("lesson_location", lzw_encode(paginas));
 	}
 }
@@ -701,8 +796,8 @@ function finalizar(){
 //     var lesson_location_local = lzw_decode(localStorage.getItem("lesson_location"));
 //     var temp, temp2;
 //     for (var i = 0; i < pages.length; i++) {
-//         temp = lesson_location_scorm.substring(i * 2, (i*2) + 2);
-//         temp2 = lesson_location_local.substring(i * 2, (i*2) + 2);
+//         temp = lesson_location_scorm.substring(i * 3, (i*3) + 2);
+//         temp2 = lesson_location_local.substring(i * 3, (i*3) + 2);
 //         //console.log(temp + " mayor que 0");
 //         temp = parseInt(temp);
 //         temp2 = parseInt(temp2);
