@@ -644,7 +644,7 @@ function finalizar(){
         alert("ERROR en función end()");
         return false;
     }
-    set("cmi.core.lesson_status",lzw_decode( localStorage.getItem("status")));
+    set("cmi.core.lesson_status",lzw_decode( localStorage.getItem("status") ));
     set("cmi.suspend_data", localStorage.getItem("intento_actual"));
     set("cmi.core.session_time", lzw_decode(localStorage.getItem("session_time")));
     //set("cmi.core.session_time", "02:21:00");

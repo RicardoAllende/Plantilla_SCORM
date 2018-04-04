@@ -24,24 +24,37 @@ var lessons ={
     ]
 };
 lessons = lessons.lecciones;
-console.log(lessons);
-var status = lzw_decode(localStorage.getItem("lesson_location"));
+//console.log(lessons);
+var lesson_location = lzw_decode(localStorage.getItem("lesson_location"));
+var lesson_status = lzw_decode( localStorage.getItem("status") );
+var background = [];
+var borders = [];
+var etiquetas = [];
 
-$("#contenido").append("Tiempo de la sesión " + lzw_decode(localStorage.getItem("session_time")) + " minutos<br>" );
-    $("#contenido").append(`Lecciones: <button data-leccion='0' class='btnCambiarAvance'>1</button>&nbsp;
-    <button data-leccion='1' class='btnCambiarAvance'>2</button>&nbsp;
-    <button data-leccion='2' class='btnCambiarAvance'>3</button>&nbsp;
-    <button data-leccion='-' class='btnCambiarAvance'>Total del curso</button>`);
+$("#contenido").append("Tiempo de la sesión " + lzw_decode(localStorage.getItem("session_time")) + " minutos<br><br>" );
+$("#contenido").append("Lecciones: ");
+for (let index = 0; index < lessons.length; index++) {
+    $("#contenido").append("<button class='btnCambiarAvance' data-leccion='" + index + "' >" + (index + 1) + "</button>");
+    background.push('rgba(54, 162, 235, 0.2)');
+    borders.push('rgba(54, 162, 235, 1)');
+    etiquetas.push("Lección " + (index + 1));
+}
+
+$("#contenido").append(`<button data-leccion='-' class='btnCambiarAvance'>Total del curso</button><br>`);
 mostrarTotalCurso();
 
 
 
 
 $(".btnCambiarAvance").click(function(){
-    alert("Clic en el botón de la clase btnCambiarAvance " + $(this).data("leccion"));
-    $("#avance").html($(this).data("leccion"));
+    //alert("Clic en el botón de la clase btnCambiarAvance " + $(this).data("leccion"));
+    let leccion = $(this).data("leccion");
+    //$("#avance").html($(this).data("leccion"));
     if($(this).data("leccion") == "-"){
         mostrarTotalCurso();
+    }else{
+        leccion = parseInt(leccion);
+        mostrarLeccion(leccion);
     }
 });
 
@@ -53,7 +66,7 @@ function porcentajeLecciones(){
         var leccion = lessons[i];
         for (var j = 0; j < leccion.length; j++) {
             var indice = dameIndice(leccion[j]);
-            temp = status.substring(indice * 2, (indice*2) + 2);
+            temp = lesson_location.substring(indice * 2, (indice*2) + 2);
             temp = parseInt(temp);
             if(temp>0){
                 completados++;
@@ -75,7 +88,7 @@ function porcentajeLecciones(){
 //     var completados=0;
 //     for (var j = 0; j < leccion.length; j++) {
 //         var indice = dameIndice(leccion[j]);
-//         temp = status.substring(indice * 2, (indice*2) + 2);
+//         temp = lesson_location.substring(indice * 2, (indice*2) + 2);
 //         temp = parseInt(temp);
 //         if(temp>0){
 //             completados++;
@@ -87,7 +100,7 @@ function porcentajeLecciones(){
 //         var leccion = lessons[i];
 //         for (var j = 0; j < leccion.length; j++) {
 //             var indice = dameIndice(leccion[j]);
-//             temp = status.substring(indice * 2, (indice*2) + 2);
+//             temp = lesson_location.substring(indice * 2, (indice*2) + 2);
 //             temp = parseInt(temp);
 //             if(temp>0){
 //                 completados++;
@@ -102,23 +115,23 @@ function porcentajeLecciones(){
 // }
 
 function recorrerTodosLosResultados(leccion){
-    if(localStorage.getItem("lesson_location") != null){
+    if(lesson_location != null){
         var completados = 0;
         var temp;
         for (var i = 0; i < pages.length; i++) {
-            temp = status.substring(i * 2, (i*2) + 2);
+            temp = lesson_location.substring(i * 2, (i*2) + 2);
             temp = parseInt(temp);
             if(temp>0){
                 completados++;
-                $("#avance").append("<a class='btn btn-primary' href='"+dameURL(pages[i].id)+"'>" + (i + 1) + "</a>" );
+                $("#avancePaginas").append("<a class='btn btn-primary' href='"+dameURL(pages[i].id)+"'>" + (i + 1) + "</a>" );
             }else{
-                $("#avance").append("<a href='"+dameURL(pages[i].id)+"'><button class='btn'>" + (i + 1) + "</button></a>" );
+                $("#avancePaginas").append("<a href='"+dameURL(pages[i].id)+"'><button class='btn'>" + (i + 1) + "</button></a>" );
             }
         }
         return completados;
     }else{
         for (var i = 0; i < pages.length; i++) {
-            $("#avance").append(
+            $("#avancePaginas").append(
                 "<a class='btn'  style='background: #AAB7B8;' href='"+
                 dameURL(pages[i].id)+"'>" + pages[i].url + "</a>"
             );
@@ -137,43 +150,36 @@ function indiceDe(id){
 }
 
 function recorrerResultados(numero_leccion){
-    if(localStorage.getItem("lesson_location") != null){
+    if(lesson_location != null){
         var completados = 0;
         var temp;
-        for (let index = 0; index < lessons.length; index++) {
-            let posicion = indiceDe(lessons[j])
-            temp = status.substring(posicion * 2, (posicion*2) + 2);
+        let posicion;
+        let leccion = lessons[numero_leccion];
+        for (let index = 0; index < leccion.length; index++) {
+            posicion = indiceDe(leccion[index]);
+            temp = lesson_location.substring(posicion * 2, (posicion*2) + 2);
             temp = parseInt(temp);
             if(temp>0){
                 completados++;
-                $("#avance").append("<a class='btn btn-primary' href='"+dameURL(lessons[j])+"'>" + (index + 1) + "</a>" );
+                $("#avancePaginas").append("<a class='btn btn-primary' href='"+dameURL(leccion[index])+"'>" + (index + 1) + "</a>" );
             }else{
-                $("#avance").append("<a href='"+dameURL(lessons[j])+"'><button class='btn'>" + (index + 1) + "</button></a>" );
+                $("#avancePaginas").append("<a href='"+dameURL(leccion[index])+"'><button class='btn'>" + (index + 1) + "</button></a>" );
             }
         }
-        // for (var i = 0; i < pages.length; i++) {
-        //     temp = status.substring(i * 2, (i*2) + 2);
-        //     temp = parseInt(temp);
-        //     if(temp>0){
-        //         completados++;
-        //         $("#avance").append("<a class='btn btn-primary' href='"+dameURL(pages[i].id)+"'>" + (i + 1) + "</a>" );
-        //     }else{
-        //         $("#avance").append("<a href='"+dameURL(pages[i].id)+"'><button class='btn'>" + (i + 1) + "</button></a>" );
-        //     }
-        // }
         return completados;
     }else{
-        for (var i = 0; i < pages.length; i++) {
-            $("#avance").append(
-                "<a class='btn'  style='background: #AAB7B8;' href='"+
-                dameURL(pages[i].id)+"'>" + pages[i].url + "</a>"
-            );
+        for (let index = 0; index < lessons[numero_leccion].length; index++) {
+            posicion = indiceDe(lessons[j]);
+            $("#avancePaginas").append("<a href='"+dameURL(lessons[j])+"'><button class='btn'>" + (index + 1) + "</button></a>" )
         }
         return 0;
     }
 }
 
 function mostrarTotalCurso(){
+    $("#avance").html("<br>");
+    $("#avance").append("Información del curso :<br>");
+    $("#avance").append("Estado del curso: " + lesson_status);
     $("#avance").append(`<div class='row' style='padding: 50px; height: 250px;'>
         <div class='col-md-6'>
         <canvas id='myChart'></canvas>
@@ -181,32 +187,24 @@ function mostrarTotalCurso(){
         <div class='col-md-6'>
         <canvas id='cursoCompleto'></canvas>
         </div>
-    </div>`);
+    </div><center><div id="avancePaginas"></div><center>`);
 
     resultados = porcentajeLecciones();
 
-    $("#avance").append("Detalle total de las páginas<br><div style='background: #e9e9e9;'");
+    $("#avancePaginas").append("Detalle total de las páginas<br><div style='background: #e9e9e9;'");
     var terminadas = recorrerTodosLosResultados();
-    //$("#avance").append("</div><hr>");
+
 
     var ctx = document.getElementById("myChart").getContext('2d');
     var myChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ["Lección 1", "Lección 2", "Lección 3"],
+            labels: etiquetas,
             datasets: [{
                 label: 'Progreso del curso (%)',
                 data: resultados,
-                backgroundColor: [
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(54, 162, 235, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(54, 162, 235, 1)'
-                ],
+                backgroundColor: background,
+                borderColor: borders,
                 borderWidth: 1
             }]
         },
@@ -234,6 +232,46 @@ function mostrarTotalCurso(){
                     "rgba( 247, 131, 106, 0.2)"
                 ]
                 
+            }],
+            labels: [
+                'Completado',
+                'No completado'
+            ]
+        }
+    });
+}
+
+function mostrarLeccion(id){
+    $("#avance").html("<br>");
+    $("#avance").append("Información de la lección " + (id+1) + ":<br>");
+    // $("#avance").append(`<div class='row' style='padding: 50px; height: 200px;'>
+    //     <div class='col-md-8'>
+    //         <canvas id='porcentajeLeccion'></canvas>
+    //     </div>
+    //     <div class='col-md-4' style="bottom:10%;">
+    //         <div id='avancePaginas'></div>
+    //     </div>
+    // </div>`);
+    $("#avance").append(`
+        <center><div style="width: 250px; height: 200px;">
+            <canvas id='porcentajeLeccion'></canvas>
+        </div><center>
+        <center><div id="avancePaginas">Detalle de las páginas de la lección: <br></div></center>
+        `);
+    var terminadas = recorrerResultados(id);
+    var ct = document.getElementById("porcentajeLeccion").getContext('2d');
+    var myPieChart = new Chart(ct,{
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [
+                    terminadas,
+                    lessons[id].length - terminadas
+                ],
+                backgroundColor: [
+                    "rgba(54, 162, 235, 0.2)",
+                    "rgba( 247, 131, 106, 0.2)"
+                ]
             }],
             labels: [
                 'Completado',
