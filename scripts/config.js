@@ -1,3 +1,4 @@
+var enPrueba = true;
 var pages =JSON.parse('{"pages" : ['+
                 '{"id": "01","url": "index.html", "title": "Subitus" },'+
                 '{"id": "02","url": "02.html","title": "Moodle"},'+
@@ -7,7 +8,8 @@ var pages =JSON.parse('{"pages" : ['+
                 '{"id": "06","url": "06.html","title": "Chamillo"},'+
                 '{"id": "07","url": "07.html","title": "Contacto"},'+
                 '{"id": "08","url": "08.html","title": "Detalle de post"},'+
-                '{"id": "09","url": "09.html","title": "E-learning"}'+
+                '{"id": "09","url": "09.html","title": "E-learning"},'+
+                '{"id": "10","url": "examen.html","title": "Prueba del curso"}'+
                 ']}');
 
 pages = pages.pages;
