@@ -23,12 +23,12 @@ var borders = [];
 var etiquetas = [];
 
 $("#contenido").append("Tiempo de la sesión " + lzw_decode(localStorage.getItem("session_time")) + " minutos<br><br>" );
-$("#contenido").append("Lecciones: ");
+$("#contenido").append("Temas: ");
 for (let index = 0; index < lessons.length; index++) {
     $("#contenido").append("<button class='btnCambiarAvance' data-leccion='" + index + "' >" + (index + 1) + "</button>&nbsp;");
     background.push('rgba(54, 162, 235, 0.2)');
     borders.push('rgba(54, 162, 235, 1)');
-    etiquetas.push("Lección " + (index + 1));
+    etiquetas.push("Tema " + (index + 1));
 }
 
 $("#contenido").append(`<button data-leccion='-' class='btnCambiarAvance'>Total del curso</button><br>`);
@@ -43,11 +43,11 @@ $(".btnCambiarAvance").click(function(){
         mostrarTotalCurso();
     }else{
         leccion = parseInt(leccion);
-        mostrarLeccion(leccion);
+        mostrarTema(leccion);
     }
 });
 
-function porcentajeLecciones(){
+function porcentajeTemas(){
     var resultados = [];
     var temp, porcentaje;
     for(var i =0; i<lessons.length; i++){
@@ -178,7 +178,7 @@ function mostrarTotalCurso(){
         </div>
     </div><center><div id="avancePaginas"></div><center>`);
 
-    resultados = porcentajeLecciones();
+    resultados = porcentajeTemas();
 
     $("#avancePaginas").append("Detalle total de las páginas<br><div style='background: #e9e9e9;'");
     var terminadas = recorrerTodosLosResultados();
@@ -230,9 +230,9 @@ function mostrarTotalCurso(){
     });
 }
 
-function mostrarLeccion(id){
+function mostrarTema(id){
     $("#avance").html("<br>");
-    $("#avance").append("Información de la lección " + (id+1) + ":<br>");
+    $("#avance").append("Información del tema" + (id+1) + ":<br>");
     // $("#avance").append(`<div class='row' style='padding: 50px; height: 200px;'>
     //     <div class='col-md-8'>
     //         <canvas id='porcentajeLeccion'></canvas>

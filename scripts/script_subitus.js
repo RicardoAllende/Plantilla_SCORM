@@ -63,13 +63,13 @@ function verificarMarcador(){
         }
         if(marcador == "1"){
             $(".btnBookmark").addClass("paginaMarcada");
-            $(".btnBookmark").html(`<i class="glyphicon glyphicon-check">`);
+            $(".btnBookmark").html(`<img src="assets/images/Bookmark-rojo.png" alt="Desmarcar página">`);
         }
     }
 }
 function marcarPagina(){
     $(".btnBookmark").addClass("paginaMarcada");
-    $(".btnBookmark").html(`<i class="glyphicon glyphicon-check">`);
+    $(".btnBookmark").html(`<img src="assets/images/Bookmark-rojo.png" alt="Desmarcar página">`);
     if (localStorage.getItem("lesson_location") != null) {
         
         let ind;
@@ -83,7 +83,7 @@ function marcarPagina(){
                 ind =  i;
             }
         }
-        $('#enlace'+ind).prepend('<i class="glyphicon glyphicon-bookmark"></i>');
+        $('#enlace'+ind).html('<i class="glyphicon glyphicon-bookmark"></i>');
         console.log("El índice es " + ind);
         var lesson_location = lzw_decode(localStorage.getItem("lesson_location"));
         var marcadorPagina = lesson_location.substring((ind * 3)+2, (ind*3) + 3);
@@ -107,7 +107,7 @@ function marcarPagina(){
 }
 function desmarcarPagina(){
     $(".btnBookmark").removeClass("paginaMarcada");
-    $(".btnBookmark").html(`<i class="glyphicon glyphicon-bookmark">`);
+    $(".btnBookmark").html(`<i class="glyphicon glyphicon-bookmark"></i>`);
     if (localStorage.getItem("lesson_location") != null) {
         let ind;
         let nombre = window.location.pathname
@@ -163,7 +163,7 @@ function darEnlaceABotones(){
         $("#btnPrev").show();
     }
 
-    $("#btnFin").click(function(){
+    $(".btnFin").click(function(){
         finalizar();
         localStorage.setItem("finalizado", "1");
         alert("Finalizando");
@@ -681,7 +681,7 @@ function findAPI(win) {
  
  //////////////////////////////////////////////////////////////////////////
  //////////////////////////////////////////////////////////////////////////
- function init(){
+function init(){
     verificarUltimaPaginaVisitada();
     //diferencia_lesson_location();   
     var api = getAPIHandle();
@@ -689,8 +689,11 @@ function findAPI(win) {
         alert("ERROR en init()");
         return false;
     }
-    var initResult = api.LMSInitialize("");
- }
+    if(localStorage.getItem("isInit") == null){
+        var initResult = api.LMSInitialize("");
+        localStorage.setItem("isInit", "1");
+    }
+}
  
  //////////////////////////////////////////////////////////////////////////
  //////////////////////////////////////////////////////////////////////////
@@ -710,6 +713,7 @@ function finalizar(){
         alert("ERROR en función end()");
         return false;
     }
+    localStorage.removeItem("isInit");
     set("cmi.core.lesson_status",lzw_decode( localStorage.getItem("status") ));
     set("cmi.suspend_data", localStorage.getItem("info_usuario") +  localStorage.getItem("suspend_data"));
     set("cmi.core.session_time", lzw_decode(localStorage.getItem("session_time")));

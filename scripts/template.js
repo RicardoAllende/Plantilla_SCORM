@@ -1,7 +1,7 @@
 var enlaces = "";
 for(let i =0; i<pages.length; i++){
     enlaces += `<li>
-                    <a href=" `+ pages[i].url + `">
+                    <a href="`+ pages[i].url + `">
                     <div class="item-content">
                         <div class="item-inner" id="enlace` + i + `">
                         <span class="title">`+ pages[i].title + `</span>
@@ -9,26 +9,21 @@ for(let i =0; i<pages.length; i++){
                     </div> </a>
                 </li>`;
 }
+enlaces += `<li>
+    <a class='btnFin'>
+    <div class="item-content">
+        <div class="item-inner">
+        <span class="title">Salir</span>
+        </div>
+    </div> </a>
+</li>`;
 
 document.write(`<div id="app">
     <!-- sidebar -->
     <div class="sidebar app-aside" id="sidebar">
         <div class="sidebar-container perfect-scrollbar">
             <div>
-                <!-- start: SEARCH FORM -->
-                <div class="search-form hidden-md hidden-lg">
-                        <a class="s-open" href="#"> <i class="ti-search"></i> </a>
-                        <form class="navbar-form" role="search">
-                            <a class="s-remove" href="#" target=".navbar-form"> <i class="ti-close"></i> </a>
-                            <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Enter search text here...">
-                                <button class="btn search-button" type="submit">
-                                    <i class="ti-search"></i>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                    <!-- end: SEARCH FORM -->
+                
                 <!-- start: USER OPTIONS -->
                 <div class="nav-user-wrapper">
                     <div class="media">
