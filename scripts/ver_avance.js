@@ -25,13 +25,13 @@ var etiquetas = [];
 $("#contenido").append("Tiempo de la sesión " + lzw_decode(localStorage.getItem("session_time")) + " minutos<br><br>" );
 $("#contenido").append("Temas: ");
 for (let index = 0; index < lessons.length; index++) {
-    $("#contenido").append("<button class='btnCambiarAvance' data-leccion='" + index + "' >" + (index + 1) + "</button>&nbsp;");
+    //$("#contenido").append("<button class='btnCambiarAvance' data-leccion='" + index + "' >" + (index + 1) + "</button>&nbsp;");
     background.push('rgba(54, 162, 235, 0.2)');
     borders.push('rgba(54, 162, 235, 1)');
     etiquetas.push("Tema " + (index + 1));
 }
-
-$("#contenido").append(`<button data-leccion='-' class='btnCambiarAvance'>Total del curso</button><br>`);
+/*
+$("#contenido").append(`<button data-leccion='-' class='btnCambiarAvance'>Total del curso</button><br>`);*/
 mostrarTotalCurso();
 
 
@@ -150,16 +150,16 @@ function recorrerResultados(numero_leccion){
             temp = parseInt(temp);
             if(temp>0){
                 completados++;
-                $("#avancePaginas").append("<a class='btn btn-primary' href='"+dameURL(leccion[index])+"'>" + (index + 1) + "</a>" );
+                //$("#avancePaginas").append("<a class='btn btn-primary' href='"+dameURL(leccion[index])+"'>" + (index + 1) + "</a>" );
             }else{
-                $("#avancePaginas").append("<a href='"+dameURL(leccion[index])+"'><button class='btn'>" + (index + 1) + "</button></a>" );
+                //$("#avancePaginas").append("<a href='"+dameURL(leccion[index])+"'><button class='btn'>" + (index + 1) + "</button></a>" );
             }
         }
         return completados;
     }else{
         for (let index = 0; index < lessons[numero_leccion].length; index++) {
             posicion = indiceDe(lessons[j]);
-            $("#avancePaginas").append("<a href='"+dameURL(lessons[j])+"'><button class='btn'>" + (index + 1) + "</button></a>" )
+            //$("#avancePaginas").append("<a href='"+dameURL(lessons[j])+"'><button class='btn'>" + (index + 1) + "</button></a>" )
         }
         return 0;
     }
@@ -170,27 +170,25 @@ function mostrarTotalCurso(){
     $("#avance").append("Información del curso :<br>");
     $("#avance").append("Estado del curso: " + lesson_status);
     $("#avance").append(`<div class='row' style='padding: 50px;'>
-        <div class='col-md-6'>
+        <div class='col-md-12'>
         <canvas id='myChart'></canvas>
         </div>
-        <div class='col-md-6'>
-        <canvas id='cursoCompleto'></canvas>
-        </div>
-    </div><center><div id="avancePaginas"></div><center>`);
+    </div><center>`);
 
     resultados = porcentajeTemas();
 
     $("#avancePaginas").append("Detalle total de las páginas<br><div style='background: #e9e9e9;'");
     var terminadas = recorrerTodosLosResultados();
+    let porcentaje = parseInt(terminadas/pages.length * 100);
 
-
+    var canvasP = document.getElementById("myChart");
     var ctx = document.getElementById("myChart").getContext('2d');
     var myChart = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: etiquetas,
             datasets: [{
-                label: 'Progreso del curso (%)',
+                label: 'Progreso del curso (' + porcentaje + '%)',
                 data: resultados,
                 backgroundColor: background,
                 borderColor: borders,
@@ -207,7 +205,25 @@ function mostrarTotalCurso(){
             }
         }
     });
-    var ct = document.getElementById("cursoCompleto").getContext('2d');
+    canvasP.onclick = function(e) {
+        var slice = myChart.getElementAtEvent(e);
+        if (!slice.length) return; // return if not clicked on slice
+        
+        var label = slice[0]._model.label;
+        alert(label);
+        switch (label) {
+           // add case for each label/slice
+           case 'Värde 5':
+              alert('clicked on slice 5');
+              window.open('www.example.com/foo');
+              break;
+           case 'Värde 6':
+              alert('clicked on slice 6');
+              window.open('www.example.com/bar');
+              break;
+           // add rests ...
+        }
+    /*var ct = document.getElementById("cursoCompleto").getContext('2d');
     var myPieChart = new Chart(ct,{
         type: 'doughnut',
         data: {
@@ -227,12 +243,12 @@ function mostrarTotalCurso(){
                 'No completado'
             ]
         }
-    });
-}
+    });*/
+}}
 
 function mostrarTema(id){
     $("#avance").html("<br>");
-    $("#avance").append("Información del tema" + (id+1) + ":<br>");
+    // $("#avance").append("Información del tema" + (id+1) + ":<br>");
     // $("#avance").append(`<div class='row' style='padding: 50px; height: 200px;'>
     //     <div class='col-md-8'>
     //         <canvas id='porcentajeLeccion'></canvas>

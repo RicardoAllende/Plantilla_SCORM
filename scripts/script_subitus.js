@@ -143,6 +143,7 @@ function desmarcarPagina(){
     alert("Página desmarcada");
 }
 $(".btnBookmark").click(function(){
+    alert("Clic en la página");
     if($(this).hasClass("paginaMarcada")){
         desmarcarPagina();
     }else{
