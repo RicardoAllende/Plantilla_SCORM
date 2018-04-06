@@ -3,7 +3,8 @@ var _Debug = false;
 var finalizado = false;
 
 darEnlaceABotones();
-
+inicializarLMS();
+establecerNombre();
 if(typeof(Storage)!= "undefined"){
 	verificar_info_usuario();
     verificarVariables();
@@ -41,18 +42,10 @@ function verificarVariablesEnLocal(){ //en el caso de que existan en servidor pe
     }
 }
 
-function dameIndice(nombre){
-    nombre = nombre.substring(nombre.lastIndexOf('/') + 1);
-    if(nombre==""){//Index
-        nombre = "index.html";
-    }
-    for (let i = 0; i < pages.length; i++) {
-        if(pages[i].url == nombre){
-            return i;
-        }
-    }
-    return -1;
+function establecerNombre(){
+    $("#studentName").html(get("cmi.core.student_name"));
 }
+
 function verificarMarcador(){
 	if (localStorage.getItem("lesson_location") != null) {
         let indice = dameIndice(window.location.pathname);
@@ -143,7 +136,6 @@ function desmarcarPagina(){
     alert("Página desmarcada");
 }
 $(".btnBookmark").click(function(){
-    alert("Clic en la página");
     if($(this).hasClass("paginaMarcada")){
         desmarcarPagina();
     }else{
@@ -176,6 +168,7 @@ function darEnlaceABotones(){
         
         var endResult = api.LMSFinish("");
         finalizado = true;
+        window.close();
     });
 
     if (!existeSiguiente(actual)) {
@@ -221,64 +214,6 @@ function convierteAHoras(minutos){
         minutos = "0" + minutos.toString();
     }
     return horas.toString() + minutos.toString();
-}
-
-function dameID(path){
-    var nombre = path.substring(path.lastIndexOf('/') + 1);
-    if(nombre==""){//Index
-        nombre = "index.html";
-    }
-    for (var i = 0; i < pages.length; i++) {
-        if (pages[i].url == nombre) {
-            return pages[i].id;
-        }
-    }
-    return "--";
-}
-
-function dameAnterior(nombre){
-    var indice = dameIndice(nombre) - 1;
-    if(indice != -1){
-        return pages[indice].url;
-    }else{
-        return "";
-    }
-}
-
-function existeAnterior(nombre){
-    var indice = dameIndice(nombre) - 1;
-    if(indice < 0){
-        return false;
-    }else{
-        return true;
-    }
-}
-
-function existeSiguiente(nombre){
-    var indice = dameIndice(nombre) + 1;
-    if(indice>=pages.length){
-        return false;
-    }else{
-        return true;
-    }
-}
-
-function dameSiguiente(nombre){
-    var indice = dameIndice(nombre) + 1;
-    if(indice < pages.length){
-        return pages[indice].url;
-    }else{
-        return "";
-    }
-}
-
-function dameNombre(id){
-    for (var i = 0; i < pages.length; i++) {
-        if(pages[i].url == id){
-            return pages[i].url;
-        }
-    }
-    return "No encontrado";
 }
 
 function guardaTiempo() {
@@ -363,7 +298,7 @@ function verificarAvance(){
         }
         $('#progress-bar').attr("aria-valuenow",nuevo); 
         $('#progress-bar').attr("style","width:" + nuevo + "%"); 
-        $('#progress-bar').html("avance: " + nuevo + "%");
+        //$('#progress-bar').html("avance: " + nuevo + "%");
 
         if(completados == pages.length){
             localStorage.setItem("status", lzw_encode("complete"));
@@ -683,14 +618,18 @@ function findAPI(win) {
  //////////////////////////////////////////////////////////////////////////
  //////////////////////////////////////////////////////////////////////////
 function init(){
+    
+}
+
+function inicializarLMS(){
     verificarUltimaPaginaVisitada();
     //diferencia_lesson_location();   
-    var api = getAPIHandle();
-    if (api == null){
-        alert("ERROR en init()");
-        return false;
-    }
     if(localStorage.getItem("isInit") == null){
+        var api = getAPIHandle();
+        if (api == null){
+            alert("ERROR en init()");
+            return false;
+        }
         var initResult = api.LMSInitialize("");
         localStorage.setItem("isInit", "1");
     }
@@ -750,7 +689,7 @@ function set(data,value){
  function get(data){
     var api = getAPIHandle();
     if (api == null){
-        alert("ERROR");
+        alert("ERROR in get()");
         return false;
     }
     var getResult= api.LMSGetValue(data); 

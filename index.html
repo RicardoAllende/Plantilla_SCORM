@@ -60,7 +60,7 @@
 					</div><br>
 					<div class="progress" style="height: 15px;">
 						<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="20"
-						aria-valuemin="0" aria-valuemax="100" style="width:50%" id="progress-bar-">
+						aria-valuemin="0" aria-valuemax="100" style="width:50%" id="progress-bar">
 						</div>
 					</div>
                 </div>
@@ -94,13 +94,13 @@
 									</div> </a>
 									<ul class="sub-menu">
 										<li>
-											<a href="01.html"> <span class="title"> Página 1 </span> </a>
+											<a href="01.html"> <span class="title" id="enlace0"> Página 1 </span> </a>
 										</li>
 										<li>
-											<a href="02.html"> <span class="title"> Página 2 </span> </a>
+											<a href="02.html"> <span class="title" id="enlace1"> Página 2 </span> </a>
 										</li>
 										<li>
-											<a href="03.html"> <span class="title"> Página 3 </span> </a>
+											<a href="03.html"> <span class="title" id="enlace2"> Página 3 </span> </a>
 										</li>
 									</ul>
 								</li>
@@ -286,7 +286,7 @@
                     
                 </ul>
                 
-                    
+                <span style="position:absolute; z-index:15; padding-top: 1%; margin: 0 auto; color: white; font-size: x-large;">Título del curso</span>
                 
                 <ul class="nav navbar-right">
                     <!-- start: MESSAGES DROPDOWN -->
@@ -313,18 +313,18 @@
         </header>
         <!-- end: TOP NAVBAR -->
         <div class="main-content">
-            <div id="contenidoCurso">
+            <div id="contenidoCurso" data-toggle="tooltip" title="Ejemplo de toggle" data-placement="bottom">
                 <center><h1>index.html</h1></center>
                 
-                <a href="index.html" id="btnNext" class="btn btn-primary btn-lg" style="display:scroll;position:fixed;bottom:50%;right:0px;">
+                <a href="index.html" id="btnNext" class="btn btn-primary btn-lg" style="display:scroll;position:fixed;bottom:50%;right:0px;" data-toggle="tooltip" title="Ejemplo de toggle">
                 Siguiente
                 </a>
                 <a href="index.html" id="btnPrev" class="btn btn-primary btn-lg" style="display:scroll;position:fixed;bottom:60%;right: 0px;">
                 Anterior
                 </a>
-                <button id="btnFin" class="btn btn-primary btn-lg" style="display:scroll;position:fixed;bottom:40%;right: 0px;">
+                <!--<button id="btnFin" class="btn btn-primary btn-lg btnFin" style="display:scroll;position:fixed;bottom:40%;right: 0px;">
                     Salir
-                </button>
+                </button>-->
             </div>
             <!--<div id="contenedor"><div id="contenido"></div></div>-->
         </div>
@@ -332,7 +332,6 @@
     
     <div class="modal fade" id="myModal" role="dialog">
         <div class="modal-dialog">
-        
             <!-- Modal content-->
             <div class="modal-content">
             <div class="modal-header">

@@ -1,38 +1,27 @@
-function dameURL(id){
-    for (var i = 0; i < pages.length; i++) {
-        if(pages[i].id == id){
-            return pages[i].url;
-        }
-    }
-    return "index.html";
-}
 
-function dameIndice(id){
-    for (let k = 0; k < pages.length; k++) {
-        if(pages[k].id == id){
-            return k;
-        }
-    }
-    return -1;
-}
 
 var lesson_location = lzw_decode(localStorage.getItem("lesson_location"));
 var lesson_status = lzw_decode( localStorage.getItem("status") );
 var background = [];
 var borders = [];
 var etiquetas = [];
+var successColor = "rgba(036, 231, 017, 0.2)";
+var successColorRGB = "rgba(036, 231, 017, 0.6)";
+var redColor = "";
 
-$("#contenido").append("Tiempo de la sesión " + lzw_decode(localStorage.getItem("session_time")) + " minutos<br><br>" );
-$("#contenido").append("Temas: ");
+
+//$("#contenido").append("Temas: ");
 for (let index = 0; index < lessons.length; index++) {
     //$("#contenido").append("<button class='btnCambiarAvance' data-leccion='" + index + "' >" + (index + 1) + "</button>&nbsp;");
-    background.push('rgba(54, 162, 235, 0.2)');
+    //background.push('rgba(0, 255, 0, 0.2)'); #5cb85c #ADFF2F
+    background.push(successColorRGB);
     borders.push('rgba(54, 162, 235, 1)');
     etiquetas.push("Tema " + (index + 1));
 }
 /*
 $("#contenido").append(`<button data-leccion='-' class='btnCambiarAvance'>Total del curso</button><br>`);*/
 mostrarTotalCurso();
+//mostrarTema(0);
 
 
 
@@ -63,45 +52,14 @@ function porcentajeTemas(){
         }
         porcentaje = completados / leccion.length * 100;
         porcentaje = parseInt(porcentaje);
+        if (porcentaje == 0) {
+            porcentaje = 1;
+        }
         resultados.push(porcentaje);
     }
     resultados.push(100);
     return resultados;
 }
-
-// function porcentajeLeccion(numeroLeccion){
-//     var resultados = [];
-//     var temp, porcentaje;
-//     numeroLeccion = parseInt(numeroLeccion);
-//     var leccion = lessons[numeroLeccion];
-//     var completados=0;
-//     for (var j = 0; j < leccion.length; j++) {
-//         var indice = dameIndice(leccion[j]);
-//         temp = lesson_location.substring(indice * 3, (indice*3) + 2);
-//         temp = parseInt(temp);
-//         if(temp>0){
-//             completados++;
-//         }
-//     }
-
-//     for(var i =0; i<lessons.length; i++){
-//         var completados = 0;
-//         var leccion = lessons[i];
-//         for (var j = 0; j < leccion.length; j++) {
-//             var indice = dameIndice(leccion[j]);
-//             temp = lesson_location.substring(indice * 3, (indice*3) + 2);
-//             temp = parseInt(temp);
-//             if(temp>0){
-//                 completados++;
-//             }
-//         }
-//         porcentaje = completados / leccion.length * 100;
-//         porcentaje = parseInt(porcentaje);
-//         resultados.push(porcentaje);
-//     }
-//     resultados.push(100);
-//     return resultados;
-// }
 
 function recorrerTodosLosResultados(leccion){
     if(lesson_location != null){
@@ -129,14 +87,7 @@ function recorrerTodosLosResultados(leccion){
     }
 }
 
-function indiceDe(id){
-    for (let index = 0; index < pages.length; index++) {
-        if(pages[index].id == id){
-            return index;
-        }
-    }
-    return -1;
-}
+
 
 function recorrerResultados(numero_leccion){
     if(lesson_location != null){
@@ -144,15 +95,16 @@ function recorrerResultados(numero_leccion){
         var temp;
         let posicion;
         let leccion = lessons[numero_leccion];
+        $("#avancePaginas").append("<br><br><br><br>");
         for (let index = 0; index < leccion.length; index++) {
             posicion = indiceDe(leccion[index]);
             temp = lesson_location.substring(posicion * 3, (posicion*3) + 2);
             temp = parseInt(temp);
             if(temp>0){
                 completados++;
-                //$("#avancePaginas").append("<a class='btn btn-primary' href='"+dameURL(leccion[index])+"'>" + (index + 1) + "</a>" );
+                $("#avancePaginas").append("<a style='background:" + successColorRGB + ";' class='btn btn-primary' href='"+dameURL(leccion[index])+"'>" + (index + 1) + "</a>" );
             }else{
-                //$("#avancePaginas").append("<a href='"+dameURL(leccion[index])+"'><button class='btn'>" + (index + 1) + "</button></a>" );
+                $("#avancePaginas").append("<a href='"+dameURL(leccion[index])+"'><button class='btn'>" + (index + 1) + "</button></a>" );
             }
         }
         return completados;
@@ -166,9 +118,10 @@ function recorrerResultados(numero_leccion){
 }
 
 function mostrarTotalCurso(){
-    $("#avance").html("<br>");
-    $("#avance").append("Información del curso :<br>");
-    $("#avance").append("Estado del curso: " + lesson_status);
+    $("#contenido").html("Tiempo de la sesión " + lzw_decode(localStorage.getItem("session_time")).substring(3, 5) + " minutos" );
+    $("#avance").html("");
+    //$("#avance").append("Información del curso :<br>");
+    //$("#avance").append("Estado del curso: " + lesson_status);
     $("#avance").append(`<div class='row' style='padding: 50px;'>
         <div class='col-md-12'>
         <canvas id='myChart'></canvas>
@@ -177,7 +130,7 @@ function mostrarTotalCurso(){
 
     resultados = porcentajeTemas();
 
-    $("#avancePaginas").append("Detalle total de las páginas<br><div style='background: #e9e9e9;'");
+    $("#avancePaginas").append("Detalle del curso<br><div style='background: #e9e9e9;'");
     var terminadas = recorrerTodosLosResultados();
     let porcentaje = parseInt(terminadas/pages.length * 100);
 
@@ -207,47 +160,17 @@ function mostrarTotalCurso(){
     });
     canvasP.onclick = function(e) {
         var slice = myChart.getElementAtEvent(e);
+        //alert(slice);
         if (!slice.length) return; // return if not clicked on slice
-        
         var label = slice[0]._model.label;
-        alert(label);
-        switch (label) {
-           // add case for each label/slice
-           case 'Värde 5':
-              alert('clicked on slice 5');
-              window.open('www.example.com/foo');
-              break;
-           case 'Värde 6':
-              alert('clicked on slice 6');
-              window.open('www.example.com/bar');
-              break;
-           // add rests ...
-        }
-    /*var ct = document.getElementById("cursoCompleto").getContext('2d');
-    var myPieChart = new Chart(ct,{
-        type: 'doughnut',
-        data: {
-            datasets: [{
-                data: [
-                    terminadas,
-                    pages.length - terminadas
-                ],
-                backgroundColor: [
-                    "rgba(54, 162, 235, 0.2)",
-                    "rgba( 247, 131, 106, 0.2)"
-                ]
-                
-            }],
-            labels: [
-                'Completado',
-                'No completado'
-            ]
-        }
-    });*/
-}}
+        var leccion = parseInt(label.substring(label.length - 1)) - 1;
+        mostrarTema(leccion);
+    }
+}
 
 function mostrarTema(id){
     $("#avance").html("<br>");
+    $("#contenido").html("Tema " + (id + 1) + "<button id='btnVerCurso' style='float: right;' class='btn'>Regresar</button>" );
     // $("#avance").append("Información del tema" + (id+1) + ":<br>");
     // $("#avance").append(`<div class='row' style='padding: 50px; height: 200px;'>
     //     <div class='col-md-8'>
@@ -256,13 +179,14 @@ function mostrarTema(id){
     //     <div class='col-md-4' style="bottom:10%;">
     //         <div id='avancePaginas'></div>
     //     </div>
-    // </div>`);
-    $("#avance").append(`
-        <center><div style="width: 250px; height: 200px;">
-            <canvas id='porcentajeLeccion'></canvas>
-        </div><center>
-        <center><div id="avancePaginas">Detalle de las páginas de la lección: <br></div></center>
-        `);
+    // </div>`); style="max-height: 200px; max-width: 300px; padding 30px;"
+    $("#avance").append(`<center><div class="row">
+                            <div class='col-md-7'>
+                                <canvas id='porcentajeLeccion'></canvas>
+                            </div>
+                            <div id="avancePaginas" class='col-md-5' >
+                            </div>
+                        </div></center>`);
     var terminadas = recorrerResultados(id);
     var ct = document.getElementById("porcentajeLeccion").getContext('2d');
     var myPieChart = new Chart(ct,{
@@ -274,8 +198,8 @@ function mostrarTema(id){
                     lessons[id].length - terminadas
                 ],
                 backgroundColor: [
-                    "rgba(54, 162, 235, 0.2)",
-                    "rgba( 247, 131, 106, 0.2)"
+                    successColor,
+                    "rgb(221, 221, 221)"
                 ]
             }],
             labels: [
@@ -283,5 +207,8 @@ function mostrarTema(id){
                 'No completado'
             ]
         }
+    });
+    $("#btnVerCurso").click(function(){
+        mostrarTotalCurso();
     });
 }

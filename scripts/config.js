@@ -233,3 +233,101 @@ var clientStrings = [
         r: /(nuhk|Googlebot|Yammybot|Openbot|Slurp|MSNBot|Ask Jeeves\/Teoma|ia_archiver)/
     }
 ];
+
+function indiceDe(id){
+    for (let index = 0; index < pages.length; index++) {
+        if(pages[index].id == id){
+            return index;
+        }
+    }
+    return -1;
+}
+
+function dameURL(id){
+    for (var i = 0; i < pages.length; i++) {
+        if(pages[i].id == id){
+            return pages[i].url;
+        }
+    }
+    return "index.html";
+}
+
+function dameIndice(id){
+    for (let k = 0; k < pages.length; k++) {
+        if(pages[k].id == id){
+            return k;
+        }
+    }
+    return -1;
+}
+
+function dameIndice(nombre){
+    nombre = nombre.substring(nombre.lastIndexOf('/') + 1);
+    if(nombre==""){//Index
+        nombre = "index.html";
+    }
+    for (let i = 0; i < pages.length; i++) {
+        if(pages[i].url == nombre){
+            return i;
+        }
+    }
+    return -1;
+}
+
+function dameID(path){
+    var nombre = path.substring(path.lastIndexOf('/') + 1);
+    if(nombre==""){//Index
+        nombre = "index.html";
+    }
+    for (var i = 0; i < pages.length; i++) {
+        if (pages[i].url == nombre) {
+            return pages[i].id;
+        }
+    }
+    return "--";
+}
+
+function dameAnterior(nombre){
+    var indice = dameIndice(nombre) - 1;
+    if(indice != -1){
+        return pages[indice].url;
+    }else{
+        return "";
+    }
+}
+
+function existeAnterior(nombre){
+    var indice = dameIndice(nombre) - 1;
+    if(indice < 0){
+        return false;
+    }else{
+        return true;
+    }
+}
+
+function existeSiguiente(nombre){
+    var indice = dameIndice(nombre) + 1;
+    if(indice>=pages.length){
+        return false;
+    }else{
+        return true;
+    }
+}
+
+function dameSiguiente(nombre){
+    var indice = dameIndice(nombre) + 1;
+    if(indice < pages.length){
+        return pages[indice].url;
+    }else{
+        return "";
+    }
+}
+
+function dameNombre(id){
+    for (var i = 0; i < pages.length; i++) {
+        if(pages[i].url == id){
+            return pages[i].url;
+        }
+    }
+    return "No encontrado";
+}

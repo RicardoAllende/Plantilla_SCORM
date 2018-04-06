@@ -1,22 +1,156 @@
 var enlaces = "";
-for(let i =0; i<pages.length; i++){
-    enlaces += `<li>
-                    <a href="`+ pages[i].url + `">
+var leccion, posicion;
+/*enlaces += `<li>
+                <a href="javascript:void(0)">
+                <div class="item-content">
+                    <div class="item-media">
+                        <div class="lettericon" data-text="Temas" data-size="sm" data-char-count="2"></div>
+                    </div>
+                    <div class="item-inner">
+                        <span class="title"> Temas </span><i class="icon-arrow"></i>
+                    </div>
+                </div> </a>`;
+enlaces += `    <li>
+                    <a href="javascript:void(0)">
                     <div class="item-content">
-                        <div class="item-inner" id="enlace` + i + `">
-                        <span class="title">`+ pages[i].title + `</span>
+                        <div class="item-media">
+                            <div class="lettericon" data-text="Temas" data-size="sm" data-char-count="2"></div>
+                        </div>
+                        <div class="item-inner">
+                            <span class="title"> Temas </span><i class="icon-arrow"></i>
                         </div>
                     </div> </a>
-                </li>`;
+                    `;
+for(let i =0; i<lessons.length; i++){
+    enlaces += `        <ul class="sub-menu">
+                        <li>
+                            <a href="javascript:void(0)">
+                            <div class="item-content">
+                                <div class="item-media">
+                                    <div class="lettericon" data-text="T" data-size="sm" data-char-count="2"></div>
+                                </div>
+                                <div class="item-inner">
+                                    <span class="title"> Tema 1 </span><i class="icon-arrow"></i>
+                                </div>
+                            </div> </a>
+                            <ul class="sub-menu">`; 
+    leccion = lessons[i];
+    
+            for (let index = 0; index < leccion.length; index++) {
+                enlaces += `<li>
+                                <a href="` + dameURL(leccion[index]) + `"> <span class="title" id="enlace0">` + dameURL(leccion[index]) + `</span> </a>
+                            </li>`;
+            }
+    enlaces += `</ul>`;
 }
-enlaces += `<li>
-    <a class='btnFin'>
+enlaces += "</li></li>";
+console.log(enlaces);*/
+
+enlaces = `<li>
+    <a href="javascript:void(0)">
     <div class="item-content">
+        <div class="item-media">
+            <div class="lettericon" data-text="Temas" data-size="sm" data-char-count="2"></div>
+        </div>
         <div class="item-inner">
-        <span class="title">Salir</span>
+            <span class="title"> Temas </span><i class="icon-arrow"></i>
         </div>
     </div> </a>
+    <ul class="sub-menu">
+        <li>
+            <a href="javascript:void(0)">
+            <div class="item-content">
+                <div class="item-media">
+                    <div class="lettericon" data-text="T" data-size="sm" data-char-count="2"></div>
+                </div>
+                <div class="item-inner">
+                    <span class="title"> Tema 1 </span><i class="icon-arrow"></i>
+                </div>
+            </div> </a>
+            <ul class="sub-menu">
+                <li>
+                    <a href="01.html"> <span class="title" id="enlace0"> Página 1 </span> </a>
+                </li>
+                <li>
+                    <a href="02.html"> <span class="title" id="enlace1"> Página 2 </span> </a>
+                </li>
+                <li>
+                    <a href="03.html"> <span class="title" id="enlace2"> Página 3 </span> </a>
+                </li>
+            </ul>
+        </li>
+
+        <li>
+            <a href="javascript:void(0)">
+            <div class="item-content">
+                <div class="item-media">
+                    <div class="lettericon" data-text="T" data-size="sm" data-char-count="2"></div>
+                </div>
+                <div class="item-inner">
+                    <span class="title"> Tema 2 </span><i class="icon-arrow"></i>
+                </div>
+            </div> </a>
+            <ul class="sub-menu">
+                <li>
+                    <a href="04.html"> <span class="title"> Página 4 </span> </a>
+                </li>
+                <li>
+                    <a href="05.html"> <span class="title"> Página 5 </span> </a>
+                </li>
+                <li>
+                    <a href="06.html"> <span class="title"> Página 6 </span> </a>
+                </li>
+            </ul>
+        </li>
+        <li>
+                <a href="javascript:void(0)">
+                <div class="item-content">
+                    <div class="item-media">
+                        <div class="lettericon" data-text="T" data-size="sm" data-char-count="2"></div>
+                    </div>
+                    <div class="item-inner">
+                        <span class="title"> Tema 3 </span><i class="icon-arrow"></i>
+                    </div>
+                </div> </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a href="07.html"> <span class="title"> Página 7 </span> </a>
+                    </li>
+                    <li>
+                        <a href="08.html"> <span class="title"> Página 8 </span> </a>
+                    </li>
+                    <li>
+                        <a href="09.html"> <span class="title"> Página 9 </span> </a>
+                    </li>
+                </ul>
+            </li>
+    </ul>
 </li>`;
+// enlaces += `<li>
+//                     <a href="`+ pages[i].url + `">
+//                     <div class="item-content">
+//                         <div class="item-inner" id="enlace` + i + `">
+//                         <span class="title">`+ pages[i].title + `</span>
+//                         </div>
+//                     </div> </a>
+//                 </li>`;
+/* Resultado esperado: 
+
+
+
+
+
+enlaces += `<li>
+<a class="btnFin">
+<div class="item-content">
+    <div class="item-media">
+        <div class="lettericon" data-text="Salir" data-size="sm" data-char-count="2"></div>
+    </div>
+    <div class="item-inner">
+        <span class="title"> Salir </span>
+    </div>
+</div> </a>
+</li>`;*/
 
 document.write(`<div id="app">
     <!-- sidebar -->
