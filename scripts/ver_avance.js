@@ -1,4 +1,21 @@
 
+function dameURL(id){
+    for (var i = 0; i < pages.length; i++) {
+        if(pages[i].id == id){
+            return pages[i].url;
+        }
+    }
+    return "index.html";
+}
+
+function dameIndice(id){
+    for (let k = 0; k < pages.length; k++) {
+        if(pages[k].id == id){
+            return k;
+        }
+    }
+    return -1;
+}
 
 var lesson_location = lzw_decode(localStorage.getItem("lesson_location"));
 var lesson_status = lzw_decode( localStorage.getItem("status") );
@@ -44,10 +61,15 @@ function porcentajeTemas(){
         var leccion = lessons[i];
         for (var j = 0; j < leccion.length; j++) {
             var indice = dameIndice(leccion[j]);
+            // alert(indice);
+            // alert("Variable lesso_location (función porcentaje temas): " + lesson_location);
             temp = lesson_location.substring(indice * 3, (indice*3) + 2);
             temp = parseInt(temp);
             if(temp>0){
+                //alert("El elemento " + j + " fue completado");
                 completados++;
+            }else{
+                //alert("Elemento " + j + temp);
             }
         }
         porcentaje = completados / leccion.length * 100;
@@ -70,9 +92,7 @@ function recorrerTodosLosResultados(leccion){
             temp = parseInt(temp);
             if(temp>0){
                 completados++;
-                $("#avancePaginas").append("<a class='btn btn-primary' href='"+dameURL(pages[i].id)+"'>" + (i + 1) + "</a>" );
-            }else{
-                $("#avancePaginas").append("<a href='"+dameURL(pages[i].id)+"'><button class='btn'>" + (i + 1) + "</button></a>" );
+                //$("#avancePaginas").append("<a class='btn btn-primary' href='"+dameURL(pages[i].id)+"'>" + (i + 1) + "</a>" );
             }
         }
         return completados;

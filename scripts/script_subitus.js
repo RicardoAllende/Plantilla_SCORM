@@ -56,13 +56,13 @@ function verificarMarcador(){
         }
         if(marcador == "1"){
             $(".btnBookmark").addClass("paginaMarcada");
-            $(".btnBookmark").html(`<img src="assets/images/Bookmark-rojo.png" alt="Desmarcar página">`);
+            $(".btnBookmark").html(`<img src="assets/images/Bookmark-rojo.png" data-toggle="tooltip" title="Desmarcar página" data-placement="bottom">`);
         }
     }
 }
 function marcarPagina(){
     $(".btnBookmark").addClass("paginaMarcada");
-    $(".btnBookmark").html(`<img src="assets/images/Bookmark-rojo.png" alt="Desmarcar página">`);
+    $(".btnBookmark").html(`<img src="assets/images/Bookmark-rojo.png" data-toggle="tooltip" title="Desmarcar página" data-placement="bottom">`);
     if (localStorage.getItem("lesson_location") != null) {
         
         let ind;
@@ -76,7 +76,7 @@ function marcarPagina(){
                 ind =  i;
             }
         }
-        $('#enlace'+ind).html('<i class="glyphicon glyphicon-bookmark"></i>');
+        $('#enlace'+ind).html('<img src="assets/images/Bookmark-rojo.png" data-toggle="tooltip" title="Página guardada en sus marcadores" data-placement="bottom">');
         console.log("El índice es " + ind);
         var lesson_location = lzw_decode(localStorage.getItem("lesson_location"));
         var marcadorPagina = lesson_location.substring((ind * 3)+2, (ind*3) + 3);
@@ -100,7 +100,7 @@ function marcarPagina(){
 }
 function desmarcarPagina(){
     $(".btnBookmark").removeClass("paginaMarcada");
-    $(".btnBookmark").html(`<i class="glyphicon glyphicon-bookmark"></i>`);
+    $(".btnBookmark").html(`<i class="glyphicon glyphicon-bookmark" data-toggle="tooltip" title="Desmarcar página" data-placement="bottom"></i>`);
     if (localStorage.getItem("lesson_location") != null) {
         let ind;
         let nombre = window.location.pathname
@@ -762,4 +762,84 @@ function diferencia_lesson_location(){ // Recorre todas las páginas de localSto
             console.log("Se encontró un mejor avance en lesson_location revisando localStorage y la variable en SCO, resultado= " + resultado);
         }
     }
+}
+
+function indiceDe(id){
+    for (let index = 0; index < pages.length; index++) {
+        if(pages[index].id == id){
+            return index;
+        }
+    }
+    return -1;
+}
+
+function dameIndice(nombre){
+    nombre = nombre.substring(nombre.lastIndexOf('/') + 1);
+    if(nombre==""){//Index
+        nombre = "index.html";
+    }
+    for (let i = 0; i < pages.length; i++) {
+        if(pages[i].url == nombre){
+            return i;
+        }
+    }
+    return -1;
+}
+
+function dameID(path){
+    var nombre = path.substring(path.lastIndexOf('/') + 1);
+    if(nombre==""){//Index
+        nombre = "index.html";
+    }
+    for (var i = 0; i < pages.length; i++) {
+        if (pages[i].url == nombre) {
+            return pages[i].id;
+        }
+    }
+    return "--";
+}
+
+function dameAnterior(nombre){
+    var indice = dameIndice(nombre) - 1;
+    if(indice != -1){
+        return pages[indice].url;
+    }else{
+        return "";
+    }
+}
+
+function existeAnterior(nombre){
+    var indice = dameIndice(nombre) - 1;
+    if(indice < 0){
+        return false;
+    }else{
+        return true;
+    }
+}
+
+function existeSiguiente(nombre){
+    var indice = dameIndice(nombre) + 1;
+    if(indice>=pages.length){
+        return false;
+    }else{
+        return true;
+    }
+}
+
+function dameSiguiente(nombre){
+    var indice = dameIndice(nombre) + 1;
+    if(indice < pages.length){
+        return pages[indice].url;
+    }else{
+        return "";
+    }
+}
+
+function dameNombre(id){
+    for (var i = 0; i < pages.length; i++) {
+        if(pages[i].url == id){
+            return pages[i].url;
+        }
+    }
+    return "No encontrado";
 }
