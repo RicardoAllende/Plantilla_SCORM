@@ -40,7 +40,7 @@ for (let index = 0; index < lessons.length; index++) {
                                 <div class="lettericon" data-text="` + (index + 1) + `" data-size="sm" data-char-count="2"></div>
                             </div>
                             <div class="item-inner">
-                                <span class="title"> Tema ` + (index + 1) +` </span><i class="icon-arrow"></i>
+                                <span class="title">` +  nombresDeLecciones[index] +` </span><i class="icon-arrow"></i>
                             </div>
                         </div> </a>
                         <ul class="sub-menu">`;
@@ -69,6 +69,9 @@ enlaces += `</ul>
                     </div>
                 </div> </a>
             </li>`;
+
+contenido = window.location.pathname;
+contenido = contenido.substring(contenido.lastIndexOf('/') + 1);
 document.write(`<div id="app">
 <!-- sidebar -->
 <div class="sidebar app-aside" id="sidebar">
@@ -92,7 +95,7 @@ document.write(`<div id="app">
             <nav>
                 <!-- start: MAIN NAVIGATION MENU -->
                 <div class="navbar-title">
-                    <span>Navegación dentro del curso</span>
+                    <span>Navegación</span>
                 </div>
                 <ul class="main-navigation-menu">`
                     + enlaces + 
@@ -147,7 +150,7 @@ document.write(`<div id="app">
             <ul class="nav navbar-right">
                 <!-- start: MESSAGES DROPDOWN -->
                 <li >
-                    <a><button type="button" class="btnBookmark"><i class="glyphicon glyphicon-bookmark" data-toggle="tooltip" title="Marcar página" data-placement="bottom"></i></button></a>
+                    <a><button type="button" class="btnBookmark hidden-md"><i class="glyphicon glyphicon-bookmark" data-toggle="tooltip" title="Marcar página" data-placement="bottom"></i></button></a>
                 </li>
                 <!-- end: MESSAGES DROPDOWN -->
                 <!-- start: ACTIVITIES DROPDOWN -->
@@ -173,7 +176,7 @@ document.write(`<div id="app">
     <!-- end: TOP NAVBAR -->
     <div class="main-content">
         <div id="contenidoCurso" data-toggle="tooltip">
-            <center><h1>` + window.location.pathname + `</h1></center>
+            <center><h1>` + contenido + `</h1></center>
             
             <a href="index.html" id="btnNext" class="btn btn-primary btn-lg" style="display:scroll;position:fixed;bottom:50%;right:0px;">
             Siguiente

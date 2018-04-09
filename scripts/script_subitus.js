@@ -27,6 +27,13 @@ if(typeof(Storage)!= "undefined"){
     alert("Este navegador no es compatible con el almacenamiento del curso ERR_LOCAL_STORAGE");
 }
 
+window.addEventListener('beforeunload', function() {
+    alert("Saliendo de la página");
+});
+function confirmarSalida(){
+    confirm("¿Está seguro de que desea salir del curso?");
+}
+
 function verificarVariablesEnLocal(){ //en el caso de que existan en servidor pero no en localStorage
     if(localStorage.getItem("status" == null)){
         localStorage.setItem( "status", get("cmi.core.lesson_status"));
@@ -76,7 +83,7 @@ function marcarPagina(){
                 ind =  i;
             }
         }
-        $('#enlace'+ind).preprend('<img src="assets/images/Bookmark-rojo.png" data-toggle="tooltip" title="Página guardada en sus marcadores" data-placement="bottom">');
+        $('#enlace'+ind).prepend('<img src="assets/images/Bookmark-rojo.png" data-toggle="tooltip" title="Página guardada en sus marcadores" data-placement="bottom">');
         console.log("El índice es " + ind);
         var lesson_location = lzw_decode(localStorage.getItem("lesson_location"));
         var marcadorPagina = lesson_location.substring((ind * 3)+2, (ind*3) + 3);
@@ -157,6 +164,7 @@ function darEnlaceABotones(){
     }
 
     $(".btnFin").click(function(){
+        localStorage.removeItem("isInit");
         finalizar();
         localStorage.setItem("finalizado", "1");
         alert("Finalizando");
@@ -287,7 +295,7 @@ function verificarAvance(){
                 }
             }
             if (marcador == "1") {
-                $('#enlace'+i).prepend('<i class="glyphicon glyphicon-bookmark"></i>');
+                $('#enlace'+i).prepend('<img src="assets/images/Bookmark-rojo.png" data-toggle="tooltip" title="Página guardada en sus marcadores" data-placement="bottom">');
             }
         }
         
@@ -301,7 +309,7 @@ function verificarAvance(){
         //$('#progress-bar').html("avance: " + nuevo + "%");
 
         if(completados == pages.length){
-            localStorage.setItem("status", lzw_encode("complete"));
+            localStorage.setItem("status", lzw_encode("completed"));
         }else{
             localStorage.setItem("status", lzw_encode("incomplete"));
         }
@@ -570,10 +578,10 @@ function findAPI(win) {
             }
             return null;
         break;
-        case SCORM1_2:
+        case SCORM2004:
             
         break;
-        case SCORM1_2:
+        case TINCAN:
             
         break;
     }
@@ -615,10 +623,10 @@ function findAPI(win) {
         
             return theAPI;
         break;
-        case SCORM1_2:
+        case SCORM2004:
             
         break;
-        case SCORM1_2:
+        case TINCAN:
             
         break;
     }
@@ -635,10 +643,10 @@ function findAPI(win) {
             }
             return apiHandle;
         break;
-        case SCORM1_2:
+        case SCORM2004:
             
         break;
-        case SCORM1_2:
+        case TINCAN:
             
         break;
     }
@@ -655,21 +663,24 @@ function inicializarLMS(){
     //diferencia_lesson_location();   
     switch (estandar) {
         case SCORM1_2:
-            if(localStorage.getItem("isInit") == null){
+            if(localStorage.getItem("isInit") == null){ // Para llamar LMSInitialize sólo una vez
+                localStorage.setItem("isInit", "1"); // Al dar clic en el botón inicializar se elimina la variable
                 var api = getAPIHandle();
                 if (api == null){
                     alert("ERROR en init()");
                     return false;
                 }
+                console.log("Antes de initialize");
+                
                 var initResult = api.LMSInitialize("");
-                localStorage.setItem("isInit", "1");
+                console.log("Después de inicializar " + api.LMSGetLastError());
             }
             
         break;
-        case SCORM1_2:
+        case SCORM2004:
             
         break;
-        case SCORM1_2:
+        case TINCAN:
             
         break;
     }
@@ -693,7 +704,6 @@ function finalizar(){
         alert("ERROR en función end()");
         return false;
     }
-    localStorage.removeItem("isInit");
     set("cmi.core.lesson_status",lzw_decode( localStorage.getItem("status") ));
     set("cmi.suspend_data", localStorage.getItem("info_usuario") +  localStorage.getItem("suspend_data"));
     set("cmi.core.session_time", lzw_decode(localStorage.getItem("session_time")));
@@ -713,10 +723,10 @@ function finalizar(){
             }
             var commitResult = api.LMSCommit("");
         break;
-        case SCORM1_2:
+        case SCORM2004:
             
         break;
-        case SCORM1_2:
+        case TINCAN:
             
         break;
     }
@@ -736,10 +746,10 @@ function set(data,value){
             var setResult= api.LMSSetValue(data, value);
             
         break;
-        case SCORM1_2:
+        case SCORM2004:
             
         break;
-        case SCORM1_2:
+        case TINCAN:
             
         break;
     }
@@ -758,10 +768,10 @@ function set(data,value){
             var getResult= api.LMSGetValue(data); 
             return getResult;
         break;
-        case SCORM1_2:
+        case SCORM2004:
             
         break;
-        case SCORM1_2:
+        case TINCAN:
             
         break;
     }

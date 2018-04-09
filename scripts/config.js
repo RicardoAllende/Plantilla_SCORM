@@ -1,7 +1,7 @@
 var SCORM1_2 = "1.2";
 var SCORM2004 = "SCORM2004";
 var TINCAN = "TINCAN";
-var estandar = SCORM1_2; // SCORM1.2, SCORM2004, TINCAN
+var estandar = SCORM1_2; // SCORM1_2, SCORM2004, TINCAN
 
 var tituloDelCurso = "Curso de prueba Subitus";
 var enPrueba = true;
@@ -21,10 +21,19 @@ pages = pages.pages;
 var lessons ={
     lecciones : [
     ["01", "02", "03"],
-    ["04", "05", "06"],
-    ["07", "08", "09"]
+    ["04", "05"],
+    ["06", "07"],
+    ["08", "09"]
+    ],
+    nombres : [
+        "Inicio",
+        "Desarrollo",
+        "Final",
+        "Conclusión"
     ]
 };
+
+nombresDeLecciones = lessons.nombres;
 lessons = lessons.lecciones;
 
 var resoluciones = {

@@ -75,7 +75,7 @@ function porcentajeTemas(){
         porcentaje = completados / leccion.length * 100;
         porcentaje = parseInt(porcentaje);
         if (porcentaje == 0) {
-            porcentaje = 1;
+            porcentaje = 2;
         }
         resultados.push(porcentaje);
     }
