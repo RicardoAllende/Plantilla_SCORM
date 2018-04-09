@@ -1,19 +1,10 @@
+var SCORM1_2 = "1.2";
+var SCORM2004 = "SCORM2004";
+var TINCAN = "TINCAN";
+var estandar = SCORM1_2; // SCORM1.2, SCORM2004, TINCAN
+
+var tituloDelCurso = "Curso de prueba Subitus";
 var enPrueba = true;
-// var pages =JSON.parse('{"pages" : ['+
-//                 '{"id": "01","url": "index.html", "title": "Subitus" },'+
-//                 '{"id": "02","url": "02.html","title": "Moodle"},'+
-//                 '{"id": "03","url": "03.html","title": "App Tincan"},'+
-//                 '{"id": "04","url": "04.html","title": "Aviso de privacidad"},'+
-//                 '{"id": "05","url": "05.html","title": "Blog"},'+
-//                 '{"id": "06","url": "06.html","title": "Chamillo"},'+
-//                 '{"id": "07","url": "07.html","title": "Contacto"},'+
-//                 '{"id": "08","url": "08.html","title": "Detalle de post"},'+
-//                 '{"id": "09","url": "09.html","title": "E-learning"},'+
-//                 '{"id": "10","url": "examen.html","title": "Prueba del curso"}'+
-//                 ']}');
-
-var titulo = "Curso de prueba Subitus";
-
 var pages = { "pages": [
     {"id": "01","url": "index.html", "title": "Subitus" },
     {"id": "02","url": "02.html","title": "Moodle"},

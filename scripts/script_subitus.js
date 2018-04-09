@@ -536,39 +536,48 @@ function lzw_decode(s) {
 /******************************************************************************************
 ******************************************************************************************/
 function findAPI(win) {
-    if (_Debug){
-       alert("win is: "+win.location.href);
+    switch (estandar) {
+        case SCORM1_2:
+            if (_Debug){
+                alert("win is: "+win.location.href);
+            }
+            if (win.API != null){
+                if (_Debug){
+                    alert("found api in this window");
+                }
+                return win.API;
+            }
+        
+            if (win.length > 0) {
+                if (_Debug){
+                alert("looking for api in windows frames");
+                }
+        
+                for (var i=0;i<win.length;i++){
+        
+                    if (_Debug){
+                        alert("looking for api in frames["+i+"]");
+                    }
+                    var theAPI = findAPI(win.frames[i]);
+                    if (theAPI != null){
+                        return theAPI;
+                    }
+                }
+            }
+        
+            if (_Debug){
+                alert("didn't find api in this window (or its children)");
+            }
+            return null;
+        break;
+        case SCORM1_2:
+            
+        break;
+        case SCORM1_2:
+            
+        break;
     }
- 
- 
-    if (win.API != null){
-       if (_Debug){
-          alert("found api in this window");
-       }
-       return win.API;
-    }
- 
-    if (win.length > 0) {
-       if (_Debug){
-          alert("looking for api in windows frames");
-       }
- 
-       for (var i=0;i<win.length;i++){
- 
-          if (_Debug){
-             alert("looking for api in frames["+i+"]");
-          }
-          var theAPI = findAPI(win.frames[i]);
-          if (theAPI != null){
-             return theAPI;
-          }
-       }
-    }
- 
-    if (_Debug){
-       alert("didn't find api in this window (or its children)");
-    }
-    return null;
+    
  
  }
  
@@ -577,42 +586,62 @@ function findAPI(win) {
  ******************************************************************************************/
  
  function getAPI(){
-    var theAPI = findAPI(this.top);
-    if (theAPI == null){
-       if (_Debug){
-          alert("checking to see if this window has an opener");
-          alert("window.opener typeof is> "+typeof(window.opener));
-       }
- 
-       if (typeof(this.opener) != "undefined"){
-          if (_Debug){
-             alert("checking this windows opener");
-          }
-          if (this.opener != null){
-             if (_Debug){
-                alert("this windows opener is NOT null - looking there");
-             }
-             theAPI = findAPI(this.opener.top);
-          }
-          else{
-             if (_Debug){
-                alert("this windows opener is null");
-             }
-          }
-       }
+    switch (estandar) {
+        case SCORM1_2:
+            var theAPI = findAPI(this.top);
+            if (theAPI == null){
+            if (_Debug){
+                alert("checking to see if this window has an opener");
+                alert("window.opener typeof is> "+typeof(window.opener));
+            }
+        
+            if (typeof(this.opener) != "undefined"){
+                if (_Debug){
+                    alert("checking this windows opener");
+                }
+                if (this.opener != null){
+                    if (_Debug){
+                        alert("this windows opener is NOT null - looking there");
+                    }
+                    theAPI = findAPI(this.opener.top);
+                }
+                else{
+                    if (_Debug){
+                        alert("this windows opener is null");
+                    }
+                }
+            }
+            }
+        
+            return theAPI;
+        break;
+        case SCORM1_2:
+            
+        break;
+        case SCORM1_2:
+            
+        break;
     }
- 
-    return theAPI;
+    
  }
  
  /******************************************************************************************
  ******************************************************************************************/
  function getAPIHandle() {
-    if (apiHandle == null){
-       apiHandle = getAPI();
+    switch (estandar) {
+        case SCORM1_2:
+            if (apiHandle == null){
+                apiHandle = getAPI();
+            }
+            return apiHandle;
+        break;
+        case SCORM1_2:
+            
+        break;
+        case SCORM1_2:
+            
+        break;
     }
- 
-    return apiHandle;
  }
  
  //////////////////////////////////////////////////////////////////////////
@@ -624,14 +653,25 @@ function init(){
 function inicializarLMS(){
     verificarUltimaPaginaVisitada();
     //diferencia_lesson_location();   
-    if(localStorage.getItem("isInit") == null){
-        var api = getAPIHandle();
-        if (api == null){
-            alert("ERROR en init()");
-            return false;
-        }
-        var initResult = api.LMSInitialize("");
-        localStorage.setItem("isInit", "1");
+    switch (estandar) {
+        case SCORM1_2:
+            if(localStorage.getItem("isInit") == null){
+                var api = getAPIHandle();
+                if (api == null){
+                    alert("ERROR en init()");
+                    return false;
+                }
+                var initResult = api.LMSInitialize("");
+                localStorage.setItem("isInit", "1");
+            }
+            
+        break;
+        case SCORM1_2:
+            
+        break;
+        case SCORM1_2:
+            
+        break;
     }
 }
  
@@ -664,36 +704,67 @@ function finalizar(){
  //////////////////////////////////////////////////////////////////////////
  //////////////////////////////////////////////////////////////////////////
  function save(){ //Crear commit
-       var api = getAPIHandle();
-        if (api == null){
-               alert("ERROR");
-               return false;
+    switch (estandar) {
+        case SCORM1_2:
+            var api = getAPIHandle();
+            if (api == null){
+                alert("ERROR");
+                return false;
             }
-        var commitResult = api.LMSCommit("");
+            var commitResult = api.LMSCommit("");
+        break;
+        case SCORM1_2:
+            
+        break;
+        case SCORM1_2:
+            
+        break;
+    }
  }
  
  
  //////////////////////////////////////////////////////////////////////////
  //////////////////////////////////////////////////////////////////////////
 function set(data,value){
-    var api = getAPIHandle();
-    if (api == null){
-        alert("ERROR");
-        return false;
+    switch (estandar) {
+        case SCORM1_2:
+            var api = getAPIHandle();
+            if (api == null){
+                alert("ERROR");
+                return false;
+            }
+            var setResult= api.LMSSetValue(data, value);
+            
+        break;
+        case SCORM1_2:
+            
+        break;
+        case SCORM1_2:
+            
+        break;
     }
-    var setResult= api.LMSSetValue(data, value);
 }
  
  //////////////////////////////////////////////////////////////////////////
  //////////////////////////////////////////////////////////////////////////
  function get(data){
-    var api = getAPIHandle();
-    if (api == null){
-        alert("ERROR in get()");
-        return false;
+    switch (estandar) {
+        case SCORM1_2:
+            var api = getAPIHandle();
+            if (api == null){
+                alert("ERROR in get()");
+                return false;
+            }
+            var getResult= api.LMSGetValue(data); 
+            return getResult;
+        break;
+        case SCORM1_2:
+            
+        break;
+        case SCORM1_2:
+            
+        break;
     }
-    var getResult= api.LMSGetValue(data); 
-    return getResult;
  }
 
  function diferencia_suspend_data(){
