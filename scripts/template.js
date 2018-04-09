@@ -30,6 +30,7 @@ enlaces += `<li>
                     </div>
                 </div> </a>
                 <ul class="sub-menu">`;
+                var contador = 0;
 for (let index = 0; index < lessons.length; index++) {
     leccion = lessons[index];
     enlaces += `    <li>
@@ -46,9 +47,10 @@ for (let index = 0; index < lessons.length; index++) {
             for (let j = 0; j < leccion.length; j++) {
                 posicion = leccion[j];
                 enlaces += `<li>
-                                <a href="` + obtenerURL(leccion[j]) + `"> <span class="title" id="enlace0"> ` + (j + 1) +
+                                <a href="` + obtenerURL(leccion[j]) + `"> <span class="title" id="enlace` + contador + `"> ` + (j + 1) +
                                 ". "  + obtenerNombre(leccion[j]) + ` </span> </a>
                         </li>`;
+                        contador++;
             }
                             
             enlaces +=`</ul>
