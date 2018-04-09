@@ -18,7 +18,7 @@ function obtenerNombre(id){
     }
     return "No encontrado";
 }
-
+//Se crean dinámicamente los enlaces para el menú
 enlaces += `<li>
                 <a href="javascript:void(0)">
                 <div class="item-content">
@@ -59,7 +59,7 @@ for (let index = 0; index < lessons.length; index++) {
 enlaces += `</ul>
 </li>
             <li>
-                <a class="btnFin" data-toggle="tooltip" title="Cerrar curso" data-placement="bottom" data-toggle="tooltip" title="Cerrar curso" data-placement="bottom">
+                <a class="btnFin" data-toggle="tooltip" title="Cerrar curso" data-placement="bottom" data-toggle="tooltip">
                 <div class="item-content">
                     <div class="item-media">
                         <div class="lettericon" data-text="Salir" data-size="sm" data-char-count="2"></div>
@@ -86,8 +86,8 @@ document.write(`<div id="app">
                     </div>
                 </div><br>
                 <div class="progress" style="height: 15px;">
-                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="20"
-                    aria-valuemin="0" aria-valuemax="100" style="width:50%" id="progress-bar">
+                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="10"
+                    aria-valuemin="0" aria-valuemax="100" style="width:10%" id="progress-bar">
                     </div>
                 </div>
             </div>
@@ -114,16 +114,16 @@ document.write(`<div id="app">
             <button href="#" class="sidebar-mobile-toggler pull-left btn no-radius hidden-md hidden-lg" class="btn btn-navbar sidebar-toggle" data-toggle-class="app-slide-off" data-toggle-target="#app" data-toggle-click-outside="#sidebar">
                 <i class="fa fa-bars"></i>
             </button>
-            <a class="navbar-brand" href="index.html"> <img src="assets/images/subitus.png" alt="Packet"/> </a>
-            <a class="navbar-brand navbar-brand-collapsed" href="index.html"> <img src="assets/images/subitus_small.png" alt="" /> </a>
+            <a class="navbar-brand" href="index.html"> <img src="assets/images/subitus.png" alt="Subitus"/> </a>
+            <a class="navbar-brand navbar-brand-collapsed" href="index.html"> <img src="assets/images/subitus_small.png" alt="Subitus" /> </a>
             <button class="pull-right menu-toggler visible-xs-block btnFin">
                 <img src="assets/images/salir.png" data-toggle="tooltip" title="Salir del curso" data-placement="bottom">
             </button>
             <button type="button" data-toggle="modal" class="btn pull-right menu-toggler visible-xs-block" id="menu-toggler" data-target="#myModal">
-                <i class="glyphicon glyphicon-stats" data-toggle="tooltip" title="Ver avance del curso" data-placement="bottom"></i>
+                <i class="glyphicon glyphicon-stats" data-toggle="tooltip" title="Avance" data-placement="bottom"></i>
             </button>
             <button class="hidden-md hidden-lg btnBookmark" >
-                <i class="glyphicon glyphicon-bookmark" data-toggle="tooltip" title="Marcar página" data-placement="bottom"></i>
+                <i class="glyphicon glyphicon-bookmark" data-toggle="tooltip" title="Marcar" data-placement="bottom"></i>
             </button>
 
         </div>
@@ -150,15 +150,15 @@ document.write(`<div id="app">
             <ul class="nav navbar-right">
                 <!-- start: MESSAGES DROPDOWN -->
                 <li >
-                    <a><button type="button" class="btnBookmark hidden-md"><i class="glyphicon glyphicon-bookmark" data-toggle="tooltip" title="Marcar página" data-placement="bottom"></i></button></a>
+                    <a><button type="button" class="btnBookmark hidden-md"><i class="glyphicon glyphicon-bookmark" data-toggle="tooltip" title="Marcar" data-placement="bottom"></i></button></a>
                 </li>
                 <!-- end: MESSAGES DROPDOWN -->
                 <!-- start: ACTIVITIES DROPDOWN -->
                 <li class="dropdown">
-                    <a><button type="button" data-toggle="modal" data-target="#myModal"><i data-toggle="tooltip" title="Ver avance del curso" data-placement="bottom" class="glyphicon glyphicon-stats"></i></button></a>
+                    <a><button type="button" data-toggle="modal" data-target="#myModal"><i data-toggle="tooltip" title="Avance" data-placement="bottom" class="glyphicon glyphicon-stats"></i></button></a>
                 </li>
                 <li class="dropdown">
-                    <a><button class="btnFin"><img src="assets/images/salir.png" data-toggle="tooltip" title="Salir del curso" data-placement="bottom"></button></a>
+                    <a><button class="btnFin"><img src="assets/images/salir.png" data-toggle="tooltip" title="Salir" data-placement="bottom"></button></a>
                 </li>
                 <!-- end: ACTIVITIES DROPDOWN -->
                 
@@ -204,7 +204,7 @@ document.write(`<div id="app">
             <div id="contenedor"><div id="contenido"></div><div id="avance"></div></div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
         </div>
         </div>
         

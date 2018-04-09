@@ -3,8 +3,8 @@ var _Debug = false;
 var finalizado = false;
 
 darEnlaceABotones();
-inicializarLMS();
-establecerNombre();
+inicializarLMS(); //LMSInitialize
+establecerNombre(); //Recuperado desde la API SCORM
 if(typeof(Storage)!= "undefined"){
 	verificar_info_usuario();
     verificarVariables();
@@ -27,12 +27,6 @@ if(typeof(Storage)!= "undefined"){
     alert("Este navegador no es compatible con el almacenamiento del curso ERR_LOCAL_STORAGE");
 }
 
-window.addEventListener('beforeunload', function() {
-    alert("Saliendo de la página");
-});
-function confirmarSalida(){
-    confirm("¿Está seguro de que desea salir del curso?");
-}
 
 function verificarVariablesEnLocal(){ //en el caso de que existan en servidor pero no en localStorage
     if(localStorage.getItem("status" == null)){
@@ -63,13 +57,15 @@ function verificarMarcador(){
         }
         if(marcador == "1"){
             $(".btnBookmark").addClass("paginaMarcada");
-            $(".btnBookmark").html(`<img src="assets/images/Bookmark-rojo.png" data-toggle="tooltip" title="Desmarcar página" data-placement="bottom">`);
+            $(".btnBookmark").html(`<img src="assets/images/Bookmark-rojo.png" data-toggle="tooltip" title="Desmarcar" data-placement="bottom" data-original-title="Desmarcar">`);
+            $('[data-toggle="tooltip"]').tooltip(); 
         }
     }
 }
 function marcarPagina(){
     $(".btnBookmark").addClass("paginaMarcada");
-    $(".btnBookmark").html(`<img src="assets/images/Bookmark-rojo.png" data-toggle="tooltip" title="Desmarcar página" data-placement="bottom">`);
+    $(".btnBookmark").html(`<img src="assets/images/Bookmark-rojo.png" data-toggle="tooltip" title="Marcar" data-placement="bottom" data-original-title="Marcar">`);
+    $('[data-toggle="tooltip"]').tooltip(); 
     if (localStorage.getItem("lesson_location") != null) {
         
         let ind;
@@ -108,6 +104,7 @@ function marcarPagina(){
 function desmarcarPagina(){
     $(".btnBookmark").removeClass("paginaMarcada");
     $(".btnBookmark").html(`<i class="glyphicon glyphicon-bookmark" data-toggle="tooltip" title="Desmarcar página" data-placement="bottom"></i>`);
+    $('[data-toggle="tooltip"]').tooltip(); 
     if (localStorage.getItem("lesson_location") != null) {
         let ind;
         let nombre = window.location.pathname
@@ -170,7 +167,9 @@ function darEnlaceABotones(){
         alert("Finalizando");
         var api = getAPIHandle();
         if (api == null){
-            alert("ERROR en función end()");
+            if (_Debug){
+                alert("ERROR en función end()");
+            }
             return false;
         }
         
@@ -296,6 +295,7 @@ function verificarAvance(){
             }
             if (marcador == "1") {
                 $('#enlace'+i).prepend('<img src="assets/images/Bookmark-rojo.png" data-toggle="tooltip" title="Página guardada en sus marcadores" data-placement="bottom">');
+                $('[data-toggle="tooltip"]').tooltip();
             }
         }
         
@@ -667,7 +667,10 @@ function inicializarLMS(){
                 localStorage.setItem("isInit", "1"); // Al dar clic en el botón inicializar se elimina la variable
                 var api = getAPIHandle();
                 if (api == null){
-                    alert("ERROR en init()");
+                    if (_Debug){
+                        alert("ERROR en init()");
+                    }
+                    
                     return false;
                 }
                 console.log("Antes de initialize");
@@ -701,7 +704,9 @@ function finalizar(){
     guardaUltimaPaginaVisitada();
     var api = getAPIHandle();
     if (api == null){
-        alert("ERROR en función end()");
+        if (_Debug){
+            alert("ERROR en función end()");
+        }
         return false;
     }
     set("cmi.core.lesson_status",lzw_decode( localStorage.getItem("status") ));
@@ -718,7 +723,9 @@ function finalizar(){
         case SCORM1_2:
             var api = getAPIHandle();
             if (api == null){
-                alert("ERROR");
+                if (_Debug){
+                    alert("ERROR");
+                }
                 return false;
             }
             var commitResult = api.LMSCommit("");
@@ -740,7 +747,9 @@ function set(data,value){
         case SCORM1_2:
             var api = getAPIHandle();
             if (api == null){
-                alert("ERROR");
+                if (_Debug){
+                    alert("ERROR");
+                }
                 return false;
             }
             var setResult= api.LMSSetValue(data, value);
@@ -762,7 +771,9 @@ function set(data,value){
         case SCORM1_2:
             var api = getAPIHandle();
             if (api == null){
-                alert("ERROR in get()");
+                if (_Debug){
+                    alert("ERROR in get()");
+                }
                 return false;
             }
             var getResult= api.LMSGetValue(data); 
