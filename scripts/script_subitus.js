@@ -76,7 +76,7 @@ function marcarPagina(){
                 ind =  i;
             }
         }
-        $('#enlace'+ind).html('<img src="assets/images/Bookmark-rojo.png" data-toggle="tooltip" title="Página guardada en sus marcadores" data-placement="bottom">');
+        $('#enlace'+ind).preprend('<img src="assets/images/Bookmark-rojo.png" data-toggle="tooltip" title="Página guardada en sus marcadores" data-placement="bottom">');
         console.log("El índice es " + ind);
         var lesson_location = lzw_decode(localStorage.getItem("lesson_location"));
         var marcadorPagina = lesson_location.substring((ind * 3)+2, (ind*3) + 3);
