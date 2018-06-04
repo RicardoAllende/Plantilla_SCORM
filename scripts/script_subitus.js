@@ -6,23 +6,15 @@ darEnlaceABotones();
 inicializarLMS(); //LMSInitialize
 establecerNombre(); //Recuperado desde la API SCORM
 if(typeof(Storage)!= "undefined"){
-	verificar_info_usuario();
+	verificar_info_usuario(); // Variables de la resolución, SO, Ubicación, navegador
     verificarVariables();
     verificarEstaPagina();
     verificarAvance();
     verificarMarcador();
-	if(localStorage.getItem("suspend_data")){ //Se verifica si es la primera vez que se accesa al intento
-        var code = lzw_decode(localStorage.getItem("suspend_data"));        
-        code += obtener_informacion_pagina();
-        localStorage.setItem("suspend_data", lzw_encode(code));
-        code = "";
-    }else{ //En este caso crean las variables de suspend_data
-    	console.log("No hay intento actual, se crea la variable suspend_data");
-        code = "";
-        code += obtener_informacion_pagina();
-        localStorage.setItem("suspend_data", lzw_encode(code));
-        code = "";
-    }
+    var code = lzw_decode(localStorage.getItem("suspend_data"));        
+    code += obtener_informacion_pagina();
+    localStorage.setItem("suspend_data", lzw_encode(code));
+    code = "";
 }else{
     alert("Este navegador no es compatible con el almacenamiento del curso ERR_LOCAL_STORAGE");
 }
@@ -161,7 +153,7 @@ function darEnlaceABotones(){
     }
 
     $(".btnFin").click(function(){
-        localStorage.removeItem("isInit");
+        // localStorage.removeItem("isInit");
         finalizar();
         localStorage.setItem("finalizado", "1");
         alert("Finalizando");
@@ -335,8 +327,8 @@ function verificarLessonLocation(){ // Crea la variable
 }
 
 function verificar_info_usuario(){
-    if(localStorage.getItem("info_usuario") == null){ //Se crea info_usuario pues no existe, o está vacío
-        console.log("Creando info_usuario");
+    if(localStorage.getItem("suspend_data") == null){ //Se guarda la información del usuario en caso de no existir
+        console.log("Iniciando suspend_data con información del usuario");
         informacion = "";
         var nAgt = navigator.userAgent;
         for (var id in clientStrings) {
@@ -388,7 +380,7 @@ function verificar_info_usuario(){
                 console.log('');
                 console.log("Información generada: "+informacion);
                 console.log("Se almacena en local storage: "+informacion);
-                localStorage.setItem("info_usuario", lzw_encode(informacion + ";"));
+                localStorage.setItem("suspend_data", lzw_encode(informacion + ";"));
             };
 
             function error() {
@@ -398,7 +390,7 @@ function verificar_info_usuario(){
                 console.log('');
                 console.log("Información generada: "+informacion);
                 console.log("Se almacena en local storage: "+informacion);
-                localStorage.setItem("info_usuario", lzw_encode(informacion + ";"));
+                localStorage.setItem("suspend_data", lzw_encode(informacion + ";"));
             };
             navigator.geolocation.getCurrentPosition(success, error);
             
@@ -408,7 +400,7 @@ function verificar_info_usuario(){
             console.log('');
             console.log("Información generada: "+informacion);
             console.log("Se almacena en local storage: "+informacion);
-            localStorage.setItem("info_usuario", lzw_encode(informacion + ";"));
+            localStorage.setItem("suspend_data", lzw_encode(informacion + ";"));
         }
 
     }
@@ -555,12 +547,10 @@ function findAPI(win) {
                 }
                 return win.API;
             }
-        
             if (win.length > 0) {
                 if (_Debug){
                 alert("looking for api in windows frames");
                 }
-        
                 for (var i=0;i<win.length;i++){
         
                     if (_Debug){
@@ -572,28 +562,25 @@ function findAPI(win) {
                     }
                 }
             }
-        
             if (_Debug){
                 alert("didn't find api in this window (or its children)");
             }
             return null;
         break;
         case SCORM2004:
-            
+
         break;
         case TINCAN:
-            
+
         break;
     }
-    
- 
  }
  
  
  /******************************************************************************************
  ******************************************************************************************/
  
- function getAPI(){
+function getAPI(){
     switch (estandar) {
         case SCORM1_2:
             var theAPI = findAPI(this.top);
@@ -663,8 +650,8 @@ function inicializarLMS(){
     //diferencia_lesson_location();   
     switch (estandar) {
         case SCORM1_2:
-            if(localStorage.getItem("isInit") == null){ // Para llamar LMSInitialize sólo una vez
-                localStorage.setItem("isInit", "1"); // Al dar clic en el botón inicializar se elimina la variable
+            // if(localStorage.getItem("isInit") == null){ // Para llamar LMSInitialize sólo una vez
+                // localStorage.setItem("isInit", "1"); // Al dar clic en el botón inicializar se elimina la variable
                 var api = getAPIHandle();
                 if (api == null){
                     if (_Debug){
@@ -673,11 +660,11 @@ function inicializarLMS(){
                     
                     return false;
                 }
-                console.log("Antes de initialize");
+                // console.log("Antes de initialize");
                 
                 var initResult = api.LMSInitialize("");
-                console.log("Después de inicializar " + api.LMSGetLastError());
-            }
+                // console.log("Después de inicializar " + api.LMSGetLastError());
+            // }
             
         break;
         case SCORM2004:
@@ -710,7 +697,7 @@ function finalizar(){
         return false;
     }
     set("cmi.core.lesson_status",lzw_decode( localStorage.getItem("status") ));
-    set("cmi.suspend_data", localStorage.getItem("info_usuario") +  localStorage.getItem("suspend_data"));
+    set("cmi.suspend_data", localStorage.getItem("suspend_data"));
     set("cmi.core.session_time", lzw_decode(localStorage.getItem("session_time")));
     //set("cmi.core.session_time", "02:21:00");
     set("cmi.core.lesson_location", localStorage.getItem("lesson_location"));
