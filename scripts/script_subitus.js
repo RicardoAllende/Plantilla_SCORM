@@ -21,16 +21,16 @@ if(typeof(Storage)!= "undefined"){
 
 
 function verificarVariablesEnLocal(){ //en el caso de que existan en servidor pero no en localStorage
-    if(localStorage.getItem("status" == null)){
+    if(localStorage.getItem("status") == null){
         localStorage.setItem( "status", get("cmi.core.lesson_status"));
     }
-    if(localStorage.getItem("suspend_data" == null)){
+    if(localStorage.getItem("suspend_data") == null){
         localStorage.setItem( "suspend_data", get("cmi.suspend_data"));
     }
-    if(localStorage.getItem("session_time" == null)){
+    if(localStorage.getItem("session_time") == null){
         localStorage.setItem("session_time" , get("cmi.core.session_time"));
     }
-    if(localStorage.getItem("lesson_location" == null)){
+    if(localStorage.getItem("lesson_location") == null){
         localStorage.setItem("lesson_location" , get("cmi.core.lesson_location"));
     }
 }
@@ -479,58 +479,6 @@ function sumaHoras(hora1, hora2){
     var hora1 = (parseInt(hora1.substring(0, 2)) * 60) + parseInt(hora1.substring(2, 4));
     var hora2 = (parseInt(hora2.substring(0, 2)) * 60) + parseInt(hora2.substring(2, 4));
     return convierteAHoras(hora1 + hora2);
-}
-
-function lzw_encode(s) {
-    var dict = {};
-    var data = (s + "").split("");
-    var out = [];
-    var currChar;
-    var phrase = data[0];
-    var code = 256;
-    for (var i=1; i<data.length; i++) {
-        currChar=data[i];
-        if (dict[phrase + currChar] != null) {
-            phrase += currChar;
-        }
-        else {
-            out.push(phrase.length > 1 ? dict[phrase] : phrase.charCodeAt(0));
-            dict[phrase + currChar] = code;
-            code++;
-            phrase=currChar;
-        }
-    }
-    out.push(phrase.length > 1 ? dict[phrase] : phrase.charCodeAt(0));
-    for (var i=0; i<out.length; i++) {
-        out[i] = String.fromCharCode(out[i]);
-    }
-    return out.join("");
-}
-
-// Decompress an LZW-encoded string
-function lzw_decode(s) {
-    var dict = {};
-    var data = (s + "").split("");
-    var currChar = data[0];
-    var oldPhrase = currChar;
-    var out = [currChar];
-    var code = 256;
-    var phrase;
-    for (var i=1; i<data.length; i++) {
-        var currCode = data[i].charCodeAt(0);
-        if (currCode < 256) {
-            phrase = data[i];
-        }
-        else {
-        phrase = dict[currCode] ? dict[currCode] : (oldPhrase + currChar);
-        }
-        out.push(phrase);
-        currChar = phrase.charAt(0);
-        dict[code] = oldPhrase + currChar;
-        code++;
-        oldPhrase = phrase;
-    }
-    return out.join("");
 }
 
 /******************************************************************************************
