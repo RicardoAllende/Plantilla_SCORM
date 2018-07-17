@@ -182,9 +182,9 @@
                     <!-- <button class="pull-right menu-toggler visible-xs-block btnFin">
                         <img src="assets/images/salir.png" data-toggle="tooltip" title="" data-placement="bottom" data-original-title="Salir del curso">-->
                     </button>
-                    <button type="button" data-toggle="modal" class="btn pull-right menu-toggler visible-xs-block" id="menu-toggler" data-target="#myModal">
+                    <!-- <button type="button" data-toggle="modal" class="btn pull-right menu-toggler visible-xs-block" id="menu-toggler" data-target="#myModal">
                         <i class="glyphicon glyphicon-stats" data-toggle="tooltip" title="" data-placement="bottom" data-original-title="Avance"></i>
-                    </button>
+                    </button> -->
                     <!-- <button class="hidden-md hidden-lg btnBookmark">
                         <i class="glyphicon glyphicon-bookmark" data-toggle="tooltip" title="" data-placement="bottom" data-original-title="Marcar"></i>
                     </button> -->
@@ -217,9 +217,9 @@
                         </li> -->
                         <!-- end: MESSAGES DROPDOWN -->
                         <!-- start: ACTIVITIES DROPDOWN -->
-                        <li class="dropdown">
+                        <!--<li class="dropdown">
                             <a><button type="button" data-toggle="modal" data-target="#myModal"><i data-toggle="tooltip" title="" data-placement="bottom" class="glyphicon glyphicon-stats" data-original-title="Avance"></i></button></a>
-                        </li>
+                        </li>-->
                         <li class="dropdown">
                             <!-- <a><button class="btnFin"><img src="assets/images/salir.png" data-toggle="tooltip" title="" data-placement="bottom" data-original-title="Salir"></button></a> -->
                         </li>
@@ -243,6 +243,7 @@
                     <table id="paginas" class="display table-responsive" style="width:100%">
                         <thead>
                             <tr>
+                                <th>#</th>
                                 <th>Página</th>
                                 <th>Fecha</th>
                                 <th>Hora de inicio</th>
@@ -257,11 +258,11 @@
                 <div class="container table-responsive">
                     <table id="variables_scorm">
                         <thead>
-                            <th>Suspend data</th>
-                            <th>Suspend data encriptado</th>
                             <th>Tiempo de la sesión</th>
                             <th>Estado del curso</th>
                             <th>Última página visitada</th>
+                            <th>Suspend data</th>
+                            <th>Suspend data encriptado</th>
                         </thead>
                     </table>
                 </div>
@@ -381,10 +382,11 @@
                     for (var i = 0, charsLength = info_paginas.length; i < charsLength; i += caracteres_por_pagina) {
                         paginas_visitadas.push(info_paginas.substring(i, i + caracteres_por_pagina));
                     }
+                    var i = 1;
                     paginas_visitadas.forEach(function(pagina){
                         // $('#resultados').append( pagina + '<br>' );
                         var id_pagina = pagina.substring(0, 2);
-                        var nombre_pagina = obtenerNombre(id_pagina);
+                        var nombre_pagina = "<div class='cl-effect-1'><a href='" + obtenerUrl(id_pagina) + "' style='color: #8e8e93;' >" +obtenerNombre(id_pagina) + "</a></div>";
                         // $('#resultados').append( "Id de la página " + id_pagina + '<br>');
                         var fecha = pagina.substring(2, 8);
                         fecha = fecha.substring(0,2) + '/' + fecha.substring(2,4) + '/' + fecha.substring(4,6);
@@ -395,8 +397,9 @@
                         hora_inicio = formatearHora(hora_inicio);
                         hora_fin = formatearHora(hora_fin);
                         tabla_suspend_data.row.add([
-                            nombre_pagina, fecha, hora_inicio, hora_fin, pagina, diferencia
+                            i, nombre_pagina, fecha, hora_inicio, hora_fin, pagina, diferencia
                         ]);
+                        i++;
                     });
                 }
                 var status, session_time, lesson_location, ultima_visitada;
@@ -415,7 +418,7 @@
                 }
 
                 tabla_variables_scorm.row.add([
-                    suspend_data, suspend_data_encriptado, session_time, status, ultima_visitada
+                     session_time, status, ultima_visitada, suspend_data, suspend_data_encriptado
                 ]);
 
             }else{
@@ -435,6 +438,16 @@
             }
             return "No encontrado";
         }
+
+        function obtenerUrl(id){
+            for (var i = 0; i < pages.length; i++) {
+                if(pages[i].id == id){
+                    return pages[i].url;
+                }
+            }
+            return "No encontrado";
+        }
+
 
         function calcularDiferencia(hora1, hora2){
             //Se convierten las horas a minutos

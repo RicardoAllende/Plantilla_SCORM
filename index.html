@@ -46,11 +46,5 @@
 	<body onLoad="init()" onUnload="end()">
 		<script src="scripts/config.js"></script>
 		<script src="scripts/template.js"></script>
-		<button id="susp" class="btn btn-primary btn-lg" style="display:scroll;position:fixed;bottom:70%;right:0px;" >Mostrar suspend_data</button>
-		<script>
-			$('#susp').click(function(){
-				alert('El valor de suspend_data es: ' + lzw_decode(localStorage.getItem('suspend_data')));
-			});
-		</script>
 	</body>
 </html>

@@ -4,15 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.css">
+    <title>Traductor de LZW</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 </head>
-<body>
+<body style="background: #e9e9e9;">
+    <div class="container" style="padding: 3%;">
+        <div class="card">
+            <div class="card-header">
+                LZW
+            </div>
+            <div class="card-body">
+                <center>
+                    <input type="text" name="entrada" size="52" id="entrada"><br><br>
+                    <button id="codificar">Codificar</button>
+                    <button id="decodificar">Decodificar</button><br><br>
+                    <input type="text" size="52" placeholder="Resultado" id="resultado"><br>
+                </center>
+            </div>
+        </div>
+    </div>
     <div class="container">
-        <input type="text" name="entrada" id="entrada"><br>
-        <button id="codificar">Codificar</button><br><br>
-        <button id="decodificar">Decodificar</button><br><br>
-        <input type="text" placeholder="Resultado" id="resultado"><br>
     </div>
 
 
@@ -23,6 +35,9 @@
     <script>
         $('#decodificar').click(function(){
             $('#resultado').val(lzw_decode($('#entrada').val()))
+        });
+        $('#codificar').click(function(){
+            $('#resultado').val(lzw_encode($('#entrada').val()))
         });
     </script>
 </body>

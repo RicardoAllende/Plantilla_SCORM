@@ -193,10 +193,22 @@ function darEnlaceABotones(){
 
 function agregaTiempoSesion(){
     var code = lzw_decode(localStorage.getItem("suspend_data"));
-    // var entrada = code.substring(8,12);
-    var entrada = code.substring(code.length - 8, code.length - 4);
-	var salida = code.substring(code.length - 4);
-    var resultado = convierteAHoras(calcularDiferencia(entrada, salida));
+    elementos = code.split(';'); // Primer elemento es la información de la máquina, segundo es información de las páginas
+    var info_paginas = elementos[1];
+
+    var paginas_visitadas = [];
+    var caracteres_por_pagina = 16;
+    for (var i = 0, charsLength = info_paginas.length; i < charsLength; i += caracteres_por_pagina) {
+        paginas_visitadas.push(info_paginas.substring(i, i + caracteres_por_pagina));
+    }
+    var minutos = 0;
+    paginas_visitadas.forEach(function(pagina){
+        var hora_inicio = pagina.substring(8, 12);
+        var hora_fin = pagina.substring(12);
+        var diferencia = calcularDiferencia(hora_inicio, hora_fin);
+        minutos += diferencia;
+    });
+    resultado = convierteAHoras(minutos);
     localStorage.setItem("session_time", lzw_encode(formatearHora(resultado)));
 }
 
