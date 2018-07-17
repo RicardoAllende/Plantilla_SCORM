@@ -5,19 +5,32 @@ var finalizado = false;
 darEnlaceABotones();
 inicializarLMS(); //LMSInitialize
 establecerNombre(); //Recuperado desde la API SCORM
+// $(document).ready(function(){
+var existia = true;
+if(localStorage.getItem('suspend_data') == null){
+    existia = false;
+}
 if(typeof(Storage)!= "undefined"){
-	verificar_info_usuario(); // Variables de la resolución, SO, Ubicación, navegador
+    
+    verificar_info_usuario(); // Variables de la resolución, SO, Ubicación, navegador
     verificarVariables();
     verificarEstaPagina();
     verificarAvance();
     verificarMarcador();
-    var code = lzw_decode(localStorage.getItem("suspend_data"));        
-    code += obtener_informacion_pagina();
+    var code = lzw_decode(localStorage.getItem("suspend_data"));
+    // if(code == null){
+    //     code = '';
+    // }
+    if(existia){ // existia = true | false
+        code += obtener_informacion_pagina();
+    }
+    // alert("El código suspend_data es: " + code);
     localStorage.setItem("suspend_data", lzw_encode(code));
     code = "";
 }else{
     alert("Este navegador no es compatible con el almacenamiento del curso ERR_LOCAL_STORAGE");
 }
+// });
 
 
 function verificarVariablesEnLocal(){ //en el caso de que existan en servidor pero no en localStorage
@@ -180,7 +193,8 @@ function darEnlaceABotones(){
 
 function agregaTiempoSesion(){
     var code = lzw_decode(localStorage.getItem("suspend_data"));
-    var entrada = code.substring(8,12);
+    // var entrada = code.substring(8,12);
+    var entrada = code.substring(code.length - 8, code.length - 4);
 	var salida = code.substring(code.length - 4);
     var resultado = convierteAHoras(calcularDiferencia(entrada, salida));
     localStorage.setItem("session_time", lzw_encode(formatearHora(resultado)));
@@ -215,8 +229,8 @@ function convierteAHoras(minutos){
     return horas.toString() + minutos.toString();
 }
 
-function guardaTiempo() {
-    if (localStorage.suspend_data) {
+function guardaTiempo() { // Al momento de salir de la página
+    if (localStorage.getItem('suspend_data') != null ) {
         var code = lzw_decode(localStorage.getItem("suspend_data"));
         var t = new Date();
         var m = t.getMinutes();
@@ -278,11 +292,11 @@ function verificarAvance(){
             if(temp>0){
                 completados++;
                 if(enPrueba){
-                    console.log("Lá página en el índice " + i + " fue completada");
+                    console.log("La página en el índice " + i + " fue completada");
                 }
             }else{
                 if(enPrueba){
-                    console.log("Incompleta Lá página en el índice " + i);
+                    console.log("Incompleta La página en el índice " + i);
                 }
             }
             if (marcador == "1") {
@@ -380,7 +394,9 @@ function verificar_info_usuario(){
                 console.log('');
                 console.log("Información generada: "+informacion);
                 console.log("Se almacena en local storage: "+informacion);
-                localStorage.setItem("suspend_data", lzw_encode(informacion + ";"));
+                informacion += ';';
+                informacion += obtener_informacion_pagina();
+                localStorage.setItem("suspend_data", lzw_encode(informacion));
             };
 
             function error() {
@@ -390,7 +406,9 @@ function verificar_info_usuario(){
                 console.log('');
                 console.log("Información generada: "+informacion);
                 console.log("Se almacena en local storage: "+informacion);
-                localStorage.setItem("suspend_data", lzw_encode(informacion + ";"));
+                informacion += ';';
+                informacion += obtener_informacion_pagina();
+                localStorage.setItem("suspend_data", lzw_encode(informacion));
             };
             navigator.geolocation.getCurrentPosition(success, error);
             
@@ -400,7 +418,9 @@ function verificar_info_usuario(){
             console.log('');
             console.log("Información generada: "+informacion);
             console.log("Se almacena en local storage: "+informacion);
-            localStorage.setItem("suspend_data", lzw_encode(informacion + ";"));
+            informacion += ';';
+            informacion += obtener_informacion_pagina();
+            localStorage.setItem("suspend_data", lzw_encode(informacion));
         }
 
     }
