@@ -56,8 +56,20 @@ for (let index = 0; index < lessons.length; index++) {
             enlaces +=`</ul>
                     </li>`;
 }
-enlaces += `</ul>
-</li>
+enlaces += `    </ul>
+            </li>
+            <li>
+                <a href="estadisticas.html">
+                    <div class="item-content">
+                        <div class="item-media">
+                            <div class="lettericon" data-text="Estadisticas" data-size="sm" data-char-count="2"></div>
+                        </div>
+                        <div class="item-inner">
+                            <span class="title"> Estadísticas </span>
+                        </div>
+                    </div>
+                </a>
+            </li>
             <li>
                 <a class="btnFin" data-toggle="tooltip" title="Cerrar curso" data-placement="bottom" data-toggle="tooltip">
                 <div class="item-content">
