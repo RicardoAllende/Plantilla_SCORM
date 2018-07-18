@@ -11,20 +11,16 @@ if(localStorage.getItem('suspend_data') == null){
     existia = false;
 }
 if(typeof(Storage)!= "undefined"){
-    
+
     verificar_info_usuario(); // Variables de la resolución, SO, Ubicación, navegador
     verificarVariables();
     verificarEstaPagina();
     verificarAvance();
     verificarMarcador();
     var code = lzw_decode(localStorage.getItem("suspend_data"));
-    // if(code == null){
-    //     code = '';
-    // }
     if(existia){ // existia = true | false
         code += obtener_informacion_pagina();
     }
-    // alert("El código suspend_data es: " + code);
     localStorage.setItem("suspend_data", lzw_encode(code));
     code = "";
 }else{
@@ -63,16 +59,16 @@ function verificarMarcador(){
         if(marcador == "1"){
             $(".btnBookmark").addClass("paginaMarcada");
             $(".btnBookmark").html(`<img src="assets/images/Bookmark-rojo.png" data-toggle="tooltip" title="Desmarcar" data-placement="bottom" data-original-title="Desmarcar">`);
-            $('[data-toggle="tooltip"]').tooltip(); 
+            $('[data-toggle="tooltip"]').tooltip();
         }
     }
 }
 function marcarPagina(){
     $(".btnBookmark").addClass("paginaMarcada");
     $(".btnBookmark").html(`<img src="assets/images/Bookmark-rojo.png" data-toggle="tooltip" title="Marcar" data-placement="bottom" data-original-title="Marcar">`);
-    $('[data-toggle="tooltip"]').tooltip(); 
+    $('[data-toggle="tooltip"]').tooltip();
     if (localStorage.getItem("lesson_location") != null) {
-        
+
         let ind;
         let nombre = window.location.pathname
         nombre = nombre.substring(nombre.lastIndexOf('/') + 1);
@@ -109,7 +105,7 @@ function marcarPagina(){
 function desmarcarPagina(){
     $(".btnBookmark").removeClass("paginaMarcada");
     $(".btnBookmark").html(`<i class="glyphicon glyphicon-bookmark" data-toggle="tooltip" title="Desmarcar página" data-placement="bottom"></i>`);
-    $('[data-toggle="tooltip"]').tooltip(); 
+    $('[data-toggle="tooltip"]').tooltip();
     if (localStorage.getItem("lesson_location") != null) {
         let ind;
         let nombre = window.location.pathname
@@ -177,7 +173,7 @@ function darEnlaceABotones(){
             }
             return false;
         }
-        
+
         var endResult = api.LMSFinish("");
         finalizado = true;
         window.close();
@@ -275,7 +271,7 @@ function verificarEstaPagina(){
         estadoPagina++;
         if (estadoPagina>99) {
             estadoPagina=99;
-            
+
         }
         if (estadoPagina<10) {
             estadoPagina = "0" + estadoPagina.toString();
@@ -284,12 +280,12 @@ function verificarEstaPagina(){
         if(enPrueba){
             console.log("Ahora el contador de esta página indica " + estadoPagina + " visitas");
         }
-        
+
         var lesson_location = localStorage.setItem("lesson_location", lzw_encode(principio + estadoPagina + final));
     }else{
         alert("Hubo un error y aún no se ha creado lesson_location");
     }
-    
+
 }
 
 function verificarAvance(){
@@ -316,14 +312,14 @@ function verificarAvance(){
                 $('[data-toggle="tooltip"]').tooltip();
             }
         }
-        
+
         let nuevo = parseInt(completados / pages.length * 100);
         if(enPrueba){
             console.log(completados + " completados, de " + pages.length);
             console.log("Se está estableciendo el valor de la barra de progreso en: " + nuevo);
         }
-        $('#progress-bar').attr("aria-valuenow",nuevo); 
-        $('#progress-bar').attr("style","width:" + nuevo + "%"); 
+        $('#progress-bar').attr("aria-valuenow",nuevo);
+        $('#progress-bar').attr("style","width:" + nuevo + "%");
         //$('#progress-bar').html("avance: " + nuevo + "%");
 
         if(completados == pages.length){
@@ -423,7 +419,7 @@ function verificar_info_usuario(){
                 localStorage.setItem("suspend_data", lzw_encode(informacion));
             };
             navigator.geolocation.getCurrentPosition(success, error);
-            
+
         } else { //No soporta geolocalización
             informacion += "-";
             informacion += obtener_resolucion();
@@ -532,7 +528,7 @@ function findAPI(win) {
                 alert("looking for api in windows frames");
                 }
                 for (var i=0;i<win.length;i++){
-        
+
                     if (_Debug){
                         alert("looking for api in frames["+i+"]");
                     }
@@ -555,11 +551,11 @@ function findAPI(win) {
         break;
     }
  }
- 
- 
+
+
  /******************************************************************************************
  ******************************************************************************************/
- 
+
 function getAPI(){
     switch (estandar) {
         case SCORM1_2:
@@ -569,7 +565,7 @@ function getAPI(){
                 alert("checking to see if this window has an opener");
                 alert("window.opener typeof is> "+typeof(window.opener));
             }
-        
+
             if (typeof(this.opener) != "undefined"){
                 if (_Debug){
                     alert("checking this windows opener");
@@ -587,19 +583,19 @@ function getAPI(){
                 }
             }
             }
-        
+
             return theAPI;
         break;
         case SCORM2004:
-            
+
         break;
         case TINCAN:
-            
+
         break;
     }
-    
+
  }
- 
+
  /******************************************************************************************
  ******************************************************************************************/
  function getAPIHandle() {
@@ -611,23 +607,23 @@ function getAPI(){
             return apiHandle;
         break;
         case SCORM2004:
-            
+
         break;
         case TINCAN:
-            
+
         break;
     }
  }
- 
+
  //////////////////////////////////////////////////////////////////////////
  //////////////////////////////////////////////////////////////////////////
 function init(){
-    
+
 }
 
 function inicializarLMS(){
     verificarUltimaPaginaVisitada();
-    //diferencia_lesson_location();   
+    //diferencia_lesson_location();
     switch (estandar) {
         case SCORM1_2:
             // if(localStorage.getItem("isInit") == null){ // Para llamar LMSInitialize sólo una vez
@@ -637,25 +633,25 @@ function inicializarLMS(){
                     if (_Debug){
                         alert("ERROR en init()");
                     }
-                    
+
                     return false;
                 }
                 // console.log("Antes de initialize");
-                
+
                 var initResult = api.LMSInitialize("");
                 // console.log("Después de inicializar " + api.LMSGetLastError());
             // }
-            
+
         break;
         case SCORM2004:
-            
+
         break;
         case TINCAN:
-            
+
         break;
     }
 }
- 
+
  //////////////////////////////////////////////////////////////////////////
  //////////////////////////////////////////////////////////////////////////
  function end(){
@@ -666,7 +662,7 @@ function inicializarLMS(){
     }
     // var endResult = api.LMSFinish("");
  }
- 
+
 function finalizar(){
     guardaUltimaPaginaVisitada();
     var api = getAPIHandle();
@@ -698,15 +694,15 @@ function finalizar(){
             var commitResult = api.LMSCommit("");
         break;
         case SCORM2004:
-            
+
         break;
         case TINCAN:
-            
+
         break;
     }
  }
- 
- 
+
+
  //////////////////////////////////////////////////////////////////////////
  //////////////////////////////////////////////////////////////////////////
 function set(data,value){
@@ -720,17 +716,17 @@ function set(data,value){
                 return false;
             }
             var setResult= api.LMSSetValue(data, value);
-            
+
         break;
         case SCORM2004:
-            
+
         break;
         case TINCAN:
-            
+
         break;
     }
 }
- 
+
  //////////////////////////////////////////////////////////////////////////
  //////////////////////////////////////////////////////////////////////////
  function get(data){
@@ -743,14 +739,14 @@ function set(data,value){
                 }
                 return false;
             }
-            var getResult= api.LMSGetValue(data); 
+            var getResult= api.LMSGetValue(data);
             return getResult;
         break;
         case SCORM2004:
-            
+
         break;
         case TINCAN:
-            
+
         break;
     }
  }
@@ -806,7 +802,7 @@ function diferencia_lesson_location(){ // Recorre todas las páginas de localSto
             }
             if (mayor>99) {
                 mayor=99;
-                
+
             }
             if (mayor<10) {
                 mayor = "0" + mayor.toString();

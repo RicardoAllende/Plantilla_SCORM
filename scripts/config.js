@@ -285,3 +285,36 @@ function lzw_decode(s) {
     }
     return out.join("");
 }
+
+var navegadores = [
+    {
+        //s: 'Windows 10',
+        id: '0',
+        nombre: 'MSIE'
+    },
+    {
+        //s: 'Windows 10',
+        id: '1',
+        nombre: 'Chrome'
+    },
+    {
+        //s: 'Windows 10',
+        id: '2',
+        nombre: 'Firefox'
+    },
+    {
+        //s: 'Windows 10',
+        id: '3',
+        nombre: 'Safari'
+    },
+    {
+        //s: 'Windows 10',
+        id: '4',
+        nombre: 'Opera'
+    },
+    {
+        //s: 'Windows 10',
+        id: '5',
+        nombre: 'Desconocido'
+    }
+];
