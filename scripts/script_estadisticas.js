@@ -24,7 +24,7 @@ $(document).ready(function() {
     });
 
     var informacion = '';
-    
+
     if(typeof(Storage) != "undefined"){
         if(localStorage.getItem("suspend_data") != null){
             var suspend_data_encriptado = localStorage.getItem("suspend_data");
@@ -55,7 +55,7 @@ $(document).ready(function() {
                 ]);
                 i++;
             });
-            
+
             var status, session_time, lesson_location, ultima_visitada;
             if(localStorage.getItem("status") != null){
                 status = lzw_decode(localStorage.getItem('status'));
@@ -70,11 +70,15 @@ $(document).ready(function() {
                 ultima_visitada = localStorage.getItem('ultimaVisitada');
             }
 
-            if(info_usuario.length != 6){ // Sin localización
+            if(info_usuario.length != 6){ // Localización activada
                 var resolucion = info_usuario.substring(info_usuario.length - 2, info_usuario.length);
                 resolucion = obtenerResolucion(resolucion);
                 var so = obtenerSO(info_usuario.substring(0, 2));
-        
+                var navegador = info_usuario.substring(2, 3);
+                navegador = obtenerNavegador(navegador);
+                alert(navegador);
+                var localizacion = obtenerLocalizacion(info_usuario);
+
                 tabla_variables_scorm.row.add([
                     "session_time", session_time, status, ultima_visitada, suspend_data, suspend_data_encriptado
                 ]);
@@ -92,6 +96,12 @@ $(document).ready(function() {
                 ]);
                 tabla_variables_scorm.row.add([
                     "Resolución", resolucion
+                ]);
+                tabla_variables_scorm.row.add([
+                    "Navegador", navegador
+                ]);
+                tabla_variables_scorm.row.add([
+                    "Localización", localizacion
                 ]);
                 tabla_variables_scorm.row.add([
                     "Sistema operativo", so
@@ -160,28 +170,30 @@ function convierteAHoras(minutos){
 }
 
 function obtenerSO(codigo){
+    var so = '-';
     clientStrings.forEach(function(client){
         if(client.s == codigo){
-            return client.r;
+            so = client.r;
         }
     });
-    return "-";
+    return so;
 }
 
 function obtenerNavegador(codigo){
+    var nav = '-';
     navegadores.forEach( function( navegador ){
         if(navegador.id == codigo){
-            return navegador.name;
+            nav = navegador.nombre;
         }
     });
-    return "-";
+    return nav;
 }
 
 function obtenerLocalizacion(info_usuario){
-    if(info_usuario.chartAt(3) != '-' ){
-        return "No se permitió acceso a la localización";
-    }else{
+    if(info_usuario.charAt(3) != '-' ){
         return info_usuario.substring(3, 14);
+    }else{
+        return "No se permitió acceso a la localización";
     }
 }
 
@@ -189,11 +201,11 @@ function obtenerResolucion( codigo ){
     // alert(codigo);
     var resolucion = "";
     resoluciones.forEach( function(elemento){
-        console.log(elemento.id);
+        // console.log(elemento.id);
         if(elemento.id == codigo){
             resolucion =  elemento.resolucion;
         }else{
-            console.log("No coincide " + elemento.id + " con " + codigo);
+            // console.log("No coincide " + elemento.id + " con " + codigo);
         }
     });
     return resolucion;
