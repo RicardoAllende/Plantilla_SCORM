@@ -76,7 +76,7 @@ $(document).ready(function() {
                 var so = obtenerSO(info_usuario.substring(0, 2));
                 var navegador = info_usuario.substring(2, 3);
                 navegador = obtenerNavegador(navegador);
-                alert(navegador);
+                // alert(navegador);
                 var localizacion = obtenerLocalizacion(info_usuario);
 
                 tabla_variables_scorm.row.add([
