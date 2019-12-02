@@ -2,31 +2,31 @@ var apiHandle = null;
 var _Debug = false;
 var finalizado = false;
 
-darEnlaceABotones();
-inicializarLMS(); //LMSInitialize
-establecerNombre(); //Recuperado desde la API SCORM
-// $(document).ready(function(){
-var existia = true;
-if(localStorage.getItem('suspend_data') == null){
-    existia = false;
-}
-if(typeof(Storage)!= "undefined"){
-
-    verificar_info_usuario(); // Variables de la resolución, SO, Ubicación, navegador
-    verificarVariables();
-    verificarEstaPagina();
-    verificarAvance();
-    verificarMarcador();
-    var code = lzw_decode(localStorage.getItem("suspend_data"));
-    if(existia){ // existia = true | false
-        code += obtener_informacion_pagina();
+document.addEventListener("DOMContentLoaded", function() {
+    darEnlaceABotones();
+    inicializarLMS(); //LMSInitialize
+    establecerNombre(); //Recuperado desde la API SCORM
+    var existia = true;
+    if(localStorage.getItem('suspend_data') == null){
+        existia = false;
     }
-    localStorage.setItem("suspend_data", lzw_encode(code));
-    code = "";
-}else{
-    alert("Este navegador no es compatible con el almacenamiento del curso ERR_LOCAL_STORAGE");
-}
-// });
+    if(typeof(Storage)!= "undefined"){
+    
+        verificar_info_usuario(); // Variables de la resolución, SO, Ubicación, navegador
+        verificarVariables();
+        verificarEstaPagina();
+        verificarAvance();
+        verificarMarcador();
+        var code = lzw_decode(localStorage.getItem("suspend_data"));
+        if(existia){ // existia = true | false
+            code += obtener_informacion_pagina();
+        }
+        localStorage.setItem("suspend_data", lzw_encode(code));
+        code = "";
+    }else{
+        alert("Este navegador no es compatible con el almacenamiento del curso ERR_LOCAL_STORAGE");
+    }
+});
 
 
 function verificarVariablesEnLocal(){ //en el caso de que existan en servidor pero no en localStorage
@@ -833,11 +833,13 @@ function dameIndice(nombre){
     if(nombre==""){//Index
         nombre = "index.html";
     }
+    console.log('Buscando', nombre, 'en ', pages)
     for (let i = 0; i < pages.length; i++) {
         if(pages[i].url == nombre){
             return i;
         }
     }
+    console.log('No se encontró', nombre, ' en el arreglo de páginas');
     return -1;
 }
 
@@ -884,8 +886,10 @@ function existeSiguiente(nombre){
 function dameSiguiente(nombre){
     var indice = dameIndice(nombre) + 1;
     if(indice < pages.length){
+        console.log('el siguiente es:', pages[indice].url);
         return pages[indice].url;
     }else{
+        console.log('No se encontró siguiente');
         return "";
     }
 }

@@ -1,4 +1,4 @@
-<body onLoad="init()" onUnload="end()">
+<body onUnload="end()">
 		<div id="app">
 			<!-- sidebar -->
 			<div class="sidebar app-aside" id="sidebar">

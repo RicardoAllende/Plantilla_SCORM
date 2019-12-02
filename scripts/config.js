@@ -5,27 +5,29 @@ var estandar = SCORM1_2; // SCORM1_2, SCORM2004, TINCAN
 
 var tituloDelCurso = "Curso de prueba Subitus";
 var enPrueba = true;
-var pages = { "pages": [
-    {"id": "01","url": "index.html", "title": "Subitus" },
-    {"id": "02","url": "02.html","title": "Moodle"},
-    {"id": "03","url": "03.html","title": "App Tincan"},
-    {"id": "04","url": "04.html","title": "Aviso de privacidad"},
-    {"id": "05","url": "05.html","title": "Blog"},
-    {"id": "06","url": "06.html","title": "Chamillo"},
-    {"id": "07","url": "07.html","title": "Contacto"},
-    {"id": "08","url": "08.html","title": "Detalle de post"},
-    {"id": "09","url": "09.html","title": "E-learning"}
-]};
+var pages = {
+    "pages": [
+        { "id": "01", "url": "index.html", "title": "Subitus" },
+        { "id": "02", "url": "02.html", "title": "Moodle" },
+        { "id": "03", "url": "03.html", "title": "App Tincan" },
+        { "id": "04", "url": "04.html", "title": "Aviso de privacidad" },
+        { "id": "05", "url": "05.html", "title": "Blog" },
+        { "id": "06", "url": "06.html", "title": "Chamillo" },
+        { "id": "07", "url": "07.html", "title": "Contacto" },
+        { "id": "08", "url": "08.html", "title": "Detalle de post" },
+        { "id": "09", "url": "09.html", "title": "E-learning" }
+    ]
+};
 pages = pages.pages;
 
-var lessons ={
-    lecciones : [
-    ["01", "02", "03"],
-    ["04", "05"],
-    ["06", "07"],
-    ["08", "09"]
+var lessons = {
+    lecciones: [
+        ["01", "02", "03"],
+        ["04", "05"],
+        ["06", "07"],
+        ["08", "09"]
     ],
-    nombres : [
+    nombres: [
         "Inicio",
         "Desarrollo",
         "Final",
@@ -37,65 +39,65 @@ nombresDeLecciones = lessons.nombres;
 lessons = lessons.lecciones;
 
 var resoluciones = {
-	"resoluciones": [
-		{"id": "01", "resolucion": "320x200"},
-		{"id": "02", "resolucion": "320x240"},
-		{"id": "03", "resolucion": "480x320"},
-		{"id": "04", "resolucion": "512x384"},
-		{"id": "05", "resolucion": "640x350"},
-		{"id": "06", "resolucion": "640x480"},
-		{"id": "07", "resolucion": "720x348"},
-		{"id": "08", "resolucion": "720x350"},
-		{"id": "09", "resolucion": "720x360"},
-		{"id": "10", "resolucion": "360x640"},
-		{"id": "11", "resolucion": "800x600"},
-		{"id": "12", "resolucion": "850x480"},
-		{"id": "13", "resolucion": "1024x768"},
-		{"id": "14", "resolucion": "1152x640"},
-		{"id": "15", "resolucion": "1280x768"},
-		{"id": "16", "resolucion": "1360x768"},
-		{"id": "17", "resolucion": "1366x768"},
-		{"id": "18", "resolucion": "1280x800"},
-		{"id": "19", "resolucion": "1280x1024"},
-		{"id": "20", "resolucion": "1440x900"},
-		{"id": "21", "resolucion": "1400x1050"},
-		{"id": "22", "resolucion": "1600x900"},
-		{"id": "23", "resolucion": "1680x1050"},
-		{"id": "24", "resolucion": "1600x1200"},
-		{"id": "25", "resolucion": "1920x1080"},
-		{"id": "26", "resolucion": "1920x1200"},
-		{"id": "27", "resolucion": "1920x1440"},
-		{"id": "28", "resolucion": "2048x1152"},
-		{"id": "29", "resolucion": "2048x1536"},
-		{"id": "30", "resolucion": "2560x1440"},
-		{"id": "31", "resolucion": "2560x1600"},
-		{"id": "32", "resolucion": "2560x2048"},
-		{"id": "33", "resolucion": "2880x1800"},
-		{"id": "34", "resolucion": "2880x1440"},
-		{"id": "35", "resolucion": "3200x2048"},
-		{"id": "36", "resolucion": "3200x2400"},
-		{"id": "37", "resolucion": "3840x2160"},
-		{"id": "38", "resolucion": "4096x2160"},
-		{"id": "39", "resolucion": "3840x2400"},
-		{"id": "40", "resolucion": "5120x4096"},
-		{"id": "41", "resolucion": "6400x4096"},
-		{"id": "42", "resolucion": "6400x4800"},
-		{"id": "43", "resolucion": "7680x4800"},
-		{"id": "44", "resolucion": "2160x1080"},
-		{"id": "45", "resolucion": "1440x720"},
-		{"id": "46", "resolucion": "2220x1080"},
-		{"id": "47", "resolucion": "2960x1440"},
-		{"id": "48", "resolucion": "2436x1125"},
-		{"id": "49", "resolucion": "1334x750"},
-		{"id": "50", "resolucion": "320x480"},
-		{"id": "51", "resolucion": "640x1136"},
-		{"id": "52", "resolucion": "750x1334"},
-		{"id": "53", "resolucion": "768x1024"},
-		{"id": "54", "resolucion": "640x960"},
-		{"id": "55", "resolucion": "720x1280"},
-		{"id": "56", "resolucion": "600x1024"},
-		{"id": "57", "resolucion": "1380x768"}
-	]
+    "resoluciones": [
+        { "id": "01", "resolucion": "320x200" },
+        { "id": "02", "resolucion": "320x240" },
+        { "id": "03", "resolucion": "480x320" },
+        { "id": "04", "resolucion": "512x384" },
+        { "id": "05", "resolucion": "640x350" },
+        { "id": "06", "resolucion": "640x480" },
+        { "id": "07", "resolucion": "720x348" },
+        { "id": "08", "resolucion": "720x350" },
+        { "id": "09", "resolucion": "720x360" },
+        { "id": "10", "resolucion": "360x640" },
+        { "id": "11", "resolucion": "800x600" },
+        { "id": "12", "resolucion": "850x480" },
+        { "id": "13", "resolucion": "1024x768" },
+        { "id": "14", "resolucion": "1152x640" },
+        { "id": "15", "resolucion": "1280x768" },
+        { "id": "16", "resolucion": "1360x768" },
+        { "id": "17", "resolucion": "1366x768" },
+        { "id": "18", "resolucion": "1280x800" },
+        { "id": "19", "resolucion": "1280x1024" },
+        { "id": "20", "resolucion": "1440x900" },
+        { "id": "21", "resolucion": "1400x1050" },
+        { "id": "22", "resolucion": "1600x900" },
+        { "id": "23", "resolucion": "1680x1050" },
+        { "id": "24", "resolucion": "1600x1200" },
+        { "id": "25", "resolucion": "1920x1080" },
+        { "id": "26", "resolucion": "1920x1200" },
+        { "id": "27", "resolucion": "1920x1440" },
+        { "id": "28", "resolucion": "2048x1152" },
+        { "id": "29", "resolucion": "2048x1536" },
+        { "id": "30", "resolucion": "2560x1440" },
+        { "id": "31", "resolucion": "2560x1600" },
+        { "id": "32", "resolucion": "2560x2048" },
+        { "id": "33", "resolucion": "2880x1800" },
+        { "id": "34", "resolucion": "2880x1440" },
+        { "id": "35", "resolucion": "3200x2048" },
+        { "id": "36", "resolucion": "3200x2400" },
+        { "id": "37", "resolucion": "3840x2160" },
+        { "id": "38", "resolucion": "4096x2160" },
+        { "id": "39", "resolucion": "3840x2400" },
+        { "id": "40", "resolucion": "5120x4096" },
+        { "id": "41", "resolucion": "6400x4096" },
+        { "id": "42", "resolucion": "6400x4800" },
+        { "id": "43", "resolucion": "7680x4800" },
+        { "id": "44", "resolucion": "2160x1080" },
+        { "id": "45", "resolucion": "1440x720" },
+        { "id": "46", "resolucion": "2220x1080" },
+        { "id": "47", "resolucion": "2960x1440" },
+        { "id": "48", "resolucion": "2436x1125" },
+        { "id": "49", "resolucion": "1334x750" },
+        { "id": "50", "resolucion": "320x480" },
+        { "id": "51", "resolucion": "640x1136" },
+        { "id": "52", "resolucion": "750x1334" },
+        { "id": "53", "resolucion": "768x1024" },
+        { "id": "54", "resolucion": "640x960" },
+        { "id": "55", "resolucion": "720x1280" },
+        { "id": "56", "resolucion": "600x1024" },
+        { "id": "57", "resolucion": "1380x768" }
+    ]
 };
 
 resoluciones = resoluciones.resoluciones;
@@ -241,8 +243,8 @@ function lzw_encode(s) {
     var currChar;
     var phrase = data[0];
     var code = 256;
-    for (var i=1; i<data.length; i++) {
-        currChar=data[i];
+    for (var i = 1; i < data.length; i++) {
+        currChar = data[i];
         if (dict[phrase + currChar] != null) {
             phrase += currChar;
         }
@@ -250,11 +252,11 @@ function lzw_encode(s) {
             out.push(phrase.length > 1 ? dict[phrase] : phrase.charCodeAt(0));
             dict[phrase + currChar] = code;
             code++;
-            phrase=currChar;
+            phrase = currChar;
         }
     }
     out.push(phrase.length > 1 ? dict[phrase] : phrase.charCodeAt(0));
-    for (var i=0; i<out.length; i++) {
+    for (var i = 0; i < out.length; i++) {
         out[i] = String.fromCharCode(out[i]);
     }
     return out.join("");
@@ -269,13 +271,13 @@ function lzw_decode(s) {
     var out = [currChar];
     var code = 256;
     var phrase;
-    for (var i=1; i<data.length; i++) {
+    for (var i = 1; i < data.length; i++) {
         var currCode = data[i].charCodeAt(0);
         if (currCode < 256) {
             phrase = data[i];
         }
         else {
-        phrase = dict[currCode] ? dict[currCode] : (oldPhrase + currChar);
+            phrase = dict[currCode] ? dict[currCode] : (oldPhrase + currChar);
         }
         out.push(phrase);
         currChar = phrase.charAt(0);

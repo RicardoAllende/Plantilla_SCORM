@@ -43,8 +43,55 @@
 		<link rel="shortcut icon" href="favicon.ico" />
 	</head>
 	<!-- end: HEAD -->
-	<body onLoad="init()" onUnload="end()">
+	<body onUnload="end()">
+		<div id="app">
+			<div id="sidebar" class="sidebar app-aside"></div>
+			<div id="app-content" class="app-content"></div>
+		</div>
+		<div id="mymodal"></div>
+		<script src="bower_components/jquery/dist/jquery.min.js"></script>
 		<script src="scripts/config.js"></script>
 		<script src="scripts/template.js"></script>
+		<script>
+			imprimirCabecera();
+			diapositiva = {
+				tipo: "accordion", // flip-card, accordion, horizontal-tabs, vertical-tabs
+				titulo: "Acordeón",
+				div: "contenidoCurso",
+				contenido: [
+					{
+						titulo: "Sección 1",
+						imagen: "",
+						posicionImagen: "", // derecha, izquierda, arriba, abajo
+						texto: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+					},
+					{
+						titulo: "Sección 2",
+						imagen: "",
+						posicionImagen: "", // derecha, izquierda, arriba, abajo
+						texto: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+					},
+					{
+						titulo: "Sección 3",
+						imagen: "",
+						posicionImagen: "", // derecha, izquierda, arriba, abajo
+						texto: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+					},
+					{
+						titulo: "Sección 4",
+						imagen: "",
+						posicionImagen: "", // derecha, izquierda, arriba, abajo
+						texto: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+					},
+					{
+						titulo: "Sección 5",
+						imagen: "",
+						posicionImagen: "", // derecha, izquierda, arriba, abajo
+						texto: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+					},
+				],
+			};
+			imprimirPieDePagina();
+		</script>
 	</body>
 </html>
