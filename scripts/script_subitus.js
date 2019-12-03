@@ -9,11 +9,11 @@ var lesson_location_decoded;
 var lesson_location_encoded;
 
 darEnlaceABotones();
-document.addEventListener("DOMContentLoaded", function() {
-    generar_suspend_data(function(){ // En este punto ya existe suspend_data_encoded y suspend_data_decoded
+document.addEventListener("DOMContentLoaded", function () {
+    generar_suspend_data(function () { // En este punto ya existe suspend_data_encoded y suspend_data_decoded
         inicializarLMS(); //LMSInitialize
         // establecerNombre(); //Recuperado desde la API SCORM
-        generar_lesson_location(function(){
+        generar_lesson_location(function () {
             verificarVariables();
             verificarEstaPagina();
             verificarAvance();
@@ -23,154 +23,154 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
-function generar_lesson_location(callback_function){
+function generar_lesson_location(callback_function) {
     lesson_location_encoded = localStorage.getItem("lesson_location");
-    if(lesson_location_encoded === null){ // Crear lesson_location
+    if (lesson_location_encoded === null) { // Crear lesson_location
         var paginas = "";
         for (let i = 0; i < pages.length; i++) {
             paginas += "000"; // Primeros 2 digitos para contador de visitas, el siguiente para marcador
         }
-        if(enPrueba){
+        if (enPrueba) {
             console.log(" Lesson_location creado " + paginas);
         }
         lesson_location_decoded = paginas;
         lesson_location_encoded = lzw_encode(lesson_location_decoded);
-		guardar_lesson_location();
-    }else{ // Existía previamente
+        guardar_lesson_location();
+    } else { // Existía previamente
         lesson_location_decoded = lzw_decode(lesson_location_encoded);
     }
     callback_function();
 }
 
-function guardar_lesson_location(){
+function guardar_lesson_location() {
     localStorage.setItem("lesson_location", lesson_location_encoded);
 }
 
-function guardar_suspend_data(){
+function guardar_suspend_data() {
     localStorage.setItem("suspend_data", suspend_data_encoded);
 }
 
-function verificarVariablesEnLocal(){ //en el caso de que existan en servidor pero no en localStorage
-    if(localStorage.getItem("status") == null){
-        localStorage.setItem( "status", get("cmi.core.lesson_status"));
+function verificarVariablesEnLocal() { //en el caso de que existan en servidor pero no en localStorage
+    if (localStorage.getItem("status") == null) {
+        localStorage.setItem("status", get("cmi.core.lesson_status"));
     }
-    if(localStorage.getItem("suspend_data") == null){
-        localStorage.setItem( "suspend_data", get("cmi.suspend_data"));
+    if (localStorage.getItem("suspend_data") == null) {
+        localStorage.setItem("suspend_data", get("cmi.suspend_data"));
     }
-    if(localStorage.getItem("session_time") == null){
-        localStorage.setItem("session_time" , get("cmi.core.session_time"));
+    if (localStorage.getItem("session_time") == null) {
+        localStorage.setItem("session_time", get("cmi.core.session_time"));
     }
-    if(localStorage.getItem("lesson_location") == null){
-        localStorage.setItem("lesson_location" , get("cmi.core.lesson_location"));
+    if (localStorage.getItem("lesson_location") == null) {
+        localStorage.setItem("lesson_location", get("cmi.core.lesson_location"));
     }
 }
 
-function establecerNombre(){
+function establecerNombre() {
     $("#studentName").html(get("cmi.core.student_name"));
 }
 
-function verificarMarcador(){
-        let indice = dameIndice(window.location.pathname);
-        let lesson_location = lesson_location_decoded;
-        let marcador = lesson_location.substring((indice * 3)+2, (indice*3) + 3);
-        if(enPrueba){
-            console.log("El marcador de esta página es: " + marcador + ", lesson_location es: " + lesson_location);
-        }
-        if(marcador == "1"){
-            $(".btnBookmark").addClass("paginaMarcada");
-            $(".btnBookmark").html(`<img src="assets/images/Bookmark-rojo.png" data-toggle="tooltip" title="Desmarcar" data-placement="bottom" data-original-title="Desmarcar">`);
-            $('[data-toggle="tooltip"]').tooltip();
-        }
+function verificarMarcador() {
+    let indice = dameIndice(window.location.pathname);
+    let lesson_location = lesson_location_decoded;
+    let marcador = lesson_location.substring((indice * 3) + 2, (indice * 3) + 3);
+    if (enPrueba) {
+        console.log("El marcador de esta página es: " + marcador + ", lesson_location es: " + lesson_location);
+    }
+    if (marcador == "1") {
+        $(".btnBookmark").addClass("paginaMarcada");
+        $(".btnBookmark").html(`<img src="assets/images/Bookmark-rojo.png" data-toggle="tooltip" title="Desmarcar" data-placement="bottom" data-original-title="Desmarcar">`);
+        $('[data-toggle="tooltip"]').tooltip();
+    }
 }
 
-function marcarPagina(){
+function marcarPagina() {
     $(".btnBookmark").addClass("paginaMarcada");
     $(".btnBookmark").html(`<img src="assets/images/Bookmark-rojo.png" data-toggle="tooltip" title="Marcar" data-placement="bottom" data-original-title="Marcar">`);
     $('[data-toggle="tooltip"]').tooltip();
 
-        let ind;
-        let nombre = window.location.pathname
-        nombre = nombre.substring(nombre.lastIndexOf('/') + 1);
-        if(nombre==""){//Index
-            nombre = "index.html";
+    let ind;
+    let nombre = window.location.pathname
+    nombre = nombre.substring(nombre.lastIndexOf('/') + 1);
+    if (nombre == "") {//Index
+        nombre = "index.html";
+    }
+    for (let i = 0; i < pages.length; i++) {
+        if (pages[i].url == nombre) {
+            ind = i;
         }
-        for (let i = 0; i < pages.length; i++) {
-            if(pages[i].url == nombre){
-                ind =  i;
-            }
-        }
-        $('#enlace'+ind).prepend('<img src="assets/images/Bookmark-rojo.png" data-toggle="tooltip" title="Página guardada en sus marcadores" data-placement="bottom">');
-        console.log("El índice es " + ind);
-        var lesson_location = lesson_location_decoded;
-        var marcadorPagina = lesson_location.substring((ind * 3)+2, (ind*3) + 3);
-        console.log("Recuperado de localStorage " + lesson_location);
-        var principio = lesson_location.substring(0, (ind*3) + 2);
-        var final = lesson_location.substring((ind*3)+3);
-        if(enPrueba){
-            console.log("El marcador de esta página era: " + marcadorPagina + ", lesson_location es: " + lesson_location);
-            console.log("Principio " + principio);
-            console.log("Final " + final);
-        }
-        marcadorPagina = "1";
-        //console.log("El marcador de esta página ahora es: " + marcadorPagina);
-        lesson_location = principio + marcadorPagina + final;
-        if(enPrueba){
-            console.log("Después de guardar el marcador lesson_location = " + lesson_location );
-        }
-        lesson_location_decoded = lesson_location;
-        lesson_location_encoded = lzw_encode(lesson_location_decoded);
-        guardar_lesson_location();
+    }
+    $('#enlace' + ind).prepend('<img src="assets/images/Bookmark-rojo.png" data-toggle="tooltip" title="Página guardada en sus marcadores" data-placement="bottom">');
+    console.log("El índice es " + ind);
+    var lesson_location = lesson_location_decoded;
+    var marcadorPagina = lesson_location.substring((ind * 3) + 2, (ind * 3) + 3);
+    console.log("Recuperado de localStorage " + lesson_location);
+    var principio = lesson_location.substring(0, (ind * 3) + 2);
+    var final = lesson_location.substring((ind * 3) + 3);
+    if (enPrueba) {
+        console.log("El marcador de esta página era: " + marcadorPagina + ", lesson_location es: " + lesson_location);
+        console.log("Principio " + principio);
+        console.log("Final " + final);
+    }
+    marcadorPagina = "1";
+    //console.log("El marcador de esta página ahora es: " + marcadorPagina);
+    lesson_location = principio + marcadorPagina + final;
+    if (enPrueba) {
+        console.log("Después de guardar el marcador lesson_location = " + lesson_location);
+    }
+    lesson_location_decoded = lesson_location;
+    lesson_location_encoded = lzw_encode(lesson_location_decoded);
+    guardar_lesson_location();
     alertify.success("Página guardada en sus marcadores");
 }
 
-function desmarcarPagina(){
+function desmarcarPagina() {
     $(".btnBookmark").removeClass("paginaMarcada");
     $(".btnBookmark").html(`<i class="glyphicon glyphicon-bookmark" data-toggle="tooltip" title="Desmarcar página" data-placement="bottom"></i>`);
     $('[data-toggle="tooltip"]').tooltip();
-        let ind;
-        let nombre = window.location.pathname
-        nombre = nombre.substring(nombre.lastIndexOf('/') + 1);
-        if(nombre==""){//Index
-            nombre = "index.html";
+    let ind;
+    let nombre = window.location.pathname
+    nombre = nombre.substring(nombre.lastIndexOf('/') + 1);
+    if (nombre == "") {//Index
+        nombre = "index.html";
+    }
+    for (let i = 0; i < pages.length; i++) {
+        if (pages[i].url == nombre) {
+            ind = i;
         }
-        for (let i = 0; i < pages.length; i++) {
-            if(pages[i].url == nombre){
-                ind =  i;
-            }
-        }
-        $('#enlace'+ind).html('<span class="title">' + pages[ind].title + ' </span>');
-        var lesson_location = lesson_location_decoded;
-        var marcadorPagina = lesson_location.substring((ind * 3)+2, (ind*3) + 3);
-        var principio = lesson_location.substring(0, (ind*3) + 2);
-        var final = lesson_location.substring((ind*3)+3);
-        if(enPrueba){
-            console.log("El índice de la página a desmarcar es " + ind);
-            console.log("Recuperado de localStorage" + lesson_location);
-            console.log("El marcador de esta página era: " + marcadorPagina + ", lesson_location es: " + lesson_location);
-            console.log("Principio " + principio);
-            console.log("Final " + final);
-        }
-        marcadorPagina = "0";
-        lesson_location = principio + marcadorPagina + final;
-        if(enPrueba){
-            console.log("El marcador de esta página ahora es: " + marcadorPagina);
-            console.log("Lesson_location = " + lesson_location );
-        }
-        lesson_location_decoded = lesson_location;
-        lesson_location_encoded = lzw_encode(lesson_location_decoded);
-        guardar_lesson_location();
+    }
+    $('#enlace' + ind).html('<span class="title">' + pages[ind].title + ' </span>');
+    var lesson_location = lesson_location_decoded;
+    var marcadorPagina = lesson_location.substring((ind * 3) + 2, (ind * 3) + 3);
+    var principio = lesson_location.substring(0, (ind * 3) + 2);
+    var final = lesson_location.substring((ind * 3) + 3);
+    if (enPrueba) {
+        console.log("El índice de la página a desmarcar es " + ind);
+        console.log("Recuperado de localStorage" + lesson_location);
+        console.log("El marcador de esta página era: " + marcadorPagina + ", lesson_location es: " + lesson_location);
+        console.log("Principio " + principio);
+        console.log("Final " + final);
+    }
+    marcadorPagina = "0";
+    lesson_location = principio + marcadorPagina + final;
+    if (enPrueba) {
+        console.log("El marcador de esta página ahora es: " + marcadorPagina);
+        console.log("Lesson_location = " + lesson_location);
+    }
+    lesson_location_decoded = lesson_location;
+    lesson_location_encoded = lzw_encode(lesson_location_decoded);
+    guardar_lesson_location();
     alertify.success('Página desmarcada');
     // alert("Página desmarcada");
 }
-$(".btnBookmark").click(function(){
-    if($(this).hasClass("paginaMarcada")){
+$(".btnBookmark").click(function () {
+    if ($(this).hasClass("paginaMarcada")) {
         desmarcarPagina();
-    }else{
+    } else {
         marcarPagina();
     }
 });
 
-function darEnlaceABotones(){
+function darEnlaceABotones() {
     /**
     * Se insertan los enlaces siguiente y anterior;
     * si no existen, desaparece el enlace
@@ -178,20 +178,20 @@ function darEnlaceABotones(){
     var actual = window.location.pathname;
     if (!existeAnterior(actual)) {
         $("#btnPrev").hide();
-    }else{
+    } else {
         $("#btnPrev").attr("href", dameAnterior(actual));
         $("#btnPrev").show();
     }
 
-    $(".btnFin").click(function(){
+    $(".btnFin").click(function () {
         // localStorage.removeItem("isInit");
         finalizar();
         localStorage.setItem("finalizado", "1");
         alertify.success('Finalizando');
         // alert("Finalizando");
         var api = getAPIHandle();
-        if (api == null){
-            if (_Debug){
+        if (api == null) {
+            if (_Debug) {
                 alert("ERROR en función darEnlaceABotones()");
             }
             return false;
@@ -204,13 +204,13 @@ function darEnlaceABotones(){
 
     if (!existeSiguiente(actual)) {
         $("#btnNext").hide();
-    }else{
+    } else {
         $("#btnNext").attr("href", dameSiguiente(actual));
         $("#btnNext").html("Siguiente");
     }
 }
 
-function agregaTiempoSesion(){
+function agregaTiempoSesion() {
     code = suspend_data_decoded;
     elementos = code.split(';'); // Primer elemento es la información de la máquina, segundo es información de las páginas
     var info_paginas = elementos[1];
@@ -221,7 +221,7 @@ function agregaTiempoSesion(){
         paginas_visitadas.push(info_paginas.substring(i, i + caracteres_por_pagina));
     }
     var minutos = 0;
-    paginas_visitadas.forEach(function(pagina){
+    paginas_visitadas.forEach(function (pagina) {
         var hora_inicio = pagina.substring(8, 12);
         var hora_fin = pagina.substring(12);
         var diferencia = calcularDiferencia(hora_inicio, hora_fin);
@@ -236,32 +236,32 @@ function agregaTiempoSesion(){
  * @returns tiempo en minutos
  */
 
-function calcularDiferencia(hora1, hora2){
+function calcularDiferencia(hora1, hora2) {
     //Se convierten las horas a minutos
     var hora1 = (parseInt(hora1.substring(0, 2)) * 60) + parseInt(hora1.substring(2, 4));
     var hora2 = (parseInt(hora2.substring(0, 2)) * 60) + parseInt(hora2.substring(2, 4));
     return hora2 - hora1;
 }
 
-function convierteAHoras(minutos){
-    while(minutos < 0){
-        minutos = (12*60) - minutos;
+function convierteAHoras(minutos) {
+    while (minutos < 0) {
+        minutos = (12 * 60) - minutos;
     }
     if (minutos > 59) {
-        var horas = parseInt(minutos/60);
+        var horas = parseInt(minutos / 60);
         var minutos = minutos - (horas * 60);
-        if(horas<10){	horas = "0" + horas.toString();	}
-    }else{
+        if (horas < 10) { horas = "0" + horas.toString(); }
+    } else {
         horas = "00";
     }
-    if(minutos<10){
+    if (minutos < 10) {
         minutos = "0" + minutos.toString();
     }
     return horas.toString() + minutos.toString();
 }
 
 function guardaTiempo() { // Al momento de salir de la página
-    if (localStorage.getItem('suspend_data') != null ) {
+    if (localStorage.getItem('suspend_data') != null) {
         var code = suspend_data_decoded;
         var t = new Date();
         var m = t.getMinutes();
@@ -277,89 +277,89 @@ function guardaTiempo() { // Al momento de salir de la página
     }
 }
 
-function obtener_entero_desde(_value){
+function obtener_entero_desde(_value) {
     console.log('Entrada obtener_entero_desde', _value)
     _value = parseInt(_value);
-    if(Number.isNaN(_value)){
+    if (Number.isNaN(_value)) {
         _value = 0;
     }
     console.log('Salida obtener_entero_desde', _value)
     return _value;
 }
 
-function verificarEstaPagina(){
+function verificarEstaPagina() {
     lesson_location = lesson_location_decoded;
-        var indice = dameIndice(window.location.pathname);
-        console.log('VerificarEstaPagina', lesson_location, indice, `'${lesson_location}'.substring(${indice} * 3, (${indice}*3) + 2` );
-        var estadoPagina = lesson_location.substring(indice * 3, (indice*3) + 2);
-        var principio = lesson_location.substring(0, (indice*3));
-        var final = lesson_location.substring((indice*3) + 2);
-        console.log('Antes de obtener_entero_desde', estadoPagina);
-        estadoPagina = obtener_entero_desde(estadoPagina);
-        if(enPrueba){
-            console.log("Esta página ha sido visitada: " + estadoPagina + " veces");
-        }
-        if(estadoPagina == 0){
-            alertify.success("Avance de esta página guardado");
-        }
-        estadoPagina++;
-        if (estadoPagina>99) {
-            estadoPagina=99;
+    var indice = dameIndice(window.location.pathname);
+    console.log('VerificarEstaPagina', lesson_location, indice, `'${lesson_location}'.substring(${indice} * 3, (${indice}*3) + 2`);
+    var estadoPagina = lesson_location.substring(indice * 3, (indice * 3) + 2);
+    var principio = lesson_location.substring(0, (indice * 3));
+    var final = lesson_location.substring((indice * 3) + 2);
+    console.log('Antes de obtener_entero_desde', estadoPagina);
+    estadoPagina = obtener_entero_desde(estadoPagina);
+    if (enPrueba) {
+        console.log("Esta página ha sido visitada: " + estadoPagina + " veces");
+    }
+    if (estadoPagina == 0) {
+        alertify.success("Avance de esta página guardado");
+    }
+    estadoPagina++;
+    if (estadoPagina > 99) {
+        estadoPagina = 99;
 
-        }
-        if (estadoPagina<10) {
-            estadoPagina = "0" + estadoPagina.toString();
-        }
-        estadoPagina = estadoPagina.toString();
-        if(enPrueba){
-            console.log("Ahora el contador de esta página indica " + estadoPagina + " visitas");
-        }
-        lesson_location_decoded = (principio + estadoPagina + final);
-        lesson_location_encoded = lzw_encode(lesson_location_decoded);
-        guardar_lesson_location();
+    }
+    if (estadoPagina < 10) {
+        estadoPagina = "0" + estadoPagina.toString();
+    }
+    estadoPagina = estadoPagina.toString();
+    if (enPrueba) {
+        console.log("Ahora el contador de esta página indica " + estadoPagina + " visitas");
+    }
+    lesson_location_decoded = (principio + estadoPagina + final);
+    lesson_location_encoded = lzw_encode(lesson_location_decoded);
+    guardar_lesson_location();
 }
 
-function verificarAvance(){
-    if(localStorage.getItem("status") != null){
+function verificarAvance() {
+    if (localStorage.getItem("status") != null) {
         var status = lesson_location_decoded;
         var completados = 0;
         var temp, marcador;
         for (var i = 0; i < pages.length; i++) {
-            temp = status.substring(i * 3, (i*3) + 2);
-            marcador = status.substring((i * 3)+2, (i*3) + 3);
+            temp = status.substring(i * 3, (i * 3) + 2);
+            marcador = status.substring((i * 3) + 2, (i * 3) + 3);
             temp = parseInt(temp);
-            if(temp>0){
+            if (temp > 0) {
                 completados++;
-                if(enPrueba){
+                if (enPrueba) {
                     console.log("La página en el índice " + i + " fue completada");
                 }
-            }else{
-                if(enPrueba){
+            } else {
+                if (enPrueba) {
                     console.log("Incompleta La página en el índice " + i);
                 }
             }
             if (marcador == "1") {
-                $('#enlace'+i).prepend('<img src="assets/images/Bookmark-rojo.png" data-toggle="tooltip" title="Página guardada en sus marcadores" data-placement="bottom">');
+                $('#enlace' + i).prepend('<img src="assets/images/Bookmark-rojo.png" data-toggle="tooltip" title="Página guardada en sus marcadores" data-placement="bottom">');
                 $('[data-toggle="tooltip"]').tooltip();
             }
         }
 
         let nuevo = parseInt(completados / pages.length * 100);
-        if(enPrueba){
+        if (enPrueba) {
             console.log(completados + " completados, de " + pages.length);
             console.log("Se está estableciendo el valor de la barra de progreso en: " + nuevo);
         }
-        $('#progress-bar').attr("aria-valuenow",nuevo);
-        $('#progress-bar').attr("style","width:" + nuevo + "%");
+        $('#progress-bar').attr("aria-valuenow", nuevo);
+        $('#progress-bar').attr("style", "width:" + nuevo + "%");
         //$('#progress-bar').html("avance: " + nuevo + "%");
 
-        if(completados == pages.length){
+        if (completados == pages.length) {
             localStorage.setItem("status", lzw_encode("completed"));
-        }else{
+        } else {
             localStorage.setItem("status", lzw_encode("incomplete"));
         }
-    }else{
-        if(enPrueba){
+    } else {
+        if (enPrueba) {
             console.log("No existía la variable status");
         }
         localStorage.setItem("status", lzw_encode("incomplete"));
@@ -370,9 +370,9 @@ function verificarAvance(){
  * Crea o recupera la variable suspend_data
  * @param {callback} funci
  */
-function generar_suspend_data(callback_function){
+function generar_suspend_data(callback_function) {
     suspend_data_encoded = localStorage.getItem("suspend_data");
-    if(suspend_data_encoded == null){ //Se crea la información del usuario en caso de no existir
+    if (suspend_data_encoded == null) { //Se crea la información del usuario en caso de no existir
         generando_informacion = true;
         console.log("Iniciando suspend_data con información del usuario");
         informacion = "";
@@ -424,8 +424,8 @@ function generar_suspend_data(callback_function){
                 console.log("Coordenadas: " + p1 + " | " + p2);
                 informacion += obtener_resolucion();
                 console.log('');
-                console.log("Información generada: "+informacion);
-                console.log("Se almacena en local storage: "+informacion);
+                console.log("Información generada: " + informacion);
+                console.log("Se almacena en local storage: " + informacion);
                 informacion += ';';
                 informacion += obtener_informacion_pagina();
                 suspend_data_decoded = informacion;
@@ -439,8 +439,8 @@ function generar_suspend_data(callback_function){
                 informacion += "-";
                 informacion += obtener_resolucion();
                 console.log('');
-                console.log("Información generada: "+informacion);
-                console.log("Se almacena en local storage: "+informacion);
+                console.log("Información generada: " + informacion);
+                console.log("Se almacena en local storage: " + informacion);
                 informacion += ';';
                 informacion += obtener_informacion_pagina();
                 suspend_data_decoded = informacion;
@@ -454,8 +454,8 @@ function generar_suspend_data(callback_function){
             informacion += "-";
             informacion += obtener_resolucion();
             console.log('');
-            console.log("Información generada: "+informacion);
-            console.log("Se almacena en local storage: "+informacion);
+            console.log("Información generada: " + informacion);
+            console.log("Se almacena en local storage: " + informacion);
             informacion += ';';
             informacion += obtener_informacion_pagina();
             suspend_data_decoded = informacion;
@@ -466,8 +466,8 @@ function generar_suspend_data(callback_function){
 
     }
 
-    intervalo_obtener_informacion = setInterval(function() { // Ejecutar lo siguiente hasta que se tenga la información lista
-        if(!generando_informacion){
+    intervalo_obtener_informacion = setInterval(function () { // Ejecutar lo siguiente hasta que se tenga la información lista
+        if (!generando_informacion) {
             clearInterval(intervalo_obtener_informacion);
             suspend_data_decoded = lzw_decode(suspend_data_encoded);
             callback_function();
@@ -475,35 +475,35 @@ function generar_suspend_data(callback_function){
     }, 200);
 }
 
-function formatearHora(hora){
-    return hora.substring(0,2) + ":" + hora.substring(2,4) + ":00";
+function formatearHora(hora) {
+    return hora.substring(0, 2) + ":" + hora.substring(2, 4) + ":00";
 }
 
-function obtener_resolucion(){
+function obtener_resolucion() {
     let resolucion = screen.width + "x" + screen.height;
-    if(screen.width < screen.height){
+    if (screen.width < screen.height) {
         resolucion = screen.height + "x" + screen.width;
     }
     for (let index = 0; index < resoluciones.length; index++) {
-        if(resolucion == resoluciones[index].resolucion){
+        if (resolucion == resoluciones[index].resolucion) {
             console.log("Resolución: " + resolucion + " -> " + resoluciones[index].id);
             return resoluciones[index].id;
         }
     }
-    console.log("No hubo match en la resolución: "+ resolucion);
+    console.log("No hubo match en la resolución: " + resolucion);
     return "00";
 }
 
-function obtener_nombre_nuevo_intento(){
+function obtener_nombre_nuevo_intento() {
     var nuevoNombre = "intento1";
-    while(localStorage.getItem(nuevoNombre) != null){
+    while (localStorage.getItem(nuevoNombre) != null) {
         console.log(nuevoNombre + " utilizado");
-        nuevoNombre = nuevoNombre.substring(0, 7) + (parseInt( nuevoNombre.substring(7)) + 1);
+        nuevoNombre = nuevoNombre.substring(0, 7) + (parseInt(nuevoNombre.substring(7)) + 1);
     }
     return nuevoNombre;
 }
 
-function obtener_informacion_pagina(){
+function obtener_informacion_pagina() {
     id_pag = dameID(window.location.pathname);
     var today = new Date();
     var dd = today.getDate();
@@ -526,23 +526,23 @@ function obtener_informacion_pagina(){
     }
     console.log("Página: " + window.location.pathname + " -> " + id_pag);
     console.log("Hora: " + hour + ":" + minutes);
-    console.log("Fecha: " + dd + "/" + mm + "/" + yyyy );
+    console.log("Fecha: " + dd + "/" + mm + "/" + yyyy);
     return '' + id_pag + dd + '' + mm + '' + yyyy + '' + hour + '' + minutes;
 }
 
-function verificarVariables(){
-	if(localStorage.getItem("session_time") == null){
-		localStorage.setItem("session_time", "00:00:00");
-	}
-	if(localStorage.getItem("total_time") == null){
-		localStorage.setItem("total_time", lzw_encode("000000"));
-	}
-	if(localStorage.getItem("status") == null){
-		localStorage.setItem("status", lzw_encode("0"));
+function verificarVariables() {
+    if (localStorage.getItem("session_time") == null) {
+        localStorage.setItem("session_time", "00:00:00");
+    }
+    if (localStorage.getItem("total_time") == null) {
+        localStorage.setItem("total_time", lzw_encode("000000"));
+    }
+    if (localStorage.getItem("status") == null) {
+        localStorage.setItem("status", lzw_encode("0"));
     }
 }
 
-function sumaHoras(hora1, hora2){
+function sumaHoras(hora1, hora2) {
     //Se convierten las horas a minutos
     var hora1 = (parseInt(hora1.substring(0, 2)) * 60) + parseInt(hora1.substring(2, 4));
     var hora2 = (parseInt(hora2.substring(0, 2)) * 60) + parseInt(hora2.substring(2, 4));
@@ -554,299 +554,299 @@ function sumaHoras(hora1, hora2){
 function findAPI(win) {
     switch (estandar) {
         case SCORM1_2:
-            if (_Debug){
-                alert("win is: "+win.location.href);
+            if (_Debug) {
+                alert("win is: " + win.location.href);
             }
-            if (win.API != null){
-                if (_Debug){
+            if (win.API != null) {
+                if (_Debug) {
                     alert("found api in this window");
                 }
                 return win.API;
             }
             if (win.length > 0) {
-                if (_Debug){
-                alert("looking for api in windows frames");
+                if (_Debug) {
+                    alert("looking for api in windows frames");
                 }
-                for (var i=0;i<win.length;i++){
+                for (var i = 0; i < win.length; i++) {
 
-                    if (_Debug){
-                        alert("looking for api in frames["+i+"]");
+                    if (_Debug) {
+                        alert("looking for api in frames[" + i + "]");
                     }
                     var theAPI = findAPI(win.frames[i]);
-                    if (theAPI != null){
+                    if (theAPI != null) {
                         return theAPI;
                     }
                 }
             }
-            if (_Debug){
+            if (_Debug) {
                 alert("didn't find api in this window (or its children)");
             }
             return null;
-        break;
+            break;
         case SCORM2004:
 
-        break;
+            break;
         case TINCAN:
 
-        break;
+            break;
     }
- }
+}
 
 
- /******************************************************************************************
- ******************************************************************************************/
+/******************************************************************************************
+******************************************************************************************/
 
-function getAPI(){
+function getAPI() {
     switch (estandar) {
         case SCORM1_2:
             var theAPI = findAPI(this.top);
-            if (theAPI == null){
-            if (_Debug){
-                alert("checking to see if this window has an opener");
-                alert("window.opener typeof is> "+typeof(window.opener));
-            }
+            if (theAPI == null) {
+                if (_Debug) {
+                    alert("checking to see if this window has an opener");
+                    alert("window.opener typeof is> " + typeof (window.opener));
+                }
 
-            if (typeof(this.opener) != "undefined"){
-                if (_Debug){
-                    alert("checking this windows opener");
-                }
-                if (this.opener != null){
-                    if (_Debug){
-                        alert("this windows opener is NOT null - looking there");
+                if (typeof (this.opener) != "undefined") {
+                    if (_Debug) {
+                        alert("checking this windows opener");
                     }
-                    theAPI = findAPI(this.opener.top);
-                }
-                else{
-                    if (_Debug){
-                        alert("this windows opener is null");
+                    if (this.opener != null) {
+                        if (_Debug) {
+                            alert("this windows opener is NOT null - looking there");
+                        }
+                        theAPI = findAPI(this.opener.top);
+                    }
+                    else {
+                        if (_Debug) {
+                            alert("this windows opener is null");
+                        }
                     }
                 }
-            }
             }
 
             return theAPI;
-        break;
+            break;
         case SCORM2004:
 
-        break;
+            break;
         case TINCAN:
 
-        break;
+            break;
     }
-
- }
-
- /******************************************************************************************
- ******************************************************************************************/
- function getAPIHandle() {
-    switch (estandar) {
-        case SCORM1_2:
-            if (apiHandle == null){
-                apiHandle = getAPI();
-            }
-            return apiHandle;
-        break;
-        case SCORM2004:
-
-        break;
-        case TINCAN:
-
-        break;
-    }
- }
-
- //////////////////////////////////////////////////////////////////////////
- //////////////////////////////////////////////////////////////////////////
-function init(){
 
 }
 
-function inicializarLMS(){
+/******************************************************************************************
+******************************************************************************************/
+function getAPIHandle() {
+    switch (estandar) {
+        case SCORM1_2:
+            if (apiHandle == null) {
+                apiHandle = getAPI();
+            }
+            return apiHandle;
+            break;
+        case SCORM2004:
+
+            break;
+        case TINCAN:
+
+            break;
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+function init() {
+
+}
+
+function inicializarLMS() {
     verificarUltimaPaginaVisitada();
     //diferencia_lesson_location();
     switch (estandar) {
         case SCORM1_2:
             // if(localStorage.getItem("isInit") == null){ // Para llamar LMSInitialize sólo una vez
-                // localStorage.setItem("isInit", "1"); // Al dar clic en el botón inicializar se elimina la variable
-                var api = getAPIHandle();
-                if (api == null){
-                    if (_Debug){
-                        alert("ERROR en init()");
-                    }
-
-                    return false;
+            // localStorage.setItem("isInit", "1"); // Al dar clic en el botón inicializar se elimina la variable
+            var api = getAPIHandle();
+            if (api == null) {
+                if (_Debug) {
+                    alert("ERROR en init()");
                 }
-                var initResult = api.LMSInitialize("");
-                // console.log("Después de inicializar " + api.LMSGetLastError());
+
+                return false;
+            }
+            var initResult = api.LMSInitialize("");
+            // console.log("Después de inicializar " + api.LMSGetLastError());
             // }
 
-        break;
+            break;
         case SCORM2004:
 
-        break;
+            break;
         case TINCAN:
 
-        break;
+            break;
     }
 }
 
- //////////////////////////////////////////////////////////////////////////
- //////////////////////////////////////////////////////////////////////////
- function end(){
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+function end() {
     guardaTiempo();
     agregaTiempoSesion();
-    if(!finalizado){
+    if (!finalizado) {
         finalizar();
     }
     // var endResult = api.LMSFinish("");
- }
+}
 
-function finalizar(){
+function finalizar() {
     guardaUltimaPaginaVisitada();
     var api = getAPIHandle();
-    if (api == null){
-        if (_Debug){
+    if (api == null) {
+        if (_Debug) {
             alert("ERROR en función end()");
         }
         return false;
     }
-    set("cmi.core.lesson_status",lzw_decode( localStorage.getItem("status") ));
+    set("cmi.core.lesson_status", lzw_decode(localStorage.getItem("status")));
     set("cmi.suspend_data", localStorage.getItem("suspend_data"));
     set("cmi.core.session_time", lzw_decode(localStorage.getItem("session_time")));
     //set("cmi.core.session_time", "02:21:00");
     set("cmi.core.lesson_location", lesson_location_encoded);
     save();
 }
- //////////////////////////////////////////////////////////////////////////
- //////////////////////////////////////////////////////////////////////////
- function save(){ //Crear commit
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+function save() { //Crear commit
     switch (estandar) {
         case SCORM1_2:
             var api = getAPIHandle();
-            if (api == null){
-                if (_Debug){
+            if (api == null) {
+                if (_Debug) {
                     alert("ERROR");
                 }
                 return false;
             }
             var commitResult = api.LMSCommit("");
-        break;
+            break;
         case SCORM2004:
 
-        break;
+            break;
         case TINCAN:
 
-        break;
+            break;
     }
- }
+}
 
 
- //////////////////////////////////////////////////////////////////////////
- //////////////////////////////////////////////////////////////////////////
-function set(data,value){
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+function set(data, value) {
     switch (estandar) {
         case SCORM1_2:
             var api = getAPIHandle();
-            if (api == null){
-                if (_Debug){
+            if (api == null) {
+                if (_Debug) {
                     alert("ERROR");
                 }
                 return false;
             }
-            var setResult= api.LMSSetValue(data, value);
+            var setResult = api.LMSSetValue(data, value);
 
-        break;
+            break;
         case SCORM2004:
 
-        break;
+            break;
         case TINCAN:
 
-        break;
+            break;
     }
 }
 
- //////////////////////////////////////////////////////////////////////////
- //////////////////////////////////////////////////////////////////////////
- function get(data){
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+function get(data) {
     switch (estandar) {
         case SCORM1_2:
             var api = getAPIHandle();
-            if (api == null){
-                if (_Debug){
+            if (api == null) {
+                if (_Debug) {
                     alert("ERROR in get()");
                 }
                 return false;
             }
-            var getResult= api.LMSGetValue(data);
+            var getResult = api.LMSGetValue(data);
             return getResult;
-        break;
+            break;
         case SCORM2004:
 
-        break;
+            break;
         case TINCAN:
 
-        break;
+            break;
     }
- }
+}
 
- function diferencia_suspend_data(){
+function diferencia_suspend_data() {
     var suspend_local = localStorage.getItem("suspend_data");
     var suspend_scor = get("cmi.suspend_data");
-    if(suspend_local.length>=suspend_scor.length){ // La variable en local tiene mayor recorrido en el curso
+    if (suspend_local.length >= suspend_scor.length) { // La variable en local tiene mayor recorrido en el curso
         set("cmi.suspend_data", suspend_local);
     }
- }
+}
 
-function guardaUltimaPaginaVisitada(){
-    let nombre=window.location.pathname;
+function guardaUltimaPaginaVisitada() {
+    let nombre = window.location.pathname;
     nombre = nombre.substring(nombre.lastIndexOf('/') + 1);
-    if(nombre==""){//Index
+    if (nombre == "") {//Index
         nombre = "index.html";
     }
     localStorage.setItem("ultimaVisitada", nombre);
 }
 
-function verificarUltimaPaginaVisitada(){
+function verificarUltimaPaginaVisitada() {
     let ultimaVisitada = localStorage.getItem("ultimaVisitada");
-    if(ultimaVisitada != null){
+    if (ultimaVisitada != null) {
         if (localStorage.getItem("finalizado") != null) {
             localStorage.removeItem("finalizado");
-            if(confirm("¿Desea ir a la última página visitada?")){
+            if (confirm("¿Desea ir a la última página visitada?")) {
                 window.location.href = ultimaVisitada;
             }
         }
     }
 }
 
-function diferencia_lesson_location(){ // Recorre todas las páginas de localStorage/SCOR y guarda el número mayor de visitas en cada uno
-    if(localStorage.getItem("status") != null){
+function diferencia_lesson_location() { // Recorre todas las páginas de localStorage/SCOR y guarda el número mayor de visitas en cada uno
+    if (localStorage.getItem("status") != null) {
         var status = lesson_location_decoded;
         var statusSCO = lzw_decode(get("cmi.core.lesson_location"));
         var completados = 0;
         //console.log(status);
-        var temp, tempSCO, mayor, marcador, marcador2, resultado="", cambio=false;
+        var temp, tempSCO, mayor, marcador, marcador2, resultado = "", cambio = false;
         for (var i = 0; i < pages.length; i++) {
-            temp = status.substring(i * 3, (i*3) + 2);
-            marcador = status.substring((i * 3)+2, (i*3) + 3);
+            temp = status.substring(i * 3, (i * 3) + 2);
+            marcador = status.substring((i * 3) + 2, (i * 3) + 3);
             temp = parseInt(temp);
-            tempSCO = statusSCO.substring(i * 3, (i*3) + 2);
-            marcador2 = statusSCO.substring((i * 3) + 2, (i*3) + 3);
+            tempSCO = statusSCO.substring(i * 3, (i * 3) + 2);
+            marcador2 = statusSCO.substring((i * 3) + 2, (i * 3) + 3);
             tempSCO = parseInt(tempSCO);
-            if(temp >= tempSCO){
+            if (temp >= tempSCO) {
                 cambio = true;
                 mayor = temp;
-            }else{
+            } else {
                 mayor = tempSCO;
             }
-            if (mayor>99) {
-                mayor=99;
+            if (mayor > 99) {
+                mayor = 99;
 
             }
-            if (mayor<10) {
+            if (mayor < 10) {
                 mayor = "0" + mayor.toString();
             }
             mayor = mayor.toString();
-            if((marcador == "1") || (marcador2 == "1") ){
+            if ((marcador == "1") || (marcador2 == "1")) {
                 marcador = "1";
             }
             resultado += (mayor + marcador);
@@ -857,23 +857,23 @@ function diferencia_lesson_location(){ // Recorre todas las páginas de localSto
     }
 }
 
-function indiceDe(id){
+function indiceDe(id) {
     for (let index = 0; index < pages.length; index++) {
-        if(pages[index].id == id){
+        if (pages[index].id == id) {
             return index;
         }
     }
     return -1;
 }
 
-function dameIndice(nombre){
+function dameIndice(nombre) {
     nombre = nombre.substring(nombre.lastIndexOf('/') + 1);
-    if(nombre==""){//Index
+    if (nombre == "") {//Index
         nombre = "index.html";
     }
     console.log('Buscando <' + nombre + '>', 'en ', pages)
     for (let i = 0; i < pages.length; i++) {
-        if(pages[i].url == nombre){
+        if (pages[i].url == nombre) {
             console.log('Regresa ', i);
             return i;
         }
@@ -882,9 +882,9 @@ function dameIndice(nombre){
     return -1;
 }
 
-function dameID(path){
+function dameID(path) {
     var nombre = path.substring(path.lastIndexOf('/') + 1);
-    if(nombre==""){//Index
+    if (nombre == "") {//Index
         nombre = "index.html";
     }
     for (let i = 0; i < pages.length; i++) {
@@ -895,47 +895,47 @@ function dameID(path){
     return "--";
 }
 
-function dameAnterior(nombre){
+function dameAnterior(nombre) {
     var indice = dameIndice(nombre) - 1;
-    if(indice != -1){
+    if (indice != -1) {
         return pages[indice].url;
-    }else{
+    } else {
         return "";
     }
 }
 
-function existeAnterior(nombre){
+function existeAnterior(nombre) {
     var indice = dameIndice(nombre) - 1;
-    if(indice < 0){
+    if (indice < 0) {
         return false;
-    }else{
+    } else {
         return true;
     }
 }
 
-function existeSiguiente(nombre){
+function existeSiguiente(nombre) {
     var indice = dameIndice(nombre) + 1;
-    if(indice>=pages.length){
+    if (indice >= pages.length) {
         return false;
-    }else{
+    } else {
         return true;
     }
 }
 
-function dameSiguiente(nombre){
+function dameSiguiente(nombre) {
     var indice = dameIndice(nombre) + 1;
-    if(indice < pages.length){
+    if (indice < pages.length) {
         console.log('el siguiente es:', pages[indice].url);
         return pages[indice].url;
-    }else{
+    } else {
         console.log('No se encontró siguiente');
         return "";
     }
 }
 
-function dameNombre(id){
+function dameNombre(id) {
     for (var i = 0; i < pages.length; i++) {
-        if(pages[i].url == id){
+        if (pages[i].url == id) {
             return pages[i].url;
         }
     }
