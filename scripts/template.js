@@ -119,7 +119,11 @@ function imprimirCabecera(){
             </nav>
         </div>
     </div>
+`;
+}
 
+function imprimirPieDePagina(){
+    $('#app-content').html(`
     <!-- start: TOP NAVBAR -->
     <header class="navbar navbar-default navbar-static-top">
         <!-- start: NAVBAR HEADER -->
@@ -187,11 +191,9 @@ function imprimirCabecera(){
         <!-- end: NAVBAR COLLAPSE -->
     </header>
     <!-- end: TOP NAVBAR -->
-`;
-}
-
-function imprimirPieDePagina(){
-    $('#app-content').html(`<div class="main-content container">
+    
+    
+    <div class="main-content container">
         <div id="contenidoCurso" data-toggle="tooltip">
             <h1 style="text-align: center">` + contenido + `</h1>
             
