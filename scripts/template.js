@@ -131,10 +131,10 @@ function imprimirPieDePagina(){
             <button href="#" class="sidebar-mobile-toggler pull-left btn no-radius hidden-md hidden-lg" class="btn btn-navbar sidebar-toggle" data-toggle-class="app-slide-off" data-toggle-target="#app" data-toggle-click-outside="#sidebar">
                 <i class="fa fa-bars"></i>
             </button>
-            <a class="navbar-brand" href="index.html"> <img src="assets/images/subitus.png" alt="Subitus"/> </a>
-            <a class="navbar-brand navbar-brand-collapsed" href="index.html"> <img src="assets/images/subitus_small.png" alt="Subitus" /> </a>
+            <a class="navbar-brand" href="index.html"> <img class="imagen_interior" src="assets/images/subitus.png" alt="Subitus"/> </a>
+            <a class="navbar-brand navbar-brand-collapsed" href="index.html"> <img class="imagen_interior" src="assets/images/subitus_small.png" alt="Subitus" /> </a>
             <button class="pull-right menu-toggler visible-xs-block btnFin">
-                <img src="assets/images/salir.png" data-toggle="tooltip" title="Salir del curso" data-placement="bottom">
+                <img class="imagen_interior" src="assets/images/salir.png" data-toggle="tooltip" title="Salir del curso" data-placement="bottom">
             </button>
             <button type="button" data-toggle="modal" class="btn pull-right menu-toggler visible-xs-block" id="menu-toggler" data-target="#myModal">
                 <i class="glyphicon glyphicon-stats" data-toggle="tooltip" title="Avance" data-placement="bottom"></i>
@@ -175,7 +175,7 @@ function imprimirPieDePagina(){
                     <a><button type="button" data-toggle="modal" data-target="#myModal"><i data-toggle="tooltip" title="Avance" data-placement="bottom" class="glyphicon glyphicon-stats"></i></button></a>
                 </li>
                 <li class="dropdown">
-                    <a><button class="btnFin"><img src="assets/images/salir.png" data-toggle="tooltip" title="Salir" data-placement="bottom"></button></a>
+                    <a><button class="btnFin"><img class="imagen_interior" src="assets/images/salir.png" data-toggle="tooltip" title="Salir" data-placement="bottom"></button></a>
                 </li>
                 <!-- end: ACTIVITIES DROPDOWN -->
                 
@@ -273,34 +273,15 @@ function renderizarContenido(informacionDiapositiva){
     // alert(informacionDiapositiva.tipo);
     switch (informacionDiapositiva.tipo) { // flip-card, accordion, horizontal-tabs, vertical-tabs
         case 'flip-card':
-
-            document.write(`<link rel="stylesheet" href="assets/css/elementos/flip-card.css">`);
-            document.write(`
-                <script>
-                    var acc = document.getElementsByClassName("accordion");
-                    var i;
-
-                    for (i = 0; i < acc.length; i++) {
-                        acc[i].addEventListener("click", function () {
-                            this.classList.toggle("active");
-                            var panel = this.nextElementSibling;
-                            if (panel.style.display === "block") {
-                                panel.style.display = "none";
-                            } else {
-                                panel.style.display = "block";
-                            }
-                        });
-                    }
-                </script>
-            `);
             break;
 
         case 'accordion':
             $.each(informacionDiapositiva.contenido, function(indice, elemento){
+                interior = renderizarInteriorImagen(elemento);
                 $(selector).append(`
-                <button class="accordion">${elemento.titulo}</button>
+                <button class="accordion pt-2">${elemento.titulo}</button>
                 <div class="panel">
-                    <p>${elemento.texto}</p>
+                    ${interior}
                 </div>
                 `);
             });
@@ -325,7 +306,7 @@ function renderizarContenido(informacionDiapositiva){
             break;
         case 'horizontal-tabs':
             contentido = ``;
-            contenido += `<ul class="nav nav-tabs">`;
+            contenido += `<ul class="nav nav-tabs pt-2">`;
             is_first = true;
             $.each(informacionDiapositiva.contenido, function(indice, elemento){
                 id_de_elemento = indice + elemento.titulo.replace(/ /g, "");
@@ -340,10 +321,11 @@ function renderizarContenido(informacionDiapositiva){
             is_first = true;
             $.each(informacionDiapositiva.contenido, function(indice, elemento){
                 id_de_elemento = indice + elemento.titulo.replace(/ /g, "");
+                interior = renderizarInteriorImagen(elemento);
                 contenido += `
                 <div id="${id_de_elemento}" class="tab-pane in ${is_first ? 'active' : ''}">
                     <h3>${elemento.titulo}</h3>
-                    <p>${elemento.texto}</p>
+                    ${interior}
                 </div>
                 `;
                 if(is_first){
@@ -358,7 +340,8 @@ function renderizarContenido(informacionDiapositiva){
 
             contenido = '';
             // $(selector).append();
-            contenido += `<div class="tab">`
+            contenido += "<div style='height: 100%'>";
+            contenido += `<div class="tab pt-2">`;
             is_first = true;
             $.each(informacionDiapositiva.contenido, function(indice, elemento){
                 id_de_elemento = indice + elemento.titulo.replace(/ /g, "");
@@ -374,14 +357,16 @@ function renderizarContenido(informacionDiapositiva){
             // $(selector).append(`<div class="tab">`);
             $.each(informacionDiapositiva.contenido, function(indice, elemento){
                 id_de_elemento = indice + elemento.titulo.replace(/ /g, "");
+                interior = renderizarInteriorImagen(elemento);
                 contenido += `
                 <div id="${id_de_elemento}" class="tabcontent">
                     <h3>${elemento.titulo}</h3>
-                    <p>${elemento.texto}</p>
+                    ${interior}
                 </div>
                 `
                 // $(selector).append();
             });
+            contenido += `</div>`;
             $(selector).html(contenido);
 
             document.write(`<link rel="stylesheet" href="assets/css/elementos/vertical-tabs.css">`);
@@ -407,6 +392,75 @@ function renderizarContenido(informacionDiapositiva){
 
             break; 
     }
+}
+
+function renderizarInteriorImagen(elemento){
+    contenido_card = "";
+    if(esVacio(elemento.imagen)){ // No existe imagen
+        if(!esVacio(elemento.texto)){
+            contenido_card = '<p>' + elemento.texto + '</p>';
+        }
+    }else{
+        elemento.posicionImagen = esVacio(elemento.posicionImagen) ? 'izquierda' : elemento.posicionImagen;
+        elemento.texto = esVacio(elemento.texto) ? 'izquierda' : elemento.texto;
+        height = esVacio(elemento.alto) ? '' : `height: ${elemento.alto};`;
+        width = esVacio(elemento.ancho) ? '' : `width: ${elemento.ancho};`;
+        switch (elemento.posicionImagen) {
+            case 'izquierda':
+                contenido_card += `
+                <div class="row pt-2">
+                    <div class="col-sm-4"><img class="imagen_interior" src="${elemento.imagen}" alt="Smiley face" style="${height} ${width}"></div>
+                    <div class="col-sm-8">${elemento.texto}</div>
+                </div>
+                `;
+                break;
+            case 'derecha':
+                contenido_card += `
+                <div class="row pt-2">
+                    <div class="col-sm-8">${elemento.texto}</div>
+                    <div class="col-sm-4"><img class="imagen_interior" src="${elemento.imagen}" alt="Smiley face" style="${height} ${width}"></div>
+                </div>
+                `;
+                break;
+            case 'arriba':
+                contenido_card += `
+                <div class="row pt-2">
+                    <div class="col-sm-12 text-center"><img class="imagen_interior" src="${elemento.imagen}" alt="Smiley face" style="${height} ${width}"></div>
+                    <div class="col-sm-12 text-center pt-2">${elemento.texto}</div>
+                </div>
+                `;
+                break;
+            case 'abajo':
+                contenido_card += `
+                <div class="row pt-2">
+                    <div class="col-sm-12 text-center">${elemento.texto}</div>
+                    <div class="col-sm-12 text-center pt-2"><img class="imagen_interior" src="${elemento.imagen}" alt="Smiley face" style="${height} ${width}"></div>
+                </div>
+                `;
+                break;
+            default:
+                break;
+        }
+    }
+    return contenido_card;
+}
+
+function esVacio(_elemento) {
+    if (_elemento === undefined) {
+        return true;
+    }
+    if (_elemento === null) {
+        return true;
+    }
+    if (Array.isArray(_elemento)) {
+        if (_elemento.length == 0) {
+            return true;
+        }
+    }
+    if (_elemento == "") {
+        return true;
+    }
+    return false;
 }
 
 /*
@@ -452,10 +506,10 @@ document.write(`<div id="app">
             <button href="#" class="sidebar-mobile-toggler pull-left btn no-radius hidden-md hidden-lg" class="btn btn-navbar sidebar-toggle" data-toggle-class="app-slide-off" data-toggle-target="#app" data-toggle-click-outside="#sidebar">
                 <i class="fa fa-bars"></i>
             </button>
-            <a class="navbar-brand" href="index.html"> <img src="assets/images/subitus.png" alt="Subitus"/> </a>
-            <a class="navbar-brand navbar-brand-collapsed" href="index.html"> <img src="assets/images/subitus_small.png" alt="Subitus" /> </a>
+            <a class="navbar-brand" href="index.html"> <img class="imagen_interior" src="assets/images/subitus.png" alt="Subitus"/> </a>
+            <a class="navbar-brand navbar-brand-collapsed" href="index.html"> <img class="imagen_interior" src="assets/images/subitus_small.png" alt="Subitus" /> </a>
             <button class="pull-right menu-toggler visible-xs-block btnFin">
-                <img src="assets/images/salir.png" data-toggle="tooltip" title="Salir del curso" data-placement="bottom">
+                <img class="imagen_interior" src="assets/images/salir.png" data-toggle="tooltip" title="Salir del curso" data-placement="bottom">
             </button>
             <button type="button" data-toggle="modal" class="btn pull-right menu-toggler visible-xs-block" id="menu-toggler" data-target="#myModal">
                 <i class="glyphicon glyphicon-stats" data-toggle="tooltip" title="Avance" data-placement="bottom"></i>
@@ -496,7 +550,7 @@ document.write(`<div id="app">
                     <a><button type="button" data-toggle="modal" data-target="#myModal"><i data-toggle="tooltip" title="Avance" data-placement="bottom" class="glyphicon glyphicon-stats"></i></button></a>
                 </li>
                 <li class="dropdown">
-                    <a><button class="btnFin"><img src="assets/images/salir.png" data-toggle="tooltip" title="Salir" data-placement="bottom"></button></a>
+                    <a><button class="btnFin"><img class="imagen_interior" src="assets/images/salir.png" data-toggle="tooltip" title="Salir" data-placement="bottom"></button></a>
                 </li>
                 <!-- end: ACTIVITIES DROPDOWN -->
                 
