@@ -1,33 +1,33 @@
 var apiHandle = null;
 var _Debug = false;
 var finalizado = false;
+// var existia_suspend_data;
+var generando_informacion = false;
+var suspend_data_encoded;
+var suspend_data_decoded;
 
+darEnlaceABotones();
 document.addEventListener("DOMContentLoaded", function() {
-    darEnlaceABotones();
-    inicializarLMS(); //LMSInitialize
-    establecerNombre(); //Recuperado desde la API SCORM
-    var existia = true;
-    if(localStorage.getItem('suspend_data') == null){
-        existia = false;
-    }
-    if(typeof(Storage)!= "undefined"){
-    
-        verificar_info_usuario(); // Variables de la resolución, SO, Ubicación, navegador
-        verificarVariables();
-        verificarEstaPagina();
-        verificarAvance();
-        verificarMarcador();
-        var code = lzw_decode(localStorage.getItem("suspend_data"));
-        if(existia){ // existia = true | false
-            code += obtener_informacion_pagina();
+    generar_suspend_data(function(){ // En este punto ya existe suspend_data_encoded y suspend_data_decoded
+        inicializarLMS(); //LMSInitialize
+        // establecerNombre(); //Recuperado desde la API SCORM
+        var existia = true;
+        if(typeof(Storage)!= "undefined"){
+        
+            verificarVariables();
+            verificarEstaPagina();
+            verificarAvance();
+            verificarMarcador();
+            guardar_suspend_data_en_local_storage();
+        }else{
+            alert("Este navegador no es compatible con el almacenamiento del curso ERR_LOCAL_STORAGE");
         }
-        localStorage.setItem("suspend_data", lzw_encode(code));
-        code = "";
-    }else{
-        alert("Este navegador no es compatible con el almacenamiento del curso ERR_LOCAL_STORAGE");
-    }
+    });
 });
 
+function guardar_suspend_data_en_local_storage(){
+    localStorage.setItem("suspend_data", suspend_data_encoded);
+}
 
 function verificarVariablesEnLocal(){ //en el caso de que existan en servidor pero no en localStorage
     if(localStorage.getItem("status") == null){
@@ -100,8 +100,9 @@ function marcarPagina(){
         }
         localStorage.setItem("lesson_location", lzw_encode(lesson_location));
     }
-    alert("Página guardada en sus marcadores");
+    alertify.success("Página guardada en sus marcadores");
 }
+
 function desmarcarPagina(){
     $(".btnBookmark").removeClass("paginaMarcada");
     $(".btnBookmark").html(`<i class="glyphicon glyphicon-bookmark" data-toggle="tooltip" title="Desmarcar página" data-placement="bottom"></i>`);
@@ -138,7 +139,8 @@ function desmarcarPagina(){
         }
         localStorage.setItem("lesson_location", lzw_encode(lesson_location));
     }
-    alert("Página desmarcada");
+    alertify.success('Página desmarcada');
+    // alert("Página desmarcada");
 }
 $(".btnBookmark").click(function(){
     if($(this).hasClass("paginaMarcada")){
@@ -165,11 +167,12 @@ function darEnlaceABotones(){
         // localStorage.removeItem("isInit");
         finalizar();
         localStorage.setItem("finalizado", "1");
-        alert("Finalizando");
+        alertify.success('Finalizando');
+        // alert("Finalizando");
         var api = getAPIHandle();
         if (api == null){
             if (_Debug){
-                alert("ERROR en función end()");
+                alert("ERROR en función darEnlaceABotones()");
             }
             return false;
         }
@@ -188,7 +191,7 @@ function darEnlaceABotones(){
 }
 
 function agregaTiempoSesion(){
-    var code = lzw_decode(localStorage.getItem("suspend_data"));
+    code = suspend_data_decoded;
     elementos = code.split(';'); // Primer elemento es la información de la máquina, segundo es información de las páginas
     var info_paginas = elementos[1];
 
@@ -239,7 +242,7 @@ function convierteAHoras(minutos){
 
 function guardaTiempo() { // Al momento de salir de la página
     if (localStorage.getItem('suspend_data') != null ) {
-        var code = lzw_decode(localStorage.getItem("suspend_data"));
+        var code = suspend_data_decoded;
         var t = new Date();
         var m = t.getMinutes();
         var h = t.getHours();
@@ -250,23 +253,32 @@ function guardaTiempo() { // Al momento de salir de la página
             h = '0' + h;
         }
         code += '' + h + '' + m;
-        localStorage.setItem("suspend_data", lzw_encode(code));
+        guardar_suspend_data_en_local_storage();
     }
 }
 
+function obtener_entero_desde(_value){
+    _var = parseInt(_value);
+    if(Number.isNaN(_value)){
+        _value = 0;
+    }
+    return _value;
+}
+
 function verificarEstaPagina(){
-    if (localStorage.getItem("lesson_location") != null) {
+    lesson_location = localStorage.getItem("lesson_location");
+    if ( lesson_location != null) {
         var indice = dameIndice(window.location.pathname);
         var lesson_location = lzw_decode(localStorage.getItem("lesson_location"));
         var estadoPagina = lesson_location.substring(indice * 3, (indice*3) + 2);
         var principio = lesson_location.substring(0, (indice*3));
         var final = lesson_location.substring((indice*3) + 2);
-        estadoPagina = parseInt(estadoPagina);
+        estadoPagina = obtener_entero_desde(estadoPagina);
         if(enPrueba){
             console.log("Esta página ha sido visitada: " + estadoPagina + " veces");
         }
         if(estadoPagina == 0){
-            alert("Avance de esta página guardado");
+            alertify.success("Avance de esta página guardado");
         }
         estadoPagina++;
         if (estadoPagina>99) {
@@ -348,8 +360,15 @@ function verificarLessonLocation(){ // Crea la variable
 	}
 }
 
-function verificar_info_usuario(){
-    if(localStorage.getItem("suspend_data") == null){ //Se guarda la información del usuario en caso de no existir
+
+/**
+ * Crea o recupera la variable suspend_data
+ * @param {callback} funci
+ */
+function generar_suspend_data(callback_function){
+    suspend_data_encoded = localStorage.getItem("suspend_data");
+    if(suspend_data_encoded == null){ //Se crea la información del usuario en caso de no existir
+        generando_informacion = true;
         console.log("Iniciando suspend_data con información del usuario");
         informacion = "";
         var nAgt = navigator.userAgent;
@@ -404,7 +423,10 @@ function verificar_info_usuario(){
                 console.log("Se almacena en local storage: "+informacion);
                 informacion += ';';
                 informacion += obtener_informacion_pagina();
-                localStorage.setItem("suspend_data", lzw_encode(informacion));
+                suspend_data_decoded = informacion;
+                suspend_data_encoded = lzw_encode(informacion);
+                // localStorage.setItem("suspend_data", lzw_encode(informacion));
+                generando_informacion = false;
             };
 
             function error() {
@@ -416,7 +438,10 @@ function verificar_info_usuario(){
                 console.log("Se almacena en local storage: "+informacion);
                 informacion += ';';
                 informacion += obtener_informacion_pagina();
-                localStorage.setItem("suspend_data", lzw_encode(informacion));
+                suspend_data_decoded = informacion;
+                suspend_data_encoded = lzw_encode(informacion);
+                // localStorage.setItem("suspend_data", lzw_encode(informacion));
+                generando_informacion = false;
             };
             navigator.geolocation.getCurrentPosition(success, error);
 
@@ -428,10 +453,20 @@ function verificar_info_usuario(){
             console.log("Se almacena en local storage: "+informacion);
             informacion += ';';
             informacion += obtener_informacion_pagina();
-            localStorage.setItem("suspend_data", lzw_encode(informacion));
+            suspend_data_decoded = informacion;
+            suspend_data_encoded = lzw_encode(informacion);
+            // localStorage.setItem("suspend_data", lzw_encode(informacion));
+            generando_informacion = false;
         }
 
     }
+
+    intervalo_obtener_informacion = setInterval(function() { // Ejecutar lo siguiente hasta que se tenga la información lista
+        if(!generando_informacion){
+            clearInterval(intervalo_obtener_informacion);
+            callback_function();
+        }
+    }, 200);
 }
 
 function formatearHora(hora){
