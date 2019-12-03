@@ -195,13 +195,13 @@ function imprimirPieDePagina(){
         <div id="contenidoCurso" data-toggle="tooltip">
             <center><h1>` + contenido + `</h1></center>
             
-            <a href="index.html" id="btnNext" class="btn btn-primary btn-lg" style="display:scroll;position:fixed;bottom:10%;right:0px;">
-            Siguiente
-            </a>
-            <a href="index.html" id="btnPrev" class="btn btn-primary btn-lg" style="display:scroll;position:fixed;bottom:20%;right: 0px; z-index: 10;">
-            Anterior
-            </a>
         </div>
+        <a href="index.html" id="btnNext" class="btn btn-primary btn-lg" style="display:scroll;position:fixed;bottom:10%;right:0px;">
+        Siguiente
+        </a>
+        <a href="index.html" id="btnPrev" class="btn btn-primary btn-lg" style="display:scroll;position:fixed;bottom:20%;right: 0px; z-index: 10;">
+        Anterior
+        </a>
         <!--<div id="contenedor"><div id="contenido"></div></div>-->
     </div>`);
     pieDePagina = `
@@ -267,14 +267,33 @@ function renderizarContenido(informacionDiapositiva){
     // console.log(informacionDiapositiva);
     selector = '#' + informacionDiapositiva.div;
     console.log('Insertando en ', selector);
+    $(selector).html('');
     // alert(informacionDiapositiva.tipo);
     switch (informacionDiapositiva.tipo) { // flip-card, accordion, horizontal-tabs, vertical-tabs
         case 'flip-card':
 
+            document.write(`<link rel="stylesheet" href="assets/css/elementos/flip-card.css">`);
+            document.write(`
+                <script>
+                    var acc = document.getElementsByClassName("accordion");
+                    var i;
+
+                    for (i = 0; i < acc.length; i++) {
+                        acc[i].addEventListener("click", function () {
+                            this.classList.toggle("active");
+                            var panel = this.nextElementSibling;
+                            if (panel.style.display === "block") {
+                                panel.style.display = "none";
+                            } else {
+                                panel.style.display = "block";
+                            }
+                        });
+                    }
+                </script>
+            `);
             break;
 
         case 'accordion':
-            $(selector).html();
             $.each(informacionDiapositiva.contenido, function(indice, elemento){
                 $(selector).append(`
                 <button class="accordion">${elemento.titulo}</button>
@@ -282,9 +301,8 @@ function renderizarContenido(informacionDiapositiva){
                     <p>${elemento.texto}</p>
                 </div>
                 `);
-                // elemento.
             });
-            document.write(`<link rel="stylesheet" href="assets/css/accordion.css">`);
+            document.write(`<link rel="stylesheet" href="assets/css/elementos/accordion.css">`);
             document.write(`
             <script>
                 var acc = document.getElementsByClassName("accordion");
@@ -304,9 +322,87 @@ function renderizarContenido(informacionDiapositiva){
             </script>`);
             break;
         case 'horizontal-tabs':
+            contentido = ``;
+            contenido += `<ul class="nav nav-tabs">`;
+            is_first = true;
+            $.each(informacionDiapositiva.contenido, function(indice, elemento){
+                id_de_elemento = indice + elemento.titulo.replace(/ /g, "");
+                contenido += `<li ${is_first ? 'class="active"' : ''}><a data-toggle="tab" href="#${id_de_elemento}">${elemento.titulo}</a></li>`;
+                if(is_first){
+                    is_first = false;
+                }
+            });
+            contenido += `</ul>`;
+
+            contenido += `<div class="tab-content">`;
+            is_first = true;
+            $.each(informacionDiapositiva.contenido, function(indice, elemento){
+                id_de_elemento = indice + elemento.titulo.replace(/ /g, "");
+                contenido += `
+                <div id="${id_de_elemento}" class="tab-pane in ${is_first ? 'active' : ''}">
+                    <h3>${elemento.titulo}</h3>
+                    <p>${elemento.texto}</p>
+                </div>
+                `;
+                if(is_first){
+                    is_first = false;
+                }
+            });
+            contenido += `</div>`;
+            console.log(contenido);
+            $(selector).html(contenido);
 
             break;
         case 'vertical-tabs':
+
+            contenido = '';
+            // $(selector).append();
+            contenido += `<div class="tab">`
+            is_first = true;
+            $.each(informacionDiapositiva.contenido, function(indice, elemento){
+                id_de_elemento = indice + elemento.titulo.replace(/ /g, "");
+                contenido += `<button class="tablinks" onclick="open_vertical_tabs(event, '${id_de_elemento}')" ${is_first ? 'id="defaultOpen"' : ''}>${elemento.titulo}</button>`;
+                // $(selector).append();
+                if(is_first){
+                    is_first = false;
+                }
+            });
+            contenido += `</div>`;
+            // $(selector).append();
+
+            // $(selector).append(`<div class="tab">`);
+            $.each(informacionDiapositiva.contenido, function(indice, elemento){
+                id_de_elemento = indice + elemento.titulo.replace(/ /g, "");
+                contenido += `
+                <div id="${id_de_elemento}" class="tabcontent">
+                    <h3>${elemento.titulo}</h3>
+                    <p>${elemento.texto}</p>
+                </div>
+                `
+                // $(selector).append();
+            });
+            $(selector).html(contenido);
+
+            document.write(`<link rel="stylesheet" href="assets/css/elementos/vertical-tabs.css">`);
+            if(typeof open_vertical_tabs !== 'function'){
+                document.write(`
+                <script>
+                    function open_vertical_tabs(evt, cityName) {
+                        var i, tabcontent, tablinks;
+                        tabcontent = document.getElementsByClassName("tabcontent");
+                        for (i = 0; i < tabcontent.length; i++) {
+                            tabcontent[i].style.display = "none";
+                        }
+                        tablinks = document.getElementsByClassName("tablinks");
+                        for (i = 0; i < tablinks.length; i++) {
+                            tablinks[i].className = tablinks[i].className.replace(" active", "");
+                        }
+                        document.getElementById(cityName).style.display = "block";
+                        evt.currentTarget.className += " active";
+                    }
+                    document.getElementById("defaultOpen").click();
+                </script>`);
+            }
 
             break; 
     }
