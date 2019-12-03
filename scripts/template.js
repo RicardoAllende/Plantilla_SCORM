@@ -349,7 +349,6 @@ function renderizarContenido(informacionDiapositiva){
                 }
             });
             contenido += `</div>`;
-            console.log(contenido);
             $(selector).html(contenido);
 
             break;

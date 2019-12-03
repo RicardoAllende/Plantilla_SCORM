@@ -1,5 +1,5 @@
 
-function dameURL(id){
+function dameURLAvance(id){
     for (var i = 0; i < pages.length; i++) {
         if(pages[i].id == id){
             return pages[i].url;
@@ -8,7 +8,7 @@ function dameURL(id){
     return "index.html";
 }
 
-function dameIndice(id){
+function dameIndiceAvance(id){
     for (let k = 0; k < pages.length; k++) {
         if(pages[k].id == id){
             return k;
@@ -60,7 +60,7 @@ function porcentajeTemas(){
         var completados = 0;
         var leccion = lessons[i];
         for (var j = 0; j < leccion.length; j++) {
-            var indice = dameIndice(leccion[j]);
+            var indice = dameIndiceAvance(leccion[j]);
             // alert(indice);
             // alert("Variable lesso_location (función porcentaje temas): " + lesson_location);
             temp = lesson_location.substring(indice * 3, (indice*3) + 2);
@@ -92,7 +92,7 @@ function recorrerTodosLosResultados(leccion){
             temp = parseInt(temp);
             if(temp>0){
                 completados++;
-                //$("#avancePaginas").append("<a class='btn btn-primary' href='"+dameURL(pages[i].id)+"'>" + (i + 1) + "</a>" );
+                //$("#avancePaginas").append("<a class='btn btn-primary' href='"+dameURLAvance(pages[i].id)+"'>" + (i + 1) + "</a>" );
             }
         }
         return completados;
@@ -100,7 +100,7 @@ function recorrerTodosLosResultados(leccion){
         for (var i = 0; i < pages.length; i++) {
             $("#avancePaginas").append(
                 "<a class='btn'  style='background: #AAB7B8;' href='"+
-                dameURL(pages[i].id)+"'>" + pages[i].url + "</a>"
+                dameURLAvance(pages[i].id)+"'>" + pages[i].url + "</a>"
             );
         }
         return 0;
@@ -122,16 +122,16 @@ function recorrerResultados(numero_leccion){
             temp = parseInt(temp);
             if(temp>0){
                 completados++;
-                $("#avancePaginas").append("<a style='background:" + successColorRGB + ";' class='btn btn-primary' href='"+dameURL(leccion[index])+"'>" + (index + 1) + "</a>" );
+                $("#avancePaginas").append("<a style='background:" + successColorRGB + ";' class='btn btn-primary' href='"+dameURLAvance(leccion[index])+"'>" + (index + 1) + "</a>" );
             }else{
-                $("#avancePaginas").append("<a href='"+dameURL(leccion[index])+"'><button class='btn'>" + (index + 1) + "</button></a>" );
+                $("#avancePaginas").append("<a href='"+dameURLAvance(leccion[index])+"'><button class='btn'>" + (index + 1) + "</button></a>" );
             }
         }
         return completados;
     }else{
         for (let index = 0; index < lessons[numero_leccion].length; index++) {
             posicion = indiceDe(lessons[j]);
-            //$("#avancePaginas").append("<a href='"+dameURL(lessons[j])+"'><button class='btn'>" + (index + 1) + "</button></a>" )
+            //$("#avancePaginas").append("<a href='"+dameURLAvance(lessons[j])+"'><button class='btn'>" + (index + 1) + "</button></a>" )
         }
         return 0;
     }

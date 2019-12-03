@@ -5,27 +5,48 @@ var finalizado = false;
 var generando_informacion = false;
 var suspend_data_encoded;
 var suspend_data_decoded;
+var lesson_location_decoded;
+var lesson_location_encoded;
 
 darEnlaceABotones();
 document.addEventListener("DOMContentLoaded", function() {
     generar_suspend_data(function(){ // En este punto ya existe suspend_data_encoded y suspend_data_decoded
         inicializarLMS(); //LMSInitialize
         // establecerNombre(); //Recuperado desde la API SCORM
-        var existia = true;
-        if(typeof(Storage)!= "undefined"){
-        
+        generar_lesson_location(function(){
             verificarVariables();
             verificarEstaPagina();
             verificarAvance();
             verificarMarcador();
-            guardar_suspend_data_en_local_storage();
-        }else{
-            alert("Este navegador no es compatible con el almacenamiento del curso ERR_LOCAL_STORAGE");
-        }
+            guardar_suspend_data();
+        });
     });
 });
 
-function guardar_suspend_data_en_local_storage(){
+function generar_lesson_location(callback_function){
+    lesson_location_encoded = localStorage.getItem("lesson_location");
+    if(lesson_location_encoded === null){ // Crear lesson_location
+        var paginas = "";
+        for (let i = 0; i < pages.length; i++) {
+            paginas += "000"; // Primeros 2 digitos para contador de visitas, el siguiente para marcador
+        }
+        if(enPrueba){
+            console.log(" Lesson_location creado " + paginas);
+        }
+        lesson_location_decoded = paginas;
+        lesson_location_encoded = lzw_encode(lesson_location_decoded);
+		guardar_lesson_location();
+    }else{ // Existía previamente
+        lesson_location_decoded = lzw_decode(lesson_location_encoded);
+    }
+    callback_function();
+}
+
+function guardar_lesson_location(){
+    localStorage.setItem("lesson_location", lesson_location_encoded);
+}
+
+function guardar_suspend_data(){
     localStorage.setItem("suspend_data", suspend_data_encoded);
 }
 
@@ -49,9 +70,8 @@ function establecerNombre(){
 }
 
 function verificarMarcador(){
-	if (localStorage.getItem("lesson_location") != null) {
         let indice = dameIndice(window.location.pathname);
-        let lesson_location = lzw_decode(localStorage.getItem("lesson_location"));
+        let lesson_location = lesson_location_decoded;
         let marcador = lesson_location.substring((indice * 3)+2, (indice*3) + 3);
         if(enPrueba){
             console.log("El marcador de esta página es: " + marcador + ", lesson_location es: " + lesson_location);
@@ -61,13 +81,12 @@ function verificarMarcador(){
             $(".btnBookmark").html(`<img src="assets/images/Bookmark-rojo.png" data-toggle="tooltip" title="Desmarcar" data-placement="bottom" data-original-title="Desmarcar">`);
             $('[data-toggle="tooltip"]').tooltip();
         }
-    }
 }
+
 function marcarPagina(){
     $(".btnBookmark").addClass("paginaMarcada");
     $(".btnBookmark").html(`<img src="assets/images/Bookmark-rojo.png" data-toggle="tooltip" title="Marcar" data-placement="bottom" data-original-title="Marcar">`);
     $('[data-toggle="tooltip"]').tooltip();
-    if (localStorage.getItem("lesson_location") != null) {
 
         let ind;
         let nombre = window.location.pathname
@@ -82,7 +101,7 @@ function marcarPagina(){
         }
         $('#enlace'+ind).prepend('<img src="assets/images/Bookmark-rojo.png" data-toggle="tooltip" title="Página guardada en sus marcadores" data-placement="bottom">');
         console.log("El índice es " + ind);
-        var lesson_location = lzw_decode(localStorage.getItem("lesson_location"));
+        var lesson_location = lesson_location_decoded;
         var marcadorPagina = lesson_location.substring((ind * 3)+2, (ind*3) + 3);
         console.log("Recuperado de localStorage " + lesson_location);
         var principio = lesson_location.substring(0, (ind*3) + 2);
@@ -98,8 +117,9 @@ function marcarPagina(){
         if(enPrueba){
             console.log("Después de guardar el marcador lesson_location = " + lesson_location );
         }
-        localStorage.setItem("lesson_location", lzw_encode(lesson_location));
-    }
+        lesson_location_decoded = lesson_location;
+        lesson_location_encoded = lzw_encode(lesson_location_decoded);
+        guardar_lesson_location();
     alertify.success("Página guardada en sus marcadores");
 }
 
@@ -107,7 +127,6 @@ function desmarcarPagina(){
     $(".btnBookmark").removeClass("paginaMarcada");
     $(".btnBookmark").html(`<i class="glyphicon glyphicon-bookmark" data-toggle="tooltip" title="Desmarcar página" data-placement="bottom"></i>`);
     $('[data-toggle="tooltip"]').tooltip();
-    if (localStorage.getItem("lesson_location") != null) {
         let ind;
         let nombre = window.location.pathname
         nombre = nombre.substring(nombre.lastIndexOf('/') + 1);
@@ -120,7 +139,7 @@ function desmarcarPagina(){
             }
         }
         $('#enlace'+ind).html('<span class="title">' + pages[ind].title + ' </span>');
-        var lesson_location = lzw_decode(localStorage.getItem("lesson_location"));
+        var lesson_location = lesson_location_decoded;
         var marcadorPagina = lesson_location.substring((ind * 3)+2, (ind*3) + 3);
         var principio = lesson_location.substring(0, (ind*3) + 2);
         var final = lesson_location.substring((ind*3)+3);
@@ -137,8 +156,9 @@ function desmarcarPagina(){
             console.log("El marcador de esta página ahora es: " + marcadorPagina);
             console.log("Lesson_location = " + lesson_location );
         }
-        localStorage.setItem("lesson_location", lzw_encode(lesson_location));
-    }
+        lesson_location_decoded = lesson_location;
+        lesson_location_encoded = lzw_encode(lesson_location_decoded);
+        guardar_lesson_location();
     alertify.success('Página desmarcada');
     // alert("Página desmarcada");
 }
@@ -253,26 +273,28 @@ function guardaTiempo() { // Al momento de salir de la página
             h = '0' + h;
         }
         code += '' + h + '' + m;
-        guardar_suspend_data_en_local_storage();
+        guardar_suspend_data();
     }
 }
 
 function obtener_entero_desde(_value){
-    _var = parseInt(_value);
+    console.log('Entrada obtener_entero_desde', _value)
+    _value = parseInt(_value);
     if(Number.isNaN(_value)){
         _value = 0;
     }
+    console.log('Salida obtener_entero_desde', _value)
     return _value;
 }
 
 function verificarEstaPagina(){
-    lesson_location = localStorage.getItem("lesson_location");
-    if ( lesson_location != null) {
+    lesson_location = lesson_location_decoded;
         var indice = dameIndice(window.location.pathname);
-        var lesson_location = lzw_decode(localStorage.getItem("lesson_location"));
+        console.log('VerificarEstaPagina', lesson_location, indice, `'${lesson_location}'.substring(${indice} * 3, (${indice}*3) + 2` );
         var estadoPagina = lesson_location.substring(indice * 3, (indice*3) + 2);
         var principio = lesson_location.substring(0, (indice*3));
         var final = lesson_location.substring((indice*3) + 2);
+        console.log('Antes de obtener_entero_desde', estadoPagina);
         estadoPagina = obtener_entero_desde(estadoPagina);
         if(enPrueba){
             console.log("Esta página ha sido visitada: " + estadoPagina + " veces");
@@ -292,17 +314,14 @@ function verificarEstaPagina(){
         if(enPrueba){
             console.log("Ahora el contador de esta página indica " + estadoPagina + " visitas");
         }
-
-        var lesson_location = localStorage.setItem("lesson_location", lzw_encode(principio + estadoPagina + final));
-    }else{
-        alert("Hubo un error y aún no se ha creado lesson_location");
-    }
-
+        lesson_location_decoded = (principio + estadoPagina + final);
+        lesson_location_encoded = lzw_encode(lesson_location_decoded);
+        guardar_lesson_location();
 }
 
 function verificarAvance(){
     if(localStorage.getItem("status") != null){
-        var status = lzw_decode(localStorage.getItem("lesson_location"));
+        var status = lesson_location_decoded;
         var completados = 0;
         var temp, marcador;
         for (var i = 0; i < pages.length; i++) {
@@ -346,20 +365,6 @@ function verificarAvance(){
         localStorage.setItem("status", lzw_encode("incomplete"));
     }
 }
-
-function verificarLessonLocation(){ // Crea la variable
-	if(localStorage.getItem("lesson_location") == null){
-        var paginas = "";
-        for (let i = 0; i < pages.length; i++) {
-            paginas += "000";
-        }
-        if(enPrueba){
-            console.log("Lesson_location creado "+paginas);
-        }
-		localStorage.setItem("lesson_location", lzw_encode(paginas));
-	}
-}
-
 
 /**
  * Crea o recupera la variable suspend_data
@@ -464,6 +469,7 @@ function generar_suspend_data(callback_function){
     intervalo_obtener_informacion = setInterval(function() { // Ejecutar lo siguiente hasta que se tenga la información lista
         if(!generando_informacion){
             clearInterval(intervalo_obtener_informacion);
+            suspend_data_decoded = lzw_decode(suspend_data_encoded);
             callback_function();
         }
     }, 200);
@@ -534,7 +540,6 @@ function verificarVariables(){
 	if(localStorage.getItem("status") == null){
 		localStorage.setItem("status", lzw_encode("0"));
     }
-    verificarLessonLocation(); // Crea la variable en caso de no existir
 }
 
 function sumaHoras(hora1, hora2){
@@ -671,8 +676,6 @@ function inicializarLMS(){
 
                     return false;
                 }
-                // console.log("Antes de initialize");
-
                 var initResult = api.LMSInitialize("");
                 // console.log("Después de inicializar " + api.LMSGetLastError());
             // }
@@ -711,7 +714,7 @@ function finalizar(){
     set("cmi.suspend_data", localStorage.getItem("suspend_data"));
     set("cmi.core.session_time", lzw_decode(localStorage.getItem("session_time")));
     //set("cmi.core.session_time", "02:21:00");
-    set("cmi.core.lesson_location", localStorage.getItem("lesson_location"));
+    set("cmi.core.lesson_location", lesson_location_encoded);
     save();
 }
  //////////////////////////////////////////////////////////////////////////
@@ -817,7 +820,7 @@ function verificarUltimaPaginaVisitada(){
 
 function diferencia_lesson_location(){ // Recorre todas las páginas de localStorage/SCOR y guarda el número mayor de visitas en cada uno
     if(localStorage.getItem("status") != null){
-        var status = lzw_decode(localStorage.getItem("lesson_location"));
+        var status = lesson_location_decoded;
         var statusSCO = lzw_decode(get("cmi.core.lesson_location"));
         var completados = 0;
         //console.log(status);
@@ -868,9 +871,10 @@ function dameIndice(nombre){
     if(nombre==""){//Index
         nombre = "index.html";
     }
-    console.log('Buscando', nombre, 'en ', pages)
+    console.log('Buscando <' + nombre + '>', 'en ', pages)
     for (let i = 0; i < pages.length; i++) {
         if(pages[i].url == nombre){
+            console.log('Regresa ', i);
             return i;
         }
     }
@@ -883,7 +887,7 @@ function dameID(path){
     if(nombre==""){//Index
         nombre = "index.html";
     }
-    for (var i = 0; i < pages.length; i++) {
+    for (let i = 0; i < pages.length; i++) {
         if (pages[i].url == nombre) {
             return pages[i].id;
         }
