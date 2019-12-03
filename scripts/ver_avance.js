@@ -146,7 +146,7 @@ function mostrarTotalCurso(){
         <div class='col-md-12'>
         <canvas id='myChart'></canvas>
         </div>
-    </div><center>`);
+    </div>`);
 
     resultados = porcentajeTemas();
 
@@ -200,13 +200,13 @@ function mostrarTema(id){
     //         <div id='avancePaginas'></div>
     //     </div>
     // </div>`); style="max-height: 200px; max-width: 300px; padding 30px;"
-    $("#avance").append(`<center><div class="row">
+    $("#avance").append(`<div class="row" style="text-align: center">
                             <div class='col-md-7'>
                                 <canvas id='porcentajeLeccion'></canvas>
                             </div>
                             <div id="avancePaginas" class='col-md-5' >
                             </div>
-                        </div></center>`);
+                        </div>`);
     var terminadas = recorrerResultados(id);
     var ct = document.getElementById("porcentajeLeccion").getContext('2d');
     var myPieChart = new Chart(ct,{

@@ -193,7 +193,7 @@ function imprimirCabecera(){
 function imprimirPieDePagina(){
     $('#app-content').html(`<div class="main-content container">
         <div id="contenidoCurso" data-toggle="tooltip">
-            <center><h1>` + contenido + `</h1></center>
+            <h1 style="text-align: center">` + contenido + `</h1>
             
         </div>
         <a href="index.html" id="btnNext" class="btn btn-primary btn-lg" style="display:scroll;position:fixed;bottom:10%;right:0px;">
@@ -512,7 +512,7 @@ document.write(`<div id="app">
     <!-- end: TOP NAVBAR -->
     <div class="main-content">
         <div id="contenidoCurso" data-toggle="tooltip">
-            <center><h1>` + contenido + `</h1></center>
+            <h1 style="text-align: center">` + contenido + `</h1>
             
             <a href="index.html" id="btnNext" class="btn btn-primary btn-lg" style="display:scroll;position:fixed;bottom:50%;right:0px;">
             Siguiente

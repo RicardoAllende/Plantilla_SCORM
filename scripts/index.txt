@@ -197,7 +197,7 @@
 				<!-- end: TOP NAVBAR -->
 				<div class="main-content">
 					<div id="contenidoCurso">
-						<center><h1>Index.html</h1></center>
+						<h1 style="text-align: center">Index.html</h1>
 						
 						<a href="index.html" id="btnNext" class="btn btn-primary btn-lg" style="display:scroll;position:fixed;bottom:50%;right:0px;">
 						Siguiente
