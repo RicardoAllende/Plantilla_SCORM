@@ -401,6 +401,7 @@ function renderizarInteriorImagen(elemento){
             contenido_card = '<p>' + elemento.texto + '</p>';
         }
     }else{
+        borderRadius = esVacio(elemento.bordeImagen) ? `` : `border-radius: ${elemento.bordeImagen};`;
         elemento.posicionImagen = esVacio(elemento.posicionImagen) ? 'izquierda' : elemento.posicionImagen;
         elemento.texto = esVacio(elemento.texto) ? 'izquierda' : elemento.texto;
         height = esVacio(elemento.alto) ? '' : `height: ${elemento.alto};`;
@@ -409,7 +410,7 @@ function renderizarInteriorImagen(elemento){
             case 'izquierda':
                 contenido_card += `
                 <div class="row pt-2">
-                    <div class="col-sm-4"><img class="imagen_interior" src="${elemento.imagen}" alt="Smiley face" style="${height} ${width}"></div>
+                    <div class="col-sm-4"><img class="imagen_interior" src="${elemento.imagen}" alt="Smiley face" style="${height} ${width} ${borderRadius}"></div>
                     <div class="col-sm-8">${elemento.texto}</div>
                 </div>
                 `;
@@ -418,14 +419,14 @@ function renderizarInteriorImagen(elemento){
                 contenido_card += `
                 <div class="row pt-2">
                     <div class="col-sm-8">${elemento.texto}</div>
-                    <div class="col-sm-4"><img class="imagen_interior" src="${elemento.imagen}" alt="Smiley face" style="${height} ${width}"></div>
+                    <div class="col-sm-4"><img class="imagen_interior" src="${elemento.imagen}" alt="Smiley face" style="${height} ${width} ${borderRadius}"></div>
                 </div>
                 `;
                 break;
             case 'arriba':
                 contenido_card += `
                 <div class="row pt-2">
-                    <div class="col-sm-12 text-center"><img class="imagen_interior" src="${elemento.imagen}" alt="Smiley face" style="${height} ${width}"></div>
+                    <div class="col-sm-12 text-center"><img class="imagen_interior" src="${elemento.imagen}" alt="Smiley face" style="${height} ${width} ${borderRadius}"></div>
                     <div class="col-sm-12 text-center pt-2">${elemento.texto}</div>
                 </div>
                 `;
@@ -434,7 +435,7 @@ function renderizarInteriorImagen(elemento){
                 contenido_card += `
                 <div class="row pt-2">
                     <div class="col-sm-12 text-center">${elemento.texto}</div>
-                    <div class="col-sm-12 text-center pt-2"><img class="imagen_interior" src="${elemento.imagen}" alt="Smiley face" style="${height} ${width}"></div>
+                    <div class="col-sm-12 text-center pt-2"><img class="imagen_interior" src="${elemento.imagen}" alt="Smiley face" style="${height} ${width} ${borderRadius}"></div>
                 </div>
                 `;
                 break;
