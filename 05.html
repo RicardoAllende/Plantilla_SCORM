@@ -59,9 +59,34 @@
 		<script>
 			imprimirCabecera();
 			diapositiva = {
-				tipo: "accordion", // flip-card, accordion, horizontal-tabs, vertical-tabs
+				tipo: "completar-palabra", // flip-card, accordion, horizontal-tabs, vertical-tabs, completar-palabra
 				titulo: "Acordeón",
 				div: "contenidoCurso",
+				opciones: [
+					"perro",
+					"CDMX",
+					"dinosaurios",
+					"Respuesta para desorientar",
+					"agua",
+				],
+				oraciones: [ // En texto debería estar esta parte [[]] en donde irá la opción
+					{
+						texto: "Un [[]] es el mejor amigo del hombre",
+						respuesta: "perro",
+					},
+					{
+						texto: "Es la capital de México: [[]]",
+						respuesta: "CDMX",
+					},
+					{
+						texto: "Los [[]] son criaturas enormes.",
+						respuesta: "dinosaurios",
+					},
+					{
+						texto: "El cuerpo humano necesita [[]] para vivir.",
+						respuesta: "agua",
+					},
+				],
 				contenido: [
 					{
 						titulo: "Sección 1",

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>jQuery example: drag and drop</title>
+        <style>
+            body {
+                font-size: 32px;
+            }
+            
+            #dropzone {
+                top: 150px;
+                width: 200px;
+                height: 200px;
+                background: cyan;
+                border: solid 1px;
+            }
+        </style>
+    </head>
+    <body>
+    <div>Drag Winston into the rectangle</div>
+    <img id="winston" src="https://www.kasandbox.org/programming-images/creatures/Winston.png">
+    
+    <div id="dropzone"></div>
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/jquery-ui/jquery-ui.min.js"></script>
+    <!-- Also include jQueryUI -->
+    <script>
+        $("#winston").draggable();
+        $("#dropzone").droppable({
+            drop: function(event, ui) {
+                $(this).css('background', 'rgb(0,200,0)');
+            },
+            over: function(event, ui) {
+                $(this).css('background', 'orange');
+            },
+            out: function(event, ui) {
+                $(this).css('background', 'cyan');
+            }
+        });
+    </script>
+    
+    </body>
+</html>

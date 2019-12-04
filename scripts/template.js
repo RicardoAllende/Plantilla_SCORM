@@ -194,7 +194,7 @@ function imprimirPieDePagina(){
     
     
     <div class="main-content container">
-        <div id="contenidoCurso" data-toggle="tooltip">
+        <div id="contenidoCurso" style="width: 90%;" data-toggle="tooltip">
             <h1 style="text-align: center">` + contenido + `</h1>
             
         </div>
@@ -262,7 +262,9 @@ function imprimirPieDePagina(){
     <script type="text/javascript" src="scripts/script_subitus.js"></script>
     <script src="scripts/ver_avance.js"></script>`;
     document.write(pieDePagina);
-    renderizarContenido(diapositiva);
+    if (!esVacio(diapositiva)) {
+        renderizarContenido(diapositiva);
+    }
 }
 
 function renderizarContenido(informacionDiapositiva){
@@ -335,6 +337,78 @@ function renderizarContenido(informacionDiapositiva){
             contenido += `</div>`;
             $(selector).html(contenido);
 
+            break;
+
+        case 'completar-palabra':
+            contenido_opciones = `<li class="title">Opciones</li>`;
+            $.each(informacionDiapositiva.opciones, function(indice, opcion){
+                contenido_opciones += `<li class="option" data-target="${opcion}">${opcion}</li>`;
+            });
+
+            contenido_oraciones = ``;
+            $.each(informacionDiapositiva.oraciones, function(indice, oracion){
+                texto = oracion.texto.replace('[[]]', `<span class="target" data-accept="${oracion.respuesta}">&nbsp;</span>`)
+                contenido_oraciones += `<li>${texto}</li>`;
+            });
+            contenido = `
+            <div class="quiz-wrapper pt-2">
+                <p class="question-description">Arrastre las opciones a los espacios en blanco.</p>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <ul class="options">
+                            ${contenido_opciones}
+                        </ul>
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="answers">
+                            <ol>
+                                ${contenido_oraciones}
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-submit" id="completar-palabra-boton-siguiente">Siguiente</button>
+            </div>
+            `;
+            $(selector).html(contenido);
+            document.write(`<link rel="stylesheet" href="assets/css/elementos/completar-palabra.css">`);
+            document.write(`
+            <script src="bower_components/jquery-ui/jquery-ui.min.js"></script>
+            <script>
+                //initialize the quiz options
+                var answersLeft = [];
+                $('.quiz-wrapper').find('li.option').each(function (i) {
+                    var $this = $(this);
+                    var answerValue = $this.data('target');
+                    var $target = $('.answers .target[data-accept="' + answerValue + '"]');
+                    var labelText = $this.html();
+                    $this.draggable({
+                        revert: "invalid",
+                        containment: ".quiz-wrapper"
+                    });
+
+                    if ($target.length > 0) {
+                        $target.droppable({
+                            accept: 'li.option[data-target="' + answerValue + '"]',
+                            drop: function (event, ui) {
+                                $this.draggable('destroy');
+                                $target.droppable('destroy');
+                                $this.html('&nbsp;');
+                                $target.html(labelText);
+                                answersLeft.splice(answersLeft.indexOf(answerValue), 1);
+                            }
+                        });
+                        answersLeft.push(answerValue);
+                    } else { }
+                });
+                $('#completar-palabra-boton-siguiente').click(function () {
+                    if (answersLeft.length > 0) {
+                        alertify.error('Aún no han sido contestadas todas las preguntas');
+                    } else {
+                        alertify.success('Todo contestado correctamente');
+                    }
+                });
+            </script>`);
             break;
         case 'vertical-tabs':
 
