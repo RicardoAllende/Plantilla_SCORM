@@ -142,7 +142,7 @@
         }
     </style>
 
-<body onunload="end()">
+<body>
     <div id="app" class="app-navbar-fixed app-sidebar-fixed">
         <div id="sidebar" class="sidebar app-aside">
             <div class="sidebar-container perfect-scrollbar ps-container ps-theme-default"
@@ -436,22 +436,22 @@
                             <div class="col-sm-4">
                                 <ul class="options">
                                     <li class="title">Opciones</li>
-                                    <li class="option" data-target="primero">Primera opción</li>
-                                    <li class="option" data-target="segundo">Segunda opción</li>
-                                    <li class="option" data-target="tercero">Tercera opción</li>
-                                    <li class="option" data-target="cuarto">Cuarta opción</li>
-                                    <li class="option" data-target="incorrecta">Opción incorrecta</li>
-                                    <li class="option" data-target="sexto">Sexta opción</li>
+                                    <li class="option select_option" data-target="primero">Primera opción</li>
+                                    <li class="option select_option" data-target="segundo">Segunda opción</li>
+                                    <li class="option select_option" data-target="tercero">Tercera opción</li>
+                                    <li class="option select_option" data-target="cuarto">Cuarta opción</li>
+                                    <li class="option select_option" data-target="incorrecta">Opción incorrecta</li>
+                                    <li class="option select_option" data-target="sexto">Sexta opción</li>
                                 </ul>
                             </div>
                             <div class="col-sm-8">
                                 <div class="answers">
                                     <ol>
-                                        <li><span class="target" data-accept="segundo">&nbsp;</span>, es el número 2.</li>
-                                        <li><span class="target" data-accept="cuarto">&nbsp;</span>, es el número 4.</li>
-                                        <li><span class="target" data-accept="primero">&nbsp;</span> , es el número 1.</li>
-                                        <li>, es el número 6 <span class="target" data-accept="sexto">&nbsp;</span>, .</li>
-                                        <li>Número 3 <span class="target" data-accept="tercero">&nbsp;</span>their home.</li>
+                                        <li><span class="target select_target" data-accept="segundo">&nbsp;</span>, es el número 2.</li>
+                                        <li><span class="target select_target" data-accept="cuarto">&nbsp;</span>, es el número 4.</li>
+                                        <li><span class="target select_target" data-accept="primero">&nbsp;</span> , es el número 1.</li>
+                                        <li>, es el número 6 <span class="target select_target" data-accept="sexto">&nbsp;</span>, .</li>
+                                        <li>Número 3 <span class="target select_target" data-accept="tercero">&nbsp;</span>their home.</li>
                                     </ol>
                                 </div>
                             </div>
@@ -511,28 +511,51 @@
         * Drag and drop quiz intended for an iBooks widget
         */
 
+        var started;
+
         $(document).ready(function () {
             //initialize the quiz options
             var answersLeft = [];
+            
             $('.quiz-wrapper').find('li.option').each(function (i) {
                 var $this = $(this);
                 var answerValue = $this.data('target');
-                var $target = $('.answers .target[data-accept="' + answerValue + '"]');
+                // console.log($this);
+                // var $target = $('.answers .target[data-accept="' + answerValue + '"]');
+                var $target = $('.select_option');
+                // var $target = $this;
                 var labelText = $this.html();
                 $this.draggable({
                     revert: "invalid",
-                    containment: ".quiz-wrapper"
+                    containment: ".quiz-wrapper",
+                    start: function(){
+                        started = answerValue;
+                        console.log('Comenzando con arrastre', started);
+                    }
                 });
 
                 if ($target.length > 0) {
                     $target.droppable({
-                        accept: 'li.option[data-target="' + answerValue + '"]',
+                        greedy: true,
+                        accept: '.select_option',
+                        // accept: 'li.option[data-target="' + answerValue + '"]',
                         drop: function (event, ui) {
+                            if(answerValue != started){
+                                // return;
+                            }
                             $this.draggable('destroy');
                             $target.droppable('destroy');
                             $this.html('&nbsp;');
                             $target.html(labelText);
                             answersLeft.splice(answersLeft.indexOf(answerValue), 1);
+                        },
+                        over: function(event, ui) {
+                            console.log('Dentro')
+                            // $(this).css('background', 'orange');
+                        },
+                        out: function(event, ui) {
+                            console.log('Fuera')
+                            // $(this).css('background', 'cyan');
                         }
                     });
                     answersLeft.push(answerValue);
