@@ -410,6 +410,37 @@ function renderizarContenido(informacionDiapositiva){
                 });
             </script>`);
             break;
+        case 'cuestionario':
+            $(selector).html(`
+            <div class="modal-dialog" style="min-height: 500px;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 id="titulo_pregunta"></h3>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col-xs-3 col-xs-offset-5">
+                            <div id="loadbar" style="display: none;">
+                                Cargando ...
+                            </div>
+                        </div>
+
+                        <div class="opciones_pregunta" id="opciones_pregunta" data-toggle="buttons"></div>
+                        <div class="row" style="padding: 3%;">
+                            <div class="col-sm-10"></div>
+                            <div class="col-sm-2">
+                                <button id="btnSiguiente" class="btn btn-success">Siguiente</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer text-muted">
+                        <span id="resultado-cuestionario"></span>
+                    </div>
+                </div>
+            </div>`);
+            preguntas = informacionDiapositiva.preguntas;
+            document.write(`<link rel="stylesheet" href="assets/css/elementos/cuestionario.css">`);
+            document.write(`<script src="scripts/cuestionario.js"></script>`);
+        break;
         case 'vertical-tabs':
 
             contenido = '';
