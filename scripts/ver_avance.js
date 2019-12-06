@@ -17,6 +17,12 @@ function dameIndiceAvance(id) {
     return -1;
 }
 
+function calcularEstadisticas(){
+    lesson_location = lesson_location_decoded;
+    var lesson_status = lzw_decode(localStorage.getItem("status"));
+    mostrarTotalCurso();
+}
+
 var lesson_location = lzw_decode(localStorage.getItem("lesson_location"));
 var lesson_status = lzw_decode(localStorage.getItem("status"));
 var background = [];

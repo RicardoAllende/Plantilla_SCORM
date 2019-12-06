@@ -224,10 +224,15 @@ function agregaTiempoSesion() {
     paginas_visitadas.forEach(function (pagina) {
         var hora_inicio = pagina.substring(8, 12);
         var hora_fin = pagina.substring(12);
+        if(esVacio(hora_fin)){
+            hora_fin = hora_inicio;
+        }
+        //-console.log('hora de inicio y de final', hora_inicio, '|', hora_fin, '|');
         var diferencia = calcularDiferencia(hora_inicio, hora_fin);
         minutos += diferencia;
     });
     resultado = convierteAHoras(minutos);
+    //-console.log('Resultado convertido a horas', resultado, 'minutos', minutos);
     localStorage.setItem("session_time", lzw_encode(formatearHora(resultado)));
 }
 
@@ -240,7 +245,11 @@ function calcularDiferencia(hora1, hora2) {
     //Se convierten las horas a minutos
     var hora1 = (parseInt(hora1.substring(0, 2)) * 60) + parseInt(hora1.substring(2, 4));
     var hora2 = (parseInt(hora2.substring(0, 2)) * 60) + parseInt(hora2.substring(2, 4));
-    return hora2 - hora1;
+    // hora1 = obtener_entero_desde(hora1);
+    // hora2 = obtener_entero_desde(hora2);
+    var resultado = hora2 - hora1;
+    // console.log('Resultado calcularDiferencia', resultado, hora1, hora2);
+    return resultado;
 }
 
 function convierteAHoras(minutos) {
@@ -257,7 +266,8 @@ function convierteAHoras(minutos) {
     if (minutos < 10) {
         minutos = "0" + minutos.toString();
     }
-    return horas.toString() + minutos.toString();
+    var resultado = horas.toString() + minutos.toString();
+    return resultado;
 }
 
 function guardaTiempo() { // Al momento de salir de la página
@@ -476,7 +486,9 @@ function generar_suspend_data(callback_function) {
 }
 
 function formatearHora(hora) {
-    return hora.substring(0, 2) + ":" + hora.substring(2, 4) + ":00";
+    var resultado = hora.substring(0, 2) + ":" + hora.substring(2, 4) + ":00";
+    // console.log('Regresado de formatearHora', resultado);
+    return resultado;
 }
 
 function obtener_resolucion() {
@@ -713,7 +725,6 @@ function finalizar() {
     set("cmi.core.lesson_status", lzw_decode(localStorage.getItem("status")));
     set("cmi.suspend_data", localStorage.getItem("suspend_data"));
     set("cmi.core.session_time", lzw_decode(localStorage.getItem("session_time")));
-    //set("cmi.core.session_time", "02:21:00");
     set("cmi.core.lesson_location", lesson_location_encoded);
     save();
 }

@@ -47,6 +47,9 @@ $(document).ready(function() {
                 fecha = fecha.substring(0,2) + '/' + fecha.substring(2,4) + '/' + fecha.substring(4,6);
                 var hora_inicio = pagina.substring(8, 12);
                 var hora_fin = pagina.substring(12);
+                if(esVacio(hora_fin)){
+                    hora_fin = hora_inicio;
+                }
                 var diferencia = calcularDiferencia(hora_inicio, hora_fin) + " minutos";
                 hora_inicio = formatearHora(hora_inicio);
                 hora_fin = formatearHora(hora_fin);
@@ -209,4 +212,22 @@ function obtenerResolucion( codigo ){
         }
     });
     return resolucion;
+}
+
+function esVacio(_elemento) {
+    if (_elemento === undefined) {
+        return true;
+    }
+    if (_elemento === null) {
+        return true;
+    }
+    if (Array.isArray(_elemento)) {
+        if (_elemento.length == 0) {
+            return true;
+        }
+    }
+    if (_elemento == "") {
+        return true;
+    }
+    return false;
 }
