@@ -88,23 +88,24 @@ if(contenido == ''){
     contenido = "Bienvenido al curso";
 }
 
+function imprimirProgressBar(){
+    document.getElementById('progress').innerHTML = `
+    <div class="progress" style="height: 15px;margin-bottom: 0px !important;">
+                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="10"
+                    aria-valuemin="0" aria-valuemax="100" style="width:10%" id="progress-bar">
+                    </div>
+                </div>
+    `;
+}
+
 function imprimirCabecera(){
     document.getElementById('sidebar').innerHTML = `
     <div class="sidebar-container perfect-scrollbar">
         <div>
             
             <!-- start: USER OPTIONS -->
-            <div class="nav-user-wrapper">
-                <div class="media">
-                    <div class="media-body">
-                        <span class="media-heading text-white"  id="studentName">Ricardo Allende</span>
-                    </div>
-                </div><br>
-                <div class="progress" style="height: 15px;">
-                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="10"
-                    aria-valuemin="0" aria-valuemax="100" style="width:10%" id="progress-bar">
-                    </div>
-                </div>
+            <div>
+            <a href="#"> <img class="imagen_interior" src="assets/images/escudo.jpg"> </a><br>
             </div>
             <!-- end: USER OPTIONS -->
             <nav>
@@ -131,8 +132,8 @@ function imprimirPieDePagina(){
             <button href="#" class="sidebar-mobile-toggler pull-left btn no-radius hidden-md hidden-lg" class="btn btn-navbar sidebar-toggle" data-toggle-class="app-slide-off" data-toggle-target="#app" data-toggle-click-outside="#sidebar">
                 <i class="fa fa-bars"></i>
             </button>
-            <a class="navbar-brand" href="index.html"> <img class="imagen_interior" src="assets/images/subitus.png" alt="Subitus"/> </a>
-            <a class="navbar-brand navbar-brand-collapsed" href="index.html"> <img class="imagen_interior" src="assets/images/subitus_small.png" alt="Subitus" /> </a>
+            
+            
             <button class="pull-right menu-toggler visible-xs-block btnFin">
                 <img class="imagen_interior" src="assets/images/salir.png" data-toggle="tooltip" title="Salir del curso" data-placement="bottom">
             </button>
@@ -151,7 +152,7 @@ function imprimirPieDePagina(){
             <ul class="nav navbar-left hidden-sm hidden-xs">
                 <li class="sidebar-toggler-wrapper">
                     <div>
-                        <button href="javascript:void(0)" class="btn sidebar-toggler visible-md visible-lg">
+                        <button href="javascript:void(0)" class="btn sidebar-toggler visible-md visible-lg" style="background-color: transparent !important;">
                             <i class="fa fa-bars"></i>
                         </button>
                     </div>
@@ -194,9 +195,12 @@ function imprimirPieDePagina(){
     
     
     <div class="main-content container">
+    <div>
+     <div>Hola</div>
+     <div>Mundo</div>
+    </div>
         <div id="contenidoCurso" style="width: 90%;" data-toggle="tooltip">
-            <h1 style="text-align: center">` + contenido + `</h1>
-            
+            <h1 style="text-align: center">` + contenido + `</h1>            
         </div>
         <a href="index.html" id="btnNext" class="btn btn-primary btn-lg" style="display:scroll;position:fixed;bottom:10%;right:0px;">
         Siguiente

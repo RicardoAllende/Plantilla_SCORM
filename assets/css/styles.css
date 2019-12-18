@@ -64,7 +64,7 @@ body {
   direction: ltr;
   overflow-x: hidden;
   height: 100%;
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: 'Oswald', sans-serif;
   font-size: 13px;
   padding: 0;
   margin: 0;
@@ -567,7 +567,7 @@ span[role="slider"] {
 }
 @media (min-width: 992px) {
   .app-navbar-fixed .navbar .navbar-collapse, .app-navbar-fixed .navbar .navbar-header {
-    position: fixed;
+    /* position: fixed; */
     top: 0;
     left: 0;
     right: 0;
@@ -626,7 +626,7 @@ span[role="slider"] {
 }
 @media (min-width: 992px) {
   .app-sidebar-fixed .navbar .navbar-header {
-    position: fixed;
+    /* position: fixed; */
     top: 0;
   }
   .app-boxed-page .app-sidebar-fixed .navbar .navbar-header {
@@ -1497,7 +1497,7 @@ span[role="slider"] {
     border-right: none;
   }
   .app-sidebar-fixed #sidebar {
-    position: fixed;
+    /* position: fixed; */
     margin-top: 0;
   }
   .app-sidebar-fixed #sidebar > div {

@@ -46,10 +46,12 @@
 		<!-- end: Packet CSS -->
 		<!-- Favicon -->
 		<link rel="shortcut icon" href="favicon.ico" />
+		<link href="https://fonts.googleapis.com/css?family=Oswald:300&display=swap" rel="stylesheet">
 	</head>
 	<!-- end: HEAD -->
 	<body onUnload="end()">
-		<div id="app">
+		<div id="progress"></div>		
+		<div id="app">			
 			<div id="sidebar" class="sidebar app-aside"></div>
             <div id="app-content" class="app-content"></div>
 		</div>
@@ -57,6 +59,7 @@
 		<script src="scripts/config.js"></script>
 		<script src="scripts/template.js"></script>
 		<script>
+			imprimirProgressBar();
 			imprimirCabecera();
 			diapositiva = {
 				tipo: "accordion", // flip-card, accordion, horizontal-tabs, vertical-tabs
