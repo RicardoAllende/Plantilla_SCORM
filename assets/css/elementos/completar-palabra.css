@@ -1,12 +1,13 @@
 .quiz-wrapper {
     position: relative;
     display: block;
+    padding-top: 3rem;
     /* width: 510px;
     height: 450px; */
 }
 
 .quiz-wrapper p.question-description {
-    background: #2C2F3B;
+    background: #2266a5;
     color: white;
     padding: 25px 20px;
 }
@@ -29,7 +30,7 @@
 }
 
 .quiz-wrapper ul.options li.title {
-    background: #2C2F3B;
+    background: #2266a5;
     color: white;
 }
 

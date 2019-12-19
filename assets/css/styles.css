@@ -68,7 +68,7 @@ body {
   font-size: 13px;
   padding: 0;
   margin: 0;
-  background: #f7f7f8;
+  background: #efefef;
   -webkit-font-smoothing: antialiased !important;
 }
 @media (min-width: 992px) {
@@ -1409,9 +1409,9 @@ span[role="slider"] {
   background: #D7D6DB;
 }
 @media (min-width: 992px) {
-  #sidebar > div, #sidebar .sidebar-container {
+  /* #sidebar > div, #sidebar .sidebar-container {
     margin-left: 10px;
-  }
+  } */
 }
 #sidebar .sidebar-container {
   -webkit-box-shadow: inset -9px 0 8px -11px rgba(0, 0, 0, 0.4);
@@ -1933,7 +1933,7 @@ span[role="slider"] {
     content: "";
     left: 0;
     top: 0;
-    background: #2C2F3B;
+    /* background: #2C2F3B; */
     width: 10px;
     height: 10px;
   }
@@ -1942,7 +1942,7 @@ span[role="slider"] {
     content: "";
     left: 0;
     top: 0;
-    background: #D7D6DB;
+    /* background: #D7D6DB; */
     width: 11px;
     height: 11px;
     border-top-left-radius: 5px;
@@ -9399,8 +9399,8 @@ input[type="radio"], input[type="checkbox"] {
   border-color: #819aaf;
 }
 .btn-primary:hover {
-  background-color: #718ea5 !important;
-  border-color: #718ea5;
+  background-color: #2266a5 !important;
+  border-color: #2266a5;
   color: #ffffff;
 }
 .btn-primary:active, .btn-primary.active, .btn-primary.active:focus, .btn-primary:active:focus, .btn-primary:active:hover, .btn-primary.dropdown-toggle:active:hover {
@@ -15898,4 +15898,70 @@ figure.effect-goliath:hover p {
   background-position: 50% 50%;
   background-repeat: no-repeat;
   margin-top: 60px;
+}
+
+.txt{
+  background: #2266a5;
+  color: white;
+  padding-left: 5rem;
+  padding-right: 5rem;
+  padding-bottom: 5rem;
+}
+
+.txt_titulo{
+  font-size: 4rem;
+  font-family: 'Oswald', sans-serif;
+}
+
+.txt_contenido{
+  font-size: 2rem;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.txt_titulo_pregunta{
+  font-family: 'Oswald', sans-serif;  
+  font-size: 3rem;
+  color: black;  
+}
+
+.txt_contenido_opciones{
+  color: black !important;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: bold;
+  background: white;
+  border: transparent;
+}
+
+.titulo_menu{
+  color: black !important;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: bold;
+}
+
+.sig_pregunta{
+  display: block;
+  margin: auto;
+}
+
+.radio_preguntas{
+  position: relative !important;
+  margin-right: 1rem !important;
+}
+
+/* .txt_descripcion{
+  margin-bottom: 0rem;
+} */
+
+.txt_drag{
+  font-family: 'Oswald', sans-serif;
+  font-size: 2rem;
+}
+
+.txt_drag_opciones{
+  color: black;
+  font-size: 2rem !important;
+}
+
+.txt_drag_preguntas{
+  font-size: 1rem !important;
 }

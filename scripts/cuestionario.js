@@ -69,9 +69,8 @@ function imprimirSiguientePregunta() {
                     -ms-animation-iteration-count: 1;
                     -ms-transform-origin: 50% 50%;`;
 
-            contenido_opciones += `<label class=" btn btn-lg btn-primary btn-block" onclick="verificarPregunta('${pregunta}')" style="${estilos_animacion}"><span class="btn-label">
-                                <i class="glyphicon glyphicon-chevron-right"></i></span> <input type="radio"
-                                    name="q_answer" value="${pregunta}">${pregunta}</label>`;
+            contenido_opciones += `<label class=" btn btn-lg btn-primary btn-block txt_contenido_opciones" onclick="verificarPregunta('${pregunta}')" style="${estilos_animacion}">
+            <input type="radio" class="radio_preguntas" name="q_answer" value="${pregunta}">${pregunta}</label>`;
         });
         $("#opciones_pregunta").html(contenido_opciones);
         $('#opciones_pregunta').fadeIn();
