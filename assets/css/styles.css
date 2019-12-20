@@ -15963,5 +15963,20 @@ figure.effect-goliath:hover p {
 }
 
 .txt_drag_preguntas{
-  font-size: 1rem !important;
+  font-size: 2rem !important;
+  padding-bottom: 3rem;
+  color: black;
+  font-weight: bold;
+}
+
+.titulo_modal{
+  font-family: 'Oswald', sans-serif;
+  color: black;
+  font-size: 2rem;
+}
+
+.txt_modal{
+  font-family: 'Open Sans', sans-serif;
+  color: black;
+  font-size: 1rem;
 }

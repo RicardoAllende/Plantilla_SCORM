@@ -423,6 +423,287 @@ function imprimirPieDePaginaDrag(){
     }
 }
 
+function imprimirPieDePaginaMap(){
+    $('#app-content').html(`
+    <!-- start: TOP NAVBAR -->
+    <header class="navbar navbar-default navbar-static-top">
+        <!-- start: NAVBAR HEADER -->
+        <div class="navbar-header">
+            <button href="#" class="sidebar-mobile-toggler pull-left btn no-radius hidden-md hidden-lg" class="btn btn-navbar sidebar-toggle" data-toggle-class="app-slide-off" data-toggle-target="#app" data-toggle-click-outside="#sidebar">
+                <i class="fa fa-bars"></i>
+            </button>
+            
+            
+            <button class="pull-right menu-toggler visible-xs-block btnFin">
+                <img class="imagen_interior" src="assets/images/salir.png" data-toggle="tooltip" title="Salir del curso" data-placement="bottom">
+            </button>
+            <button onclick="calcularEstadisticas()" type="button" data-toggle="modal" class="btn pull-right menu-toggler visible-xs-block" id="menu-toggler" data-target="#myModal">
+                <i class="glyphicon glyphicon-stats" data-toggle="tooltip" title="Avance" data-placement="bottom"></i>
+            </button>
+            <button class="hidden-md hidden-lg btnBookmark" >
+                <i class="glyphicon glyphicon-bookmark" data-toggle="tooltip" title="Marcar" data-placement="bottom"></i>
+            </button>
+
+        </div>
+        <!-- end: NAVBAR HEADER -->
+        <!-- start: NAVBAR COLLAPSE -->
+        <div class="navbar-collapse collapse">
+            
+            <ul class="nav navbar-left hidden-sm hidden-xs">
+                <li class="sidebar-toggler-wrapper">
+                    <div>
+                        <button href="javascript:void(0)" class="btn sidebar-toggler visible-md visible-lg" style="background-color: transparent !important;">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                    </div>
+                </li>
+                <li>
+                    <a href="#" class="toggle-fullscreen"> <i class="fa fa-expand expand-off"></i><i class="fa fa-compress expand-on"></i></a>
+                </li>
+                
+            </ul>
+            
+            <span style="position:absolute; z-index:15; padding-top: 1%; margin: 0 auto; color: white; font-size: x-large;">` + tituloDelCurso + `</span>
+            
+            <ul class="nav navbar-right">
+                <!-- start: MESSAGES DROPDOWN -->
+                <li >
+                    <a><button type="button" class="btnBookmark hidden-md"><i class="glyphicon glyphicon-bookmark" data-toggle="tooltip" title="Marcar" data-placement="bottom"></i></button></a>
+                </li>
+                <!-- end: MESSAGES DROPDOWN -->
+                <!-- start: ACTIVITIES DROPDOWN -->
+                <li class="dropdown">
+                    <a onclick="calcularEstadisticas()"><button type="button" data-toggle="modal" data-target="#myModal"><i data-toggle="tooltip" title="Avance" data-placement="bottom" class="glyphicon glyphicon-stats"></i></button></a>
+                </li>
+                <li class="dropdown">
+                    <a><button class="btnFin"><img class="imagen_interior" src="assets/images/salir.png" data-toggle="tooltip" title="Salir" data-placement="bottom"></button></a>
+                </li>
+                <!-- end: ACTIVITIES DROPDOWN -->
+                
+            </ul>
+            <!-- start: MENU TOGGLER FOR MOBILE DEVICES -->
+            <div class="close-handle visible-xs-block menu-toggler" data-toggle="collapse" href=".navbar-collapse">
+                <div class="arrow-left"></div>
+                <div class="arrow-right"></div>
+            </div>
+            <!-- end: MENU TOGGLER FOR MOBILE DEVICES -->
+        </div>
+
+        <!-- end: NAVBAR COLLAPSE -->
+    </header>
+    <!-- end: TOP NAVBAR -->
+    
+    
+    <div class="main-content">
+    <div class="txt">
+     <div class="txt_titulo">Instrucciones</div><br>
+     <div style="font-weight: bold;margin-top: -1rem;">__________________</div><br>
+     <div class="txt_contenido">
+     Da click en la computadora, celular, pluma, cuaderno o cactus para conocer información de ellos.     
+     </div>
+    </div>
+        <div id="contenidoCurso" style="background: #efefef;" data-toggle="tooltip">
+            <!--<h1 style="text-align: center">` + contenido + `</h1>-->            
+        </div>
+        <!--<a href="index.html" id="btnNext" class="btn btn-primary btn-lg" style="display:scroll;position:fixed;bottom:10%;right:0px;">
+        Siguiente
+        </a>
+        <a href="index.html" id="btnPrev" class="btn btn-primary btn-lg" style="display:scroll;position:fixed;bottom:20%;right: 0px; z-index: 10;">
+        Anterior
+        </a>-->
+        <!--<div id="contenedor"><div id="contenido"></div></div>-->
+        <div style="background: #efefef;text-align: center;padding-top: 2rem;"><img src="assets/images/escritorio.jpg" usemap="#image-map"></img></div>
+        <map name="image-map">
+            <area alt="Cuaderno" title="Cuaderno" coords="329,155,494,402" shape="rect" data-toggle="modal" data-target="#cuaderno">
+            <area alt="Celular" title="Celular" coords="219,193,291,352" shape="rect" data-toggle="modal" data-target="#celular">
+            <area alt="Computadora" title="Computadora" coords="1,283,287,100,218,0,2,1" shape="poly" data-toggle="modal" data-target="#computadora">
+            <area alt="Pluma" title="Pluma" coords="510,200,529,379" shape="rect" data-toggle="modal" data-target="#pluma">
+            <area alt="Cactus" title="Cactus" coords="427,64,57" shape="circle" data-toggle="modal" data-target="#cactus">
+        </map>
+        <!-- Modal Cuaderno-->
+        <div class="modal fade" id="cuaderno" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header titulo_modal">
+                Cuaderno
+                <!--<h5 class="modal-title" id="exampleModalLabel">Cuaderno</h5>-->
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body txt_modal">
+                Un cuaderno (también llamado cuadernillo, libreta, libro de notas, libro de apuntes, libro de anotaciones) es un libro de pequeño o gran tamaño que se utiliza para tomar notas, dibujar, escribir, hacer tareas o añadir apuntes. Aunque mucha gente usa libretas, estas son más comúnmente asociadas con los estudiantes que suelen llevar cuadernos para apuntar las notas/apuntes de las distintas asignaturas, o realizar los trabajos que los profesores les piden. También hay agendas que puede ser utilizados por empresarios o personas sumamente ocupadas , mayormente son utilizados por niños, jóvenes estudiantes. Los artistas usan a menudo grandes cuadernos que incluyen amplios espacios de papel en blanco para poder dibujar.
+                </div>
+                <!--<div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+                </div>-->
+            </div>
+            </div>
+        </div>
+
+        <!-- Modal Celular-->
+        <div class="modal fade" id="celular" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header titulo_modal">
+                Celular
+                  <!--<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>-->
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row pt-2">                    
+                    <div class="col-sm-4"><img class="imagen_interior" src="assets/images/escritorio.jpg" alt="Smiley face"></div>
+                    <div class="col-sm-8 txt_modal">Un celular es un artefacto que sirve para comunicarse de forma móvil. La tecnología consiste básicamente en antenas distribuidas en un área de cobertura que interactúan con el artefacto, enviando y recibiendo señales con el mismo.</div>
+                    </div>
+                </div>
+                <!--<div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                  <button type="button" class="btn btn-primary">Save changes</button>
+                </div>-->
+              </div>
+            </div>
+          </div>
+
+          <!-- Modal Computadora-->
+          <div class="modal fade" id="computadora" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header titulo_modal">
+                  Computadora
+                    <!--<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>-->
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                      <div class="row pt-2">                    
+                      <div class="col-sm-8 txt_modal">La computadora, ese equipo indispensable en la vida cotidiana de hoy en día que también se conoce por el nombre de computador u ordenador, es una máquina electrónica que permite procesar y acumular datos. El término proviene del latín computare (“calcular”).</div>
+                      <div class="col-sm-4"><img class="imagen_interior" src="assets/images/escritorio.jpg" alt="Smiley face"></div>
+                      </div>
+                  </div>
+                  <!--<div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                  </div>-->
+                </div>
+              </div>
+            </div>
+
+            <!-- Modal Pluma-->
+          <div class="modal fade" id="pluma" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header titulo_modal">
+                  Pluma
+                    <!--<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>-->
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                      <div class="row pt-2">                    
+                      <div class="col-sm-12 text-center"><img class="imagen_interior" src="assets/images/escritorio.jpg" alt="Smiley face"></div>
+                      <div class="col-sm-12 txt_modal pt-2">Una pluma (del latín pinna, pluma), de forma genérica, es un dispositivo, normalmente de forma alargada, usado para entintar una superficie con el propósito de escribir o dibujar sobre ella, usualmente en papel.</div>
+                      </div>
+                  </div>
+                  <!--<div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                  </div>-->
+                </div>
+              </div>
+            </div>
+
+            <!-- Modal Cactus-->
+          <div class="modal fade" id="cactus" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header titulo_modal">
+                  Cactus
+                    <!--<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>-->
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                      <div class="row pt-2">                     
+                      <div class="col-sm-12 txt_modal pt-2">Cactaceae, las cactáceas, son conocidas en conjunto como cactos, cactus o cacti. Esta familia es originaria de América. Sin embargo, hay una excepción, Rhipsalis baccifera, que está extendida en África tropical, Madagascar y Ceilán. Se cree que la colonización del Viejo Mundo por esta especie es relativamente reciente (unos cuantos cientos de años), probablemente transportada en el aparato digestivo de pájaros migratorios en forma de semillas, bien directamente desde América o a partir de poblaciones surgidas en África como consecuencia del transporte de esclavos.</div>
+                      <div class="col-sm-12 text-center"><img class="imagen_interior" src="assets/images/escritorio.jpg" alt="Smiley face"></div>
+                      </div>
+                  </div>
+                  <!--<div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                  </div>-->
+                </div>
+              </div>
+            </div>
+
+    </div>`);    
+    pieDePagina = `
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Avance del curso</h4>
+            </div>
+            <div class="modal-body">
+                <div id="contenedor"><div id="contenido"></div><div id="avance"></div></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- </div>
+    start: MAIN JAVASCRIPTS -->
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="bower_components/components-modernizr/modernizr.js"></script>
+    <script src="bower_components/js-cookie/src/js.cookie.js"></script>
+    <script src="bower_components/perfect-scrollbar/js/perfect-scrollbar.jquery.min.js"></script>
+    <script src="bower_components/jquery-fullscreen/jquery.fullscreen-min.js"></script>
+    <!--<script src="bower_components/switchery/dist/switchery.min.js"></script>-->
+    <script src="bower_components/jquery.knobe/dist/jquery.knob.min.js"></script>
+    <script src="bower_components/seiyria-bootstrap-slider/dist/bootstrap-slider.min.js"></script>
+    <script src="bower_components/slick.js/slick/slick.min.js"></script>
+    <script src="bower_components/jquery-numerator/jquery-numerator.js"></script>
+    <script src="bower_components/ladda/dist/spin.min.js"></script>
+    <script src="bower_components/ladda/dist/ladda.min.js"></script>
+    <script src="bower_components/ladda/dist/ladda.jquery.min.js"></script>
+    <!-- end: MAIN JAVASCRIPTS -->
+    <!-- start: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
+    <script src="bower_components/Chart-js/Chart.min.js"></script>
+
+    <!-- end: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
+    <!-- start: Packet JAVASCRIPTS -->
+    <script src="assets/js/letter-icons.js"></script>
+    <script src="assets/js/main.js"></script>
+    <!-- end: Packet JAVASCRIPTS -->
+    <!-- start: JavaScript Event Handlers for this page -->
+    <script src="assets/js/index.js"></script>
+    <script>
+    jQuery(document).ready(function() {
+        Main.init();
+        Index.init();
+    });
+    </script>
+    <script type="text/javascript" src="scripts/script_subitus.js"></script>
+    <script src="scripts/ver_avance.js"></script>`;
+    document.write(pieDePagina);
+    if (!esVacio(diapositiva)) {
+        renderizarContenido(diapositiva);
+    }
+}
+
 function renderizarContenido(informacionDiapositiva){
     // console.log(informacionDiapositiva);
     selector = '#' + informacionDiapositiva.div;
@@ -523,7 +804,8 @@ function renderizarContenido(informacionDiapositiva){
                         </div>
                     </div>
                 </div>
-                <button class="btn btn-submit" id="completar-palabra-boton-siguiente">Siguiente</button>
+                <!--<button class="btn btn-submit" id="completar-palabra-boton-siguiente">Siguiente</button>-->
+                <div class="col-sm-12" style="background: #efefef;"><a id="completar-palabra-boton-siguiente"> <img class="sig_pregunta" src="assets/images/btn_siguiente.png"> </a></div>
             </div>
             `;
             $(selector).html(contenido);

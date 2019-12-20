@@ -50,10 +50,11 @@
 
 .quiz-wrapper .answers .target {
     display: inline-block;
-    width: 110px;
+    width: 200px;
     background: #D7D6DB;
-    margin: 0 3px;
+    /* margin: 0 3px; */
     text-align: center;
+    height: 30px;
 }
 
 .quiz-wrapper button[type="submit"] {
